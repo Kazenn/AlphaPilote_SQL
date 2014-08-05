@@ -98,7 +98,7 @@ public class UserInterface extends JFrame{
 		
 		ZoneIp = new JTextField();
 		
-		ZoneIp.setBounds(6, 17, 164, 20);
+		ZoneIp.setBounds(6, 17, 147, 20);
 		PaneZoneConnexion.add(ZoneIp);
 		ZoneIp.setText("192.168.0.253");
 		ZoneIp.setColumns(10);
@@ -238,7 +238,7 @@ public class UserInterface extends JFrame{
 		JLabel ResultatPing = new JLabel("");
 		ResultatPing.setFont(new Font("Arial", Font.BOLD, 13));
 		ResultatPing.setForeground(new Color(51, 153, 0));
-		ResultatPing.setBounds(166, 17, 64, 20);
+		ResultatPing.setBounds(164, 17, 64, 20);
 		PaneZoneConnexion.add(ResultatPing);
 		
 		JPanel ZoneConnexionAutoLogin = new JPanel();

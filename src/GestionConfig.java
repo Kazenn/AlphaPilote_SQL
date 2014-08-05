@@ -1,4 +1,7 @@
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -82,6 +85,74 @@ public class GestionConfig {
 	return Password;
 	
 }
+
+	public String EcrireUser(String User , String Machine , String UserAEcrire)
+	{
+		 
+		 String ValidationEcriture = "";
+		 int CodeRetour = 5;
+		 String configPath="D:\\AlphaPilote\\config.txt";
+		 Properties properties=new Properties();
+		 File FichierConfig = new File(configPath);
+		 FileInputStream stream;
+		try {
+			 
+			 stream = new FileInputStream(FichierConfig);
+			 properties.load(stream);
+			 properties.setProperty(User + Machine , UserAEcrire);
+			 FileOutputStream oStream = new FileOutputStream(FichierConfig) ;
+			 properties.store(oStream, "Fichier de configuration des users et password");
+			 ValidationEcriture = "User pour " + Machine +" est correctement enregistré";
+			 CodeRetour = 0;
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			ValidationEcriture = "Impossible de trouver le fichier : " + e;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			ValidationEcriture = "Erreur lors de l'écriture du fichier : " + e;
+		}
+		 
+		 CodeRetour = 1;
+		 
+	return ValidationEcriture;
+	
+	}
+	
+	public String EcrirePassword(String Password , String Machine , String PasswordAEcrire)
+	{
+		 
+		 String ValidationEcriture = "";
+		 int CodeRetour = 5;
+		 String configPath="D:\\AlphaPilote\\config.txt";
+		 Properties properties=new Properties();
+		 File FichierConfig = new File(configPath);
+		 FileInputStream stream;
+		try {
+			 
+			 stream = new FileInputStream(FichierConfig);
+			 properties.load(stream);
+			 properties.setProperty(Password + Machine , PasswordAEcrire);
+			 FileOutputStream oStream = new FileOutputStream(FichierConfig) ;
+			 properties.store(oStream, "Fichier de configuration des users et password");
+			 ValidationEcriture = "Fichier correctement enregistré";
+			 CodeRetour = 0;
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			ValidationEcriture = "Impossible de trouver le fichier : " + e;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			ValidationEcriture = "Erreur lors de l'écriture du fichier : " + e;
+		}
+		 
+		 CodeRetour = 1;
+		 
+	return ValidationEcriture;
+	
+	}
 	
 	
 }
