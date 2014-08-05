@@ -1,19 +1,19 @@
-import javax.swing.JFrame;
-import javax.swing.JTextField;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.border.TitledBorder;
-import javax.swing.border.LineBorder;
-
 import java.awt.Color;
-
-import javax.swing.JButton;
-
+import java.awt.Font;
+import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
+
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
 
 
 public class UserInterfaceConfig extends JFrame{
@@ -23,7 +23,7 @@ public class UserInterfaceConfig extends JFrame{
 		
 		ZoneConfigUnix = new JPanel();
 		ZoneConfigUnix.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Unix", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		ZoneConfigUnix.setBounds(6, 0, 150, 74);
+		ZoneConfigUnix.setBounds(6, 0, 150, 106);
 		getContentPane().add(ZoneConfigUnix);
 		ZoneConfigUnix.setLayout(null);
 		
@@ -48,17 +48,17 @@ public class UserInterfaceConfig extends JFrame{
 		JPanel ZoneConfigGmvs = new JPanel();
 		ZoneConfigGmvs.setLayout(null);
 		ZoneConfigGmvs.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "TPX Gmvs", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		ZoneConfigGmvs.setBounds(166, 0, 150, 74);
+		ZoneConfigGmvs.setBounds(166, 0, 150, 106);
 		getContentPane().add(ZoneConfigGmvs);
 		
 		TextConfigGmvsUser = new JTextField();
 		TextConfigGmvsUser.setColumns(10);
-		TextConfigGmvsUser.setBounds(54, 16, 86, 20);
+		TextConfigGmvsUser.setBounds(47, 16, 86, 20);
 		ZoneConfigGmvs.add(TextConfigGmvsUser);
 		
 		TextConfigGmvsPassword = new JTextField();
 		TextConfigGmvsPassword.setColumns(10);
-		TextConfigGmvsPassword.setBounds(54, 47, 86, 20);
+		TextConfigGmvsPassword.setBounds(47, 47, 86, 20);
 		ZoneConfigGmvs.add(TextConfigGmvsPassword);
 		
 		JLabel LabelConfigGmvsUser = new JLabel("User");
@@ -69,10 +69,17 @@ public class UserInterfaceConfig extends JFrame{
 		LabelConfigGmvsPassword.setBounds(6, 50, 38, 14);
 		ZoneConfigGmvs.add(LabelConfigGmvsPassword);
 		
+		CheckBoxAutoGmvs = new JCheckBox("Auto connect");
+		CheckBoxAutoGmvs.setBackground(new Color(169, 169, 169));
+		CheckBoxAutoGmvs.setSelected(true);
+		CheckBoxAutoGmvs.setBounds(16, 74, 97, 25);
+		ZoneConfigGmvs.add(CheckBoxAutoGmvs);
+		
+					
 		ZoneConfigSysa = new JPanel();
 		ZoneConfigSysa.setLayout(null);
 		ZoneConfigSysa.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Sysa", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		ZoneConfigSysa.setBounds(326, 0, 150, 74);
+		ZoneConfigSysa.setBounds(326, 0, 150, 106);
 		getContentPane().add(ZoneConfigSysa);
 		
 		TextConfigSysaUser = new JTextField();
@@ -96,7 +103,7 @@ public class UserInterfaceConfig extends JFrame{
 		ZoneConfigKmvs = new JPanel();
 		ZoneConfigKmvs.setLayout(null);
 		ZoneConfigKmvs.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Kmvs (IP0)", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		ZoneConfigKmvs.setBounds(6, 88, 150, 74);
+		ZoneConfigKmvs.setBounds(326, 117, 150, 106);
 		getContentPane().add(ZoneConfigKmvs);
 		
 		TextConfigKmvsUser = new JTextField();
@@ -121,7 +128,7 @@ public class UserInterfaceConfig extends JFrame{
 		ZoneConfigZmvs = new JPanel();
 		ZoneConfigZmvs.setLayout(null);
 		ZoneConfigZmvs.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Zmvs (CFF)", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		ZoneConfigZmvs.setBounds(166, 88, 150, 74);
+		ZoneConfigZmvs.setBounds(166, 117, 150, 106);
 		getContentPane().add(ZoneConfigZmvs);
 		
 		TextConfigZmvsUser = new JTextField();
@@ -141,19 +148,28 @@ public class UserInterfaceConfig extends JFrame{
 		LabelConfigZmvsPassword = new JLabel("Pass");
 		LabelConfigZmvsPassword.setBounds(6, 50, 38, 14);
 		ZoneConfigZmvs.add(LabelConfigZmvsPassword);
-		
+				
 		JButton BoutonValiderConfig = new JButton("Valider la configuration");
-		BoutonValiderConfig.setBounds(10, 340, 210, 67);
+		BoutonValiderConfig.setMargin(new Insets(1, 1, 1, 1));
+		BoutonValiderConfig.setBounds(6, 380, 180, 51);
 		getContentPane().add(BoutonValiderConfig);
 		BoutonValiderConfig.setIcon(new ImageIcon(UserInterfaceConfig.class.getResource("/com/sun/javafx/scene/control/skin/caspian/images/capslock-icon.png")));
+		
+		
 		
 		JProgressBar ProgressBarValideConfig = new JProgressBar();
 		ProgressBarValideConfig.setStringPainted(true);
 		ProgressBarValideConfig.setForeground(new Color(34, 139, 34));
-		ProgressBarValideConfig.setBounds(10, 305, 210, 24);
+		ProgressBarValideConfig.setBounds(6, 345, 180, 24);
 		getContentPane().add(ProgressBarValideConfig);
 		
 		ProgressBarValideConfig.setValue(0);
+		
+		JLabel LabelConfigValide = new JLabel("");
+		LabelConfigValide.setForeground(new Color(60, 179, 113));
+		LabelConfigValide.setFont(new Font("Verdana", Font.PLAIN, 12));
+		LabelConfigValide.setBounds(6, 320, 150, 14);
+		getContentPane().add(LabelConfigValide);
 		BoutonValiderConfig.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
@@ -171,6 +187,9 @@ public class UserInterfaceConfig extends JFrame{
 				String UserZmvs = TextConfigZmvsUser.getText();
 				String PassZmvs = TextConfigZmvsPassword.getText();
 				
+				
+				LabelConfigValide.setForeground(Color.GRAY);
+				LabelConfigValide.setText("");
 				GestionConfig MaConfig = new GestionConfig();
 				EcritureValideOuErreur = MaConfig.EcrireUser("user", "Unix" , UserUnix);
 				ProgressBarValideConfig.setValue(10);
@@ -189,16 +208,19 @@ public class UserInterfaceConfig extends JFrame{
 				ProgressBarValideConfig.setValue(70);
 				EcritureValideOuErreur = MaConfig.EcrirePassword("password", "Sysa", PassSysa);
 				ProgressBarValideConfig.setValue(80);
+				
 				EcritureValideOuErreur = MaConfig.EcrirePassword("password", "Kmvs", PassKmvs);
 				ProgressBarValideConfig.setValue(90);
 				EcritureValideOuErreur = MaConfig.EcrirePassword("password", "Zmvs", PassZmvs);
 				ProgressBarValideConfig.setValue(100);
 				
 				System.out.println(EcritureValideOuErreur);
+				LabelConfigValide.setText("Config sauvegard\u00E9e!");
+				LabelConfigValide.setForeground(new Color(60, 179, 113));
+				
 				
 			}
 		});
-		
 		
 		
 		//Fin Déclarations des objets et composants
@@ -219,7 +241,72 @@ public class UserInterfaceConfig extends JFrame{
 		String UserZmvs = "#erreur";
 		String PassZmvs = "#erreur";
 		
+		LabelConfigValide.setForeground(Color.GRAY);
 		
+		BoutonRechargerConfig = new JButton("Recharger la configuration");
+		BoutonRechargerConfig.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				
+				int CodeRetour = 5;
+				String UserGmvs = "#erreur";
+				String PassGmvs = "#erreur";
+				String UserUnix = "#erreur";
+				String PassUnix = "#erreur";
+				String UserSysa = "#erreur";
+				String PassSysa = "#erreur";
+				String UserKmvs = "#erreur";
+				String PassKmvs = "#erreur";
+				String UserZmvs = "#erreur";
+				String PassZmvs = "#erreur";
+				
+				ProgressBarValideConfig.setValue(0);
+				LabelConfigValide.setForeground(Color.GRAY);
+				LabelConfigValide.setText("Config rechargée");
+				GestionConfig MaConfig = new GestionConfig();
+				CodeRetour = MaConfig.LireConfig();
+				//UserG = MaConfig.DemandeUser("G");
+				//UserUnix = MaConfig.DemandeUser("Unix");
+				if (CodeRetour == 0)
+				{
+					UserUnix = MaConfig.DemandeUser("Unix");
+					PassUnix = MaConfig.DemandePassword("Unix");
+					TextConfigUnixUser.setText(UserUnix);
+					TextConfigUnixPassword.setText(PassUnix);
+					
+					UserGmvs = MaConfig.DemandeUser("Gmvs");
+					PassGmvs = MaConfig.DemandePassword("Gmvs");
+					TextConfigGmvsUser.setText(UserGmvs);
+					TextConfigGmvsPassword.setText(PassGmvs);
+					
+					UserSysa = MaConfig.DemandeUser("Sysa");
+					PassSysa = MaConfig.DemandePassword("Sysa");
+					TextConfigSysaUser.setText(UserSysa);
+					TextConfigSysaPassword.setText(PassSysa);
+					
+					UserKmvs = MaConfig.DemandeUser("Kmvs");
+					PassKmvs = MaConfig.DemandePassword("Kmvs");
+					TextConfigKmvsUser.setText(UserKmvs);
+					TextConfigKmvsPassword.setText(PassKmvs);
+					
+					UserZmvs = MaConfig.DemandeUser("Zmvs");
+					PassZmvs = MaConfig.DemandePassword("Zmvs");
+					TextConfigZmvsUser.setText(UserZmvs);
+					TextConfigZmvsPassword.setText(PassZmvs);
+					
+				}
+				if (CodeRetour == 1)
+				{
+					
+					
+				}
+				
+			}
+		});
+		BoutonRechargerConfig.setIcon(new ImageIcon(UserInterfaceConfig.class.getResource("/com/sun/javafx/scene/web/skin/Redo_16x16_JFX.png")));
+		BoutonRechargerConfig.setMargin(new Insets(1, 1, 1, 1));
+		BoutonRechargerConfig.setBounds(196, 380, 180, 51);
+		getContentPane().add(BoutonRechargerConfig);
 		GestionConfig MaConfig = new GestionConfig();
 		CodeRetour = MaConfig.LireConfig();
 		//UserG = MaConfig.DemandeUser("G");
@@ -261,8 +348,12 @@ public class UserInterfaceConfig extends JFrame{
 	}
 	
 	
+	public Boolean DemandeEtatAutoLoginGmvs() 
+	{
+		return CheckBoxAutoGmvs.isSelected();
+	}
 
-	
+
 	private static final long serialVersionUID = 1L;
 	private JTextField TextConfigUnixUser;
 	private JTextField TextConfigUnixPassword;
@@ -284,4 +375,8 @@ public class UserInterfaceConfig extends JFrame{
 	private JTextField TextConfigZmvsPassword;
 	private JLabel LabelConfigZmvsUser;
 	private JLabel LabelConfigZmvsPassword;
+	private JCheckBox CheckBoxAutoGmvs;
+	private JButton BoutonRechargerConfig;
 }
+
+

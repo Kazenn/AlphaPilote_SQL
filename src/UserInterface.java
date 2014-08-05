@@ -1,44 +1,40 @@
-import javax.swing.*;
-
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
-
+import java.awt.AWTEvent;
+import java.awt.AWTException;
+import java.awt.Checkbox;
+import java.awt.Color;
+import java.awt.Desktop;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.InputEvent;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.Color;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
 import java.net.URI;
-import java.security.Timestamp;
-import java.sql.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.jgoodies.forms.factories.FormFactory;
-
-import java.awt.Font;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.AWTEvent;
-import java.awt.AWTException;
-import java.awt.Component;
-import java.awt.Desktop;
-import java.awt.Dimension;
-import java.awt.Robot;
-
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
-
-import java.awt.event.KeyAdapter;
-import java.awt.Checkbox;
+import java.awt.Toolkit;
 
 
 public class UserInterface extends JFrame{
@@ -47,8 +43,13 @@ public class UserInterface extends JFrame{
 	 */
 	private static final long serialVersionUID = 1L;
 	private JTextField ZoneIp;
+	String CheminQuick3270 = "C:\\Program Files (x86)\\Quick3270 Secure\\Quick3270.exe";
+	String CheminQuick3270ProfileGmvs = "D:\\AlphaPilote\\GMVS.ecf";
+	String CheminPutty = "D:\\AlphaPilote\\Putty.exe";
+	//CheminQuick3270ProfileGmvs
 
 	public UserInterface() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(UserInterface.class.getResource("/javax/swing/plaf/metal/icons/ocean/computer.gif")));
 		setTitle(" AlphaPilote v0.1    -     Etienne PFISTNER");
 		
 		JMenuBar BarreMenuPrincipale = new JMenuBar();
@@ -116,29 +117,39 @@ public class UserInterface extends JFrame{
 				try {
 					
 					
-					String exeloc = "C:\\Program Files (x86)\\Quick3270 Secure\\Quick3270.exe";
-					String directory = "D:\\AlphaPilote\\GMVS.ecf";
-					ProcessBuilder builder = new ProcessBuilder(new String[] { exeloc, directory });
+					//String CheminQuick3270 = "C:\\Program Files (x86)\\Quick3270 Secure\\Quick3270.exe";
+					//String CheminQuick3270ProfileGmvs = "D:\\AlphaPilote\\GMVS.ecf";
+					ProcessBuilder builder = new ProcessBuilder(new String[] { CheminQuick3270, CheminQuick3270ProfileGmvs });
 					Process p = builder.start();
 					
 					ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuGmvs.getText());
 		            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 					
+		            
+		            
+		            
+		            UserInterfaceConfig UserInterfacePourDemande = new UserInterfaceConfig();
+		            if ( UserInterfacePourDemande.DemandeEtatAutoLoginGmvs() == true)
+		            {
+		           
 		            SmartRobot SuperRobot = new SmartRobot();
 		            SuperRobot.delay(500);
 		            SuperRobot.type("tpx");
+		            SuperRobot.delay(50);
 		            SuperRobot.keyPress(KeyEvent.VK_ENTER);
-		           
-					//Robot robot = new Robot();
-					//robot.delay(500);
-					//robot.keyPress(KeyEvent.VK_T);
-					//robot.keyPress(KeyEvent.VK_P);
-					//robot.keyPress(KeyEvent.VK_X);
-					//robot.keyPress(KeyEvent.VK_ENTER);
-										
+		            
+		            GestionConfig MaConfig = new GestionConfig();
+		            String UserDemande = MaConfig.DemandeUser("Gmvs");
+		            String PassDemande = MaConfig.DemandePassword("Gmvs");
+		            
+		            SuperRobot.delay(250);
+		            SuperRobot.type(UserDemande);
+		            SuperRobot.keyPress(KeyEvent.VK_TAB);
+		            SuperRobot.type(PassDemande);
+		            SuperRobot.keyPress(KeyEvent.VK_ENTER);
+		            }
 					
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					
 					MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour GMVS : " +e1);
 					ZoneTextLog.append("Erreur au lancement : Consulter la log." );
@@ -146,7 +157,6 @@ public class UserInterface extends JFrame{
 					e1.printStackTrace();
 					
 				} catch (AWTException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 					MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour GMVS : " +e);
 					ZoneTextLog.append("Erreur au lancement : Consulter la log." );
@@ -202,7 +212,6 @@ public class UserInterface extends JFrame{
 		            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 		            
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					GestionLog MaLog = new GestionLog();
 					MaLog.EcrireDansFichierLog("Erreur au lancement d'ODIP : " +e);
 					ZoneTextLog.append("Erreur au lancement : Consulter la log." );
@@ -242,13 +251,14 @@ public class UserInterface extends JFrame{
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
 				
-				ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/C", "start D:\\AlphaPilote\\log.txt");
-	            //pb.directory(new File(CHEMIN));
-								//ProcessBuilder builder = new ProcessBuilder(new String[] { exeloc, directory });
+				
+	            //pb.CheminQuick3270ProfileGmvs(new File(CHEMIN));
+								//ProcessBuilder builder = new ProcessBuilder(new String[] { CheminQuick3270, CheminQuick3270ProfileGmvs });
 				try {
+					ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/C", "start D:\\AlphaPilote\\log.txt");
 					Process p = builder.start();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
+					
 					GestionLog MaLog = new GestionLog();
 					MaLog.EcrireDansFichierLog("Erreur au lancement de la log : " +e);
 					ZoneTextLog.append("Erreur au lancement : Consulter la log." );
@@ -262,6 +272,23 @@ public class UserInterface extends JFrame{
 		
 		JSeparator SeparateurApropos = new JSeparator();
 		MenuAPropos.add(SeparateurApropos);
+		
+		JMenuItem MenuSignalerUnBug = new JMenuItem("Signaler un bug");
+		MenuSignalerUnBug.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				
+				Desktop desktop = Desktop.getDesktop(); 
+			    String message = "mailto:epfistner@gmail.com?subject=Bug_ou_suggestion_pour_AlphaPilote&body=Fichier_log_attache&attachment=d:/AlphaPilote/log.txt"; 
+			    URI uri = URI.create(message); 
+			    try {
+					desktop.mail(uri);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				} 
+			}
+		});
+		MenuAPropos.add(MenuSignalerUnBug);
 		
 		JMenuItem MenuInterrogation = new JMenuItem("?");
 		MenuAPropos.add(MenuInterrogation);
@@ -279,7 +306,7 @@ public class UserInterface extends JFrame{
 					ZoneTextLog.append("Lancement mstsc pour " + ZoneIp.getText()  );
 		            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
+					
 					GestionLog MaLog = new GestionLog();
 					MaLog.EcrireDansFichierLog("Erreur au lancement de la log : " +e1);
 					ZoneTextLog.append("Erreur au lancement : Consulter la log." );
@@ -397,7 +424,7 @@ public class UserInterface extends JFrame{
 			            
 			             if (BoutonRadioRoot.isSelected() == true && LanceUneFois == true ) {
 			            	 
-			            	 	Runtime.getRuntime().exec(String.format("D:\\AlphaPilote\\Putty.exe " + TextZoneIp +" -ssh -l root"));
+			            	 	Runtime.getRuntime().exec(String.format(CheminPutty + " " + TextZoneIp +" -ssh -l root"));
 			            	 	ZoneTextLog.append("Lancement putty ssh vers " + ZoneIp.getText() + " avec le user root" );
 					            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 					            LanceUneFois = false;
@@ -407,7 +434,7 @@ public class UserInterface extends JFrame{
 			             		             		             
 			             if (BoutonRadioSalle.isSelected() == true && LanceUneFois == true ) {
 			            	 
-			            	 	Runtime.getRuntime().exec(String.format("D:\\AlphaPilote\\Putty.exe " + TextZoneIp +" -ssh -l salle"));
+			            	 	Runtime.getRuntime().exec(String.format(CheminPutty + " " + TextZoneIp +" -ssh -l salle"));
 			            	 	ZoneTextLog.append("Lancement putty ssh vers " + ZoneIp.getText() + " avec le user salle" );
 					            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 					            LanceUneFois = false;
@@ -417,7 +444,7 @@ public class UserInterface extends JFrame{
 					     if (BoutonRadioUserPerso.isSelected() == true && LanceUneFois == true && CheckBoxPassword.getState() == false) {
 					            	 
 				            	 	String EtatBouton = BoutonRadioUserPerso.getText();
-				            	 	Runtime.getRuntime().exec(String.format("D:\\AlphaPilote\\Putty.exe " + TextZoneIp +" -ssh -l "+EtatBouton));
+				            	 	Runtime.getRuntime().exec(String.format(CheminPutty + " " + TextZoneIp +" -ssh -l "+EtatBouton));
 				            	 	ZoneTextLog.append("Lancement putty ssh vers " + ZoneIp.getText() + " avec le user " + BoutonRadioUserPerso.getText() );
 						            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 						            LanceUneFois = false;
@@ -428,7 +455,7 @@ public class UserInterface extends JFrame{
 				          if (BoutonRadioUserPerso.isSelected() == true && LanceUneFois == true && CheckBoxPassword.getState() == true) {
 				            	 	
 				            	 	String EtatBouton = BoutonRadioUserPerso.getText();
-				            	 	Runtime.getRuntime().exec(String.format("D:\\AlphaPilote\\Putty.exe " + TextZoneIp +" -ssh -l "+EtatBouton));
+				            	 	Runtime.getRuntime().exec(String.format(CheminPutty + " " + TextZoneIp +" -ssh -l "+EtatBouton));
 				            	 	ZoneTextLog.append("Lancement putty ssh vers " + ZoneIp.getText() + " avec le user " +EtatBouton+" et le mot de passe" );
 						            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 						            LanceUneFois = false;
@@ -464,7 +491,7 @@ public class UserInterface extends JFrame{
 			      
 			             
 			             if (LanceUneFois == true){
-			            	 	Runtime.getRuntime().exec(String.format("D:\\AlphaPilote\\Putty.exe -ssh " + TextZoneIp ));
+			            	 	Runtime.getRuntime().exec(String.format(CheminPutty + " "+ TextZoneIp + " -ssh" ));
 			            	 	ZoneTextLog.append("Lancement putty ssh vers " + ZoneIp.getText());
 			            	 	ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 			            	 	LanceUneFois = false;
@@ -474,14 +501,14 @@ public class UserInterface extends JFrame{
 			             CheckBoxPassword.setState(false);
 						
 					} catch (IOException e1) {
-						// TODO Auto-generated catch block
+						
 						GestionLog MaLog = new GestionLog();
 						MaLog.EcrireDansFichierLog("Erreur au lancement de putty : " +e1);
 						ZoneTextLog.append("Erreur au lancement : Consulter la log." );
 			            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 						e1.printStackTrace();
 					} catch (AWTException e1) {
-						// TODO Auto-generated catch block
+						
 						GestionLog MaLog = new GestionLog();
 						MaLog.EcrireDansFichierLog("Erreur au lancement de putty : " +e1);
 						ZoneTextLog.append("Erreur au lancement : Consulter la log." );
@@ -505,7 +532,7 @@ public class UserInterface extends JFrame{
 		            
 		             if (BoutonRadioRoot.isSelected() == true && LanceUneFois == true ) {
 		            	 
-		            	 	Runtime.getRuntime().exec(String.format("D:\\AlphaPilote\\Putty.exe " + TextZoneIp +" -telnet -l root"));
+		            	 	Runtime.getRuntime().exec(String.format(CheminPutty + " "+ TextZoneIp +" -telnet -l root"));
 		            	 	ZoneTextLog.append("Lancement putty telnet vers " + ZoneIp.getText() + " avec le user root" );
 				            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 				            LanceUneFois = false;
@@ -516,7 +543,7 @@ public class UserInterface extends JFrame{
 		             		             		             
 		             if (BoutonRadioSalle.isSelected() == true && LanceUneFois == true ) {
 		            	 
-		            	 	Runtime.getRuntime().exec(String.format("D:\\AlphaPilote\\Putty.exe " + TextZoneIp +" -telnet -l salle"));
+		            	 	Runtime.getRuntime().exec(String.format(CheminPutty + " " + TextZoneIp +" -telnet -l salle"));
 		            	 	ZoneTextLog.append("Lancement putty telnet vers " + ZoneIp.getText() + " avec le user salle" );
 				            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 				            LanceUneFois = false;
@@ -527,7 +554,7 @@ public class UserInterface extends JFrame{
 		             if (BoutonRadioUserPerso.isSelected() == true && LanceUneFois == true && CheckBoxPassword.getState() == false) {
 		            	 
 		            	 	String EtatBouton = BoutonRadioUserPerso.getText();
-		            	 	Runtime.getRuntime().exec(String.format("D:\\AlphaPilote\\Putty.exe " + TextZoneIp +" -telnet -l "+EtatBouton));
+		            	 	Runtime.getRuntime().exec(String.format(CheminPutty + " " + TextZoneIp +" -telnet -l "+EtatBouton));
 		            	 	ZoneTextLog.append("Lancement putty telnet vers " + ZoneIp.getText() + " avec le user " + BoutonRadioUserPerso.getText() );
 				            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 				            LanceUneFois = false;
@@ -538,7 +565,7 @@ public class UserInterface extends JFrame{
 		             if (BoutonRadioUserPerso.isSelected() == true && LanceUneFois == true && CheckBoxPassword.getState() == true) {
 		            	 	
 		            	 	String EtatBouton = BoutonRadioUserPerso.getText();
-		            	 	Runtime.getRuntime().exec(String.format("D:\\AlphaPilote\\Putty.exe " + TextZoneIp +" -telnet -l "+EtatBouton));
+		            	 	Runtime.getRuntime().exec(String.format(CheminPutty + " " + TextZoneIp +" -telnet -l "+EtatBouton));
 		            	 	ZoneTextLog.append("Lancement putty telnet vers " + ZoneIp.getText() + " avec le user " +EtatBouton+" et le mot de passe" );
 				            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 				            LanceUneFois = false;
@@ -570,7 +597,8 @@ public class UserInterface extends JFrame{
 		             
 		             if (LanceUneFois == true){
 		            	 	//Runtime.getRuntime().exec(String.format("cmd.exe /c start D:\\AlphaPilote\\Putty.exe -telnet " + TextZoneIp ));
-		            	 	Runtime.getRuntime().exec(String.format("D:\\AlphaPilote\\Putty.exe -telnet " + TextZoneIp ));
+		            	 	
+		            	 	Runtime.getRuntime().exec(String.format(CheminPutty+" " + TextZoneIp ));
 		            	 	ZoneTextLog.append("Lancement putty telnet vers " + ZoneIp.getText());
 		            	 	ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 		            	 	LanceUneFois = false;
@@ -580,14 +608,14 @@ public class UserInterface extends JFrame{
 		             	             
 		       		            
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
+					
 					GestionLog MaLog = new GestionLog();
 					MaLog.EcrireDansFichierLog("Erreur au lancement de putty : " +e);
 					ZoneTextLog.append("Erreur au lancement : Consulter la log." );
 		            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 					e.printStackTrace();
 				} catch (AWTException e) {
-					// TODO Auto-generated catch block
+					
 					GestionLog MaLog = new GestionLog();
 					MaLog.EcrireDansFichierLog("Erreur au lancement de putty : " +e);
 					ZoneTextLog.append("Erreur au lancement : Consulter la log." );
@@ -677,7 +705,7 @@ public class UserInterface extends JFrame{
 						e1.printStackTrace();
 			            
 			         } catch (InterruptedException e1) {
-						// TODO Auto-generated catch block
+						
 			        	 ZoneTextLog.append("PING KO - Echec de la commande");
 				         ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
 				         GestionLog MaLog = new GestionLog();

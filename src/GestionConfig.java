@@ -8,11 +8,12 @@ import java.util.Properties;
 
 public class GestionConfig {
 
+	String configPath="D:\\AlphaPilote\\config.txt";
 	
 	public int LireConfig() 
 	{
 		 int CodeRetour = 0;
-		 String configPath="D:\\AlphaPilote\\config.txt";
+		 //String configPath="D:\\AlphaPilote\\config.txt";
 		 Properties properties=new Properties();
 		 try 
 		 {
@@ -39,7 +40,7 @@ public class GestionConfig {
 		{
 	 String User = "";
 	 int CodeRetour = 5;
-	 String configPath="D:\\AlphaPilote\\config.txt";
+	 //String configPath="D:\\AlphaPilote\\config.txt";
 	 Properties properties=new Properties();
 	 try 
 	 {
@@ -65,7 +66,7 @@ public class GestionConfig {
 	{
 		String Password = "";
 		int CodeRetour = 5;
-		String configPath="D:\\AlphaPilote\\config.txt";
+		//String configPath="D:\\AlphaPilote\\config.txt";
 		Properties properties=new Properties();
 		try 
 		{
@@ -91,7 +92,7 @@ public class GestionConfig {
 		 
 		 String ValidationEcriture = "";
 		 int CodeRetour = 5;
-		 String configPath="D:\\AlphaPilote\\config.txt";
+		 //String configPath="D:\\AlphaPilote\\config.txt";
 		 Properties properties=new Properties();
 		 File FichierConfig = new File(configPath);
 		 FileInputStream stream;
@@ -105,11 +106,11 @@ public class GestionConfig {
 			 ValidationEcriture = "User pour " + Machine +" est correctement enregistré";
 			 CodeRetour = 0;
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 			ValidationEcriture = "Impossible de trouver le fichier : " + e;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 			ValidationEcriture = "Erreur lors de l'écriture du fichier : " + e;
 		}
@@ -125,7 +126,7 @@ public class GestionConfig {
 		 
 		 String ValidationEcriture = "";
 		 int CodeRetour = 5;
-		 String configPath="D:\\AlphaPilote\\config.txt";
+		 //String configPath="D:\\AlphaPilote\\config.txt";
 		 Properties properties=new Properties();
 		 File FichierConfig = new File(configPath);
 		 FileInputStream stream;
@@ -139,11 +140,11 @@ public class GestionConfig {
 			 ValidationEcriture = "Fichier correctement enregistré";
 			 CodeRetour = 0;
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 			ValidationEcriture = "Impossible de trouver le fichier : " + e;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 			ValidationEcriture = "Erreur lors de l'écriture du fichier : " + e;
 		}

@@ -2,27 +2,23 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 
 public class GestionLog {
+	String CheminLog="D:\\AlphaPilote\\log.txt";
 	                   
 	public void EcrireDansFichierLog(String ChaineDansFichier) 
 	{
 		
 	                FileOutputStream FichierSortie; // declare a file output object
 	                PrintStream FluxEcriture; // declare a print stream object
-	                String LogPath="D:\\AlphaPilote\\log.txt";
-	                
-	                
-	                
+	           
 	                SimpleDateFormat SimpleDate = new SimpleDateFormat("dd/MM/yyyy à HH:mm:ss");
 	                String LaDateHeure = SimpleDate.format(new java.util.Date());
-	                              
-	                          
+	                     
 	                try {
-	                	FichierSortie = new FileOutputStream(LogPath, true);
+	                	FichierSortie = new FileOutputStream(CheminLog, true);
 						FluxEcriture = new PrintStream(FichierSortie, true);
 	                	FluxEcriture.println ("["+LaDateHeure+"] " + ChaineDansFichier);
 	                	FluxEcriture.close();
-			
-						
+				
 					} catch (FileNotFoundException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

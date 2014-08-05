@@ -1,14 +1,9 @@
 import java.io.BufferedReader;
-import java.io.Console;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.nio.charset.Charset;
 import java.text.Normalizer;
-import java.util.Map;
-import java.util.Map.Entry;
 
 
 class AfficheurFlux implements Runnable {
@@ -37,41 +32,26 @@ class AfficheurFlux implements Runnable {
             	
             	PrintStream ps = null;
             	ps = new PrintStream(System.out, true, "ISO-8859-1");
-            	
-            	//String LigneSansAccent = removeAccent(ligne);
-                //System.out.println("Contenu de ligne " + LigneSansAccent);
+
             	ps.println(ligne);
-            	//boolean find = false;
+            	
                 if (ligne.lastIndexOf("attente") != -1) {
                 	find = false;
                 	RetourFluxAfficheur = "Ping KO - Pas de réponse de la destination" + "\n\r";
-
-                	//UserInterface.AlimenterAfficheur("test");
                 }
                 if (ligne.lastIndexOf("Impossible") != -1) {
                 	find = false;
                 	RetourFluxAfficheur = "Ping KO - Impossible de joindre l'hôte" + "\n\r";
-                }
-                
+                }                
                 if (ligne.lastIndexOf("trouver") != -1) {
                 	find = false;
                 	RetourFluxAfficheur = "Ping KO - Impossible de trouver l'hôte" + "\n\r";
-                }
-                
+                }       
                 if (ligne.lastIndexOf("octet") != -1) {
                 	find = true;
                 	String LigneFinale = ligne.substring(10);
-                	RetourFluxAfficheur = "Ping OK -" + LigneFinale + "\n\r";
-                	
-                	
-                	//ligne = Normalizer.normalize(ligne, Normalizer.Form.NFD);
-                	//ligne = ligne.replaceAll("\\p{M}", "");
-                	//RetourFluxAfficheur = "Ping OK - " + ligne + "\n\r";
+                	RetourFluxAfficheur = "Ping OK -" + LigneFinale + "\n\r";                
                 }
-                
-                //RetourFluxAfficheur = ligne;
-                //System.out.println("Contenu de RETOUR " + RetourFluxAfficheur);
-                
                 
             }
         } catch (IOException e) {
