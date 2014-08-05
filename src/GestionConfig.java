@@ -58,5 +58,30 @@ public class GestionConfig {
 	}
 
 	
+	public String DemandePassword(String Machine)
+	{
+		String Password = "";
+		int CodeRetour = 5;
+		String configPath="D:\\AlphaPilote\\config.txt";
+		Properties properties=new Properties();
+		try 
+		{
+			FileInputStream in =new FileInputStream(configPath);
+			properties.load(in);
+			in.close();
+			Password = properties.getProperty("password" + Machine);
+			CodeRetour = 0;
+
+		} 
+		catch (IOException e) {
+			//System.out.println("Impssible de trouver le fichier de configuration");
+			CodeRetour = 1;
+
+		}
+
+	return Password;
+	
+}
+	
 	
 }

@@ -6,7 +6,6 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.KeyEvent;
 
-
 class SmartRobot extends Robot
 {
 
@@ -33,7 +32,7 @@ keyRelease(KeyEvent.VK_ENTER);
 
 
 
-	private void writeToClipboard(String s)
+	public void writeToClipboard(String s)
 		{
 		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 		Transferable transferable = new StringSelection(s);
@@ -46,4 +45,6 @@ keyRelease(KeyEvent.VK_ENTER);
 		writeToClipboard(text);
 		pasteClipboard();
 		}
+	
+	
 }
