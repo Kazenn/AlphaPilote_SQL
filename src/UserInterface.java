@@ -305,14 +305,16 @@ public class UserInterface extends JFrame{
 				String TextZoneIp = ZoneIp.getText();
 				
 				try {
-					Runtime.getRuntime().exec(String.format("cmd.exe /c start D:\\AlphaPilote\\Putty.exe -telnet " + TextZoneIp ));
 					
-		            SmartRobot SuperRobot = new SmartRobot();
-		            
 		            Boolean Check = CheckboxRoot.isSelected();
 		            
 		             if (Check == true) {
-		            	    
+		            	 
+		            	 	Runtime.getRuntime().exec(String.format("cmd.exe /c start D:\\AlphaPilote\\Putty.exe " + TextZoneIp +" -telnet -l root"));
+		            	 	ZoneTextLog.append("Lancement putty telnet pour " + ZoneIp.getText() + " avec le user root" );
+				            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
+		            	    /*
+		            	    SmartRobot SuperRobot = new SmartRobot();
 				            SuperRobot.delay(1000);
 				            SuperRobot.keyPress(KeyEvent.VK_R);
 				            SuperRobot.delay(100);
@@ -325,18 +327,16 @@ public class UserInterface extends JFrame{
 				            SuperRobot.keyPress(KeyEvent.VK_ENTER); 
 				            ZoneTextLog.append("Lancement putty telnet pour " + ZoneIp.getText() + " avec le user root" );
 				            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
-				             
+				            */ 
 		             }
 		             else{
+		            	 Runtime.getRuntime().exec(String.format("cmd.exe /c start D:\\AlphaPilote\\Putty.exe -telnet " + TextZoneIp ));
 		            	 ZoneTextLog.append("Lancement putty telnet pour " + ZoneIp.getText());
 				         ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 		             }
 		             		             
 		       		            
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (AWTException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
