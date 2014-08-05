@@ -71,46 +71,14 @@ public class UserInterface extends JFrame{
 		MenuQuitter.setBackground(Color.RED);
 		MenuFichier.add(MenuQuitter);
 		
-		JMenu MenuSeparateur = new JMenu("         ");
-		MenuSeparateur.setForeground(Color.BLACK);
-		MenuSeparateur.setEnabled(false);
-		BarreMenuPrincipale.add(MenuSeparateur);
+		JSeparator SeparateurFichierFavoris = new JSeparator();
+		SeparateurFichierFavoris.setPreferredSize(new Dimension(0, 10));
+		SeparateurFichierFavoris.setMaximumSize(new Dimension(5, 100));
+		SeparateurFichierFavoris.setOrientation(SwingConstants.VERTICAL);
+		BarreMenuPrincipale.add(SeparateurFichierFavoris);
 		
 		JMenu mnFavorisPilotage = new JMenu("Favoris Pilotage");
 		BarreMenuPrincipale.add(mnFavorisPilotage);
-		
-		
-		
-		JMenu MenuConnexionMvs = new JMenu("Connexion MVS");
-		BarreMenuPrincipale.add(MenuConnexionMvs);
-		
-		JMenuItem MenuGmvs = new JMenuItem("TPX Gmvs");
-		
-		MenuGmvs.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/webkit/prism/resources/mediaVolumeThumb.png")));
-		MenuConnexionMvs.add(MenuGmvs);
-		getContentPane().setLayout(null);
-		
-		JPanel PaneZoneConnexion = new JPanel();
-		PaneZoneConnexion.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Connexion", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(255, 99, 71)));
-		PaneZoneConnexion.setBounds(6, 2, 308, 224);
-		getContentPane().add(PaneZoneConnexion);
-		PaneZoneConnexion.setLayout(null);
-		
-		ZoneIp = new JTextField();
-		
-		ZoneIp.setBounds(6, 17, 147, 20);
-		PaneZoneConnexion.add(ZoneIp);
-		ZoneIp.setText("192.168.0.253");
-		ZoneIp.setColumns(10);
-		
-		
-		JButton BoutonValideIp = new JButton("Ping");
-		BoutonValideIp.setBounds(226, 16, 72, 23);
-		PaneZoneConnexion.add(BoutonValideIp);
-		
-		JButton BoutonValideTelnet = new JButton("Telnet");
-		BoutonValideTelnet.setBounds(216, 50, 82, 23);
-		PaneZoneConnexion.add(BoutonValideTelnet);
 		
 		JScrollPane ScrollZoneTextLog = new JScrollPane();
 		ScrollZoneTextLog.setViewportBorder(new TitledBorder(null, "Log", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(255, 69, 0)));
@@ -125,12 +93,28 @@ public class UserInterface extends JFrame{
 		ZoneTextLog.setBackground(Color.LIGHT_GRAY);
 		ZoneTextLog.setEditable(false);
 		
+		
+		
+		JMenu MenuConnexionMvs = new JMenu("Connexion");
+		BarreMenuPrincipale.add(MenuConnexionMvs);
+		
+		JMenu SousMenuConnexionMvs = new JMenu("MVS");
+		SousMenuConnexionMvs.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/webkit/prism/resources/mediaPlayDisabled.png")));
+		MenuConnexionMvs.add(SousMenuConnexionMvs);
+		
+		JMenuItem MenuGmvs = new JMenuItem("TPX Gmvs");
+		SousMenuConnexionMvs.add(MenuGmvs);
+		
+		MenuGmvs.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/webkit/prism/resources/mediaVolumeThumb.png")));
+		
 		MenuGmvs.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
+				GestionLog MaLog = new GestionLog();
 				
 								
 				try {
+					
 					
 					String exeloc = "C:\\Program Files (x86)\\Quick3270 Secure\\Quick3270.exe";
 					String directory = "D:\\AlphaPilote\\GMVS.ecf";
@@ -155,17 +139,51 @@ public class UserInterface extends JFrame{
 					
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
-					ZoneTextLog.append("Erreur au lancement");
+					
+					MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour GMVS : " +e1);
+					ZoneTextLog.append("Erreur au lancement : Consulter la log." );
 		            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 					e1.printStackTrace();
-					System.out.println("Second:" + e1);
+					
 				} catch (AWTException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour GMVS : " +e);
+					ZoneTextLog.append("Erreur au lancement : Consulter la log." );
+		            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 				}
 				
 			}
 		});
+		getContentPane().setLayout(null);
+		
+		JPanel PaneZoneConnexion = new JPanel();
+		PaneZoneConnexion.setSize(new Dimension(10, 10));
+		PaneZoneConnexion.setOpaque(false);
+		PaneZoneConnexion.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Connexion", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(255, 99, 71)));
+		PaneZoneConnexion.setBounds(6, 2, 308, 224);
+		getContentPane().add(PaneZoneConnexion);
+		PaneZoneConnexion.setLayout(null);
+		
+		ZoneIp = new JTextField();
+		
+		ZoneIp.setBounds(6, 17, 147, 20);
+		PaneZoneConnexion.add(ZoneIp);
+		ZoneIp.setText("192.168.0.253");
+		ZoneIp.setColumns(10);
+		
+		
+		JButton BoutonValideIp = new JButton("Ping");
+		BoutonValideIp.setBounds(226, 16, 72, 23);
+		PaneZoneConnexion.add(BoutonValideIp);
+		
+		JButton BoutonValideTelnet = new JButton("Telnet");
+		BoutonValideTelnet.setBounds(216, 50, 82, 23);
+		PaneZoneConnexion.add(BoutonValideTelnet);
+		
+		
+		
+		
 	
 		JButton BoutonValideSsh = new JButton("SSH");
 		BoutonValideSsh.setBounds(216, 84, 82, 23);
@@ -185,6 +203,10 @@ public class UserInterface extends JFrame{
 		            
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
+					GestionLog MaLog = new GestionLog();
+					MaLog.EcrireDansFichierLog("Erreur au lancement d'ODIP : " +e);
+					ZoneTextLog.append("Erreur au lancement : Consulter la log." );
+		            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 					e.printStackTrace();
 				}
 				
@@ -212,6 +234,38 @@ public class UserInterface extends JFrame{
 		MenuModifierFichierConfig.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/scene/web/skin/Copy_16x16_JFX.png")));
 		MenuConfiguration.add(MenuModifierFichierConfig);
 		
+		JMenu MenuAPropos = new JMenu("A propos d'AlphaPilote");
+		BarreMenuPrincipale.add(MenuAPropos);
+		
+		JMenuItem MenuLogErreurs = new JMenuItem("Log d'erreurs");
+		MenuLogErreurs.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				
+				ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/C", "start D:\\AlphaPilote\\log.txt");
+	            //pb.directory(new File(CHEMIN));
+								//ProcessBuilder builder = new ProcessBuilder(new String[] { exeloc, directory });
+				try {
+					Process p = builder.start();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					GestionLog MaLog = new GestionLog();
+					MaLog.EcrireDansFichierLog("Erreur au lancement de la log : " +e);
+					ZoneTextLog.append("Erreur au lancement : Consulter la log." );
+		            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
+					e.printStackTrace();
+				}
+				
+			}
+		});
+		MenuAPropos.add(MenuLogErreurs);
+		
+		JSeparator SeparateurApropos = new JSeparator();
+		MenuAPropos.add(SeparateurApropos);
+		
+		JMenuItem MenuInterrogation = new JMenuItem("?");
+		MenuAPropos.add(MenuInterrogation);
+		
 		
 		JButton BoutonValideMstsc = new JButton("MSTSC");
 		BoutonValideMstsc.addMouseListener(new MouseAdapter() {
@@ -226,6 +280,10 @@ public class UserInterface extends JFrame{
 		            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
+					GestionLog MaLog = new GestionLog();
+					MaLog.EcrireDansFichierLog("Erreur au lancement de la log : " +e1);
+					ZoneTextLog.append("Erreur au lancement : Consulter la log." );
+		            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 					e1.printStackTrace();
 				}
 				
@@ -417,14 +475,18 @@ public class UserInterface extends JFrame{
 						
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
+						GestionLog MaLog = new GestionLog();
+						MaLog.EcrireDansFichierLog("Erreur au lancement de putty : " +e1);
+						ZoneTextLog.append("Erreur au lancement : Consulter la log." );
+			            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 						e1.printStackTrace();
-						ZoneTextLog.append("Erreur, impossible de trouver putty.exe dans D:\\AlphaPilote");
-	            	 	ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 					} catch (AWTException e1) {
 						// TODO Auto-generated catch block
+						GestionLog MaLog = new GestionLog();
+						MaLog.EcrireDansFichierLog("Erreur au lancement de putty : " +e1);
+						ZoneTextLog.append("Erreur au lancement : Consulter la log." );
+			            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 						e1.printStackTrace();
-						ZoneTextLog.append("Erreur du robot pour taper le mot de passe");
-	            	 	ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 					}
 			            
 				
@@ -519,14 +581,18 @@ public class UserInterface extends JFrame{
 		       		            
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
+					GestionLog MaLog = new GestionLog();
+					MaLog.EcrireDansFichierLog("Erreur au lancement de putty : " +e);
+					ZoneTextLog.append("Erreur au lancement : Consulter la log." );
+		            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 					e.printStackTrace();
-					ZoneTextLog.append("Erreur, impossible de trouver putty.exe dans D:\\AlphaPilote");
-            	 	ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 				} catch (AWTException e) {
 					// TODO Auto-generated catch block
+					GestionLog MaLog = new GestionLog();
+					MaLog.EcrireDansFichierLog("Erreur au lancement de putty : " +e);
+					ZoneTextLog.append("Erreur au lancement : Consulter la log." );
+		            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 					e.printStackTrace();
-					ZoneTextLog.append("Erreur du robot pour taper le mot de passe");
-            	 	ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 				}
 				
 				
@@ -605,12 +671,18 @@ public class UserInterface extends JFrame{
 			            e1.printStackTrace();
 			            ZoneTextLog.append("PING KO - Echec de la commande");
 			            ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+			            GestionLog MaLog = new GestionLog();
+						MaLog.EcrireDansFichierLog("Erreur au lancement du ping : " +e);
+						
+						e1.printStackTrace();
 			            
 			         } catch (InterruptedException e1) {
 						// TODO Auto-generated catch block
 			        	 ZoneTextLog.append("PING KO - Echec de la commande");
 				         ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
-						e1.printStackTrace();
+				         GestionLog MaLog = new GestionLog();
+						 MaLog.EcrireDansFichierLog("Erreur au lancement du ping : " +e1);
+						 e1.printStackTrace();
 					}
 			    }				
 		

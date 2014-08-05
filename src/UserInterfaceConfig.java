@@ -152,6 +152,8 @@ public class UserInterfaceConfig extends JFrame{
 		ProgressBarValideConfig.setForeground(new Color(34, 139, 34));
 		ProgressBarValideConfig.setBounds(10, 305, 210, 24);
 		getContentPane().add(ProgressBarValideConfig);
+		
+		ProgressBarValideConfig.setValue(0);
 		BoutonValiderConfig.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
