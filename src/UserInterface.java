@@ -35,11 +35,13 @@ import java.util.Map.Entry;
 
 
 
+
 import com.jgoodies.forms.factories.FormFactory;
 
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.AWTEvent;
 import java.awt.AWTException;
 import java.awt.Component;
 import java.awt.Desktop;
@@ -47,6 +49,8 @@ import java.awt.Dimension;
 import java.awt.Robot;
 
 import javax.swing.border.TitledBorder;
+
+import java.awt.event.KeyAdapter;
 
 
 public class UserInterface extends JFrame{
@@ -100,14 +104,15 @@ public class UserInterface extends JFrame{
 		
 		JPanel PaneZoneConnexion = new JPanel();
 		PaneZoneConnexion.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Connexion", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(255, 99, 71)));
-		PaneZoneConnexion.setBounds(6, 2, 278, 157);
+		PaneZoneConnexion.setBounds(6, 2, 278, 169);
 		getContentPane().add(PaneZoneConnexion);
 		PaneZoneConnexion.setLayout(null);
 		
 		ZoneIp = new JTextField();
+		
 		ZoneIp.setBounds(6, 17, 164, 20);
 		PaneZoneConnexion.add(ZoneIp);
-		ZoneIp.setText("192.168.0.1");
+		ZoneIp.setText("192.168.0.253");
 		ZoneIp.setColumns(10);
 		
 		
@@ -224,15 +229,43 @@ public class UserInterface extends JFrame{
 		BoutonValideMstsc.setBounds(190, 118, 82, 23);
 		PaneZoneConnexion.add(BoutonValideMstsc);
 		
-		JCheckBox CheckboxRoot = new JCheckBox("root");
-		CheckboxRoot.setBounds(6, 44, 54, 23);
-		PaneZoneConnexion.add(CheckboxRoot);
-		
 		JLabel ResultatPing = new JLabel("");
 		ResultatPing.setFont(new Font("Tahoma", Font.BOLD, 15));
 		ResultatPing.setForeground(Color.GRAY);
-		ResultatPing.setBounds(5, 126, 82, 23);
+		ResultatPing.setBounds(98, 44, 82, 23);
 		PaneZoneConnexion.add(ResultatPing);
+		
+		JPanel ZoneConnexionAutoLogin = new JPanel();
+		ZoneConnexionAutoLogin.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Auto login", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 102, 204)));
+		ZoneConnexionAutoLogin.setBounds(6, 44, 82, 97);
+		PaneZoneConnexion.add(ZoneConnexionAutoLogin);
+		ZoneConnexionAutoLogin.setLayout(null);
+		
+		
+		
+		JRadioButton BoutonRadioRoot = new JRadioButton("root");
+		BoutonRadioRoot.setBounds(6, 16, 70, 23);
+		ZoneConnexionAutoLogin.add(BoutonRadioRoot);
+		
+		
+		JRadioButton BoutonRadioSalle = new JRadioButton("salle");
+		BoutonRadioSalle.setBounds(6, 42, 70, 27);
+		ZoneConnexionAutoLogin.add(BoutonRadioSalle);
+		
+		
+		JRadioButton BoutonRadioUserPerso = new JRadioButton("j0*****");
+		BoutonRadioUserPerso.setBounds(6, 72, 70, 18);
+		ZoneConnexionAutoLogin.add(BoutonRadioUserPerso);
+		
+		
+		//Ajout des bouton dans le ButtonGroup
+				ButtonGroup MesBoutonsLogin = new ButtonGroup();
+				MesBoutonsLogin.add(BoutonRadioRoot);
+				MesBoutonsLogin.add(BoutonRadioSalle);
+				MesBoutonsLogin.add(BoutonRadioUserPerso);
+		
+		
+		
 		
 		JProgressBar MaBarreProgression = new JProgressBar();
 		MaBarreProgression.setBounds(10, 237, 164, 20);
@@ -275,7 +308,7 @@ public class UserInterface extends JFrame{
 				
 			}
 		});
-		BoutonChargerConfig.setBounds(6, 16, 110, 23);
+		BoutonChargerConfig.setBounds(6, 16, 126, 23);
 		ZoneConfig.add(BoutonChargerConfig);
 		BoutonValideSsh.addMouseListener(new MouseAdapter() {
 			@Override
@@ -286,12 +319,45 @@ public class UserInterface extends JFrame{
 					String TextZoneIp = ZoneIp.getText();
 					
 					try {
-						Runtime.getRuntime().exec(String.format("cmd.exe /c start D:\\AlphaPilote\\Putty.exe -ssh " + TextZoneIp ));
-						ZoneTextLog.append("Lancement putty ssh pour " + ZoneIp.getText()  );
-			            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
+						//Runtime.getRuntime().exec(String.format("cmd.exe /c start D:\\AlphaPilote\\Putty.exe -ssh " + TextZoneIp ));
+						//ZoneTextLog.append("Lancement putty ssh pour " + ZoneIp.getText()  );
+			            //ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
+						
+						Boolean LanceUneFois = true;
+			            
+			             if (BoutonRadioRoot.isSelected() == true && LanceUneFois == true ) {
+			            	 
+			            	 	Runtime.getRuntime().exec(String.format("cmd.exe /c start D:\\AlphaPilote\\Putty.exe " + TextZoneIp +" -ssh -l root"));
+			            	 	ZoneTextLog.append("Lancement putty ssh vers " + ZoneIp.getText() + " avec le user root" );
+					            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
+					            LanceUneFois = false;
+					            MesBoutonsLogin.clearSelection();
+					       
+			             }
+			             		             		             
+			             if (BoutonRadioSalle.isSelected() == true && LanceUneFois == true ) {
+			            	 
+			            	 	Runtime.getRuntime().exec(String.format("cmd.exe /c start D:\\AlphaPilote\\Putty.exe " + TextZoneIp +" -ssh -l salle"));
+			            	 	ZoneTextLog.append("Lancement putty ssh vers " + ZoneIp.getText() + " avec le user salle" );
+					            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
+					            LanceUneFois = false;
+					            MesBoutonsLogin.clearSelection();
+			      
+			             }
+			             if (LanceUneFois == true){
+			            	 	Runtime.getRuntime().exec(String.format("cmd.exe /c start D:\\AlphaPilote\\Putty.exe -ssh " + TextZoneIp ));
+			            	 	ZoneTextLog.append("Lancement putty ssh vers " + ZoneIp.getText());
+			            	 	ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
+			            	 	LanceUneFois = false;
+			            	 	MesBoutonsLogin.clearSelection();
+					         
+			             }
+						
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
+						ZoneTextLog.append("Erreur, impossible de trouver putty.exe dans D:\\AlphaPilote");
+	            	 	ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 					}
 			            
 				
@@ -306,39 +372,43 @@ public class UserInterface extends JFrame{
 				
 				try {
 					
-		            Boolean Check = CheckboxRoot.isSelected();
+		            Boolean LanceUneFois = true;
 		            
-		             if (Check == true) {
+		             if (BoutonRadioRoot.isSelected() == true && LanceUneFois == true ) {
 		            	 
 		            	 	Runtime.getRuntime().exec(String.format("cmd.exe /c start D:\\AlphaPilote\\Putty.exe " + TextZoneIp +" -telnet -l root"));
-		            	 	ZoneTextLog.append("Lancement putty telnet pour " + ZoneIp.getText() + " avec le user root" );
+		            	 	ZoneTextLog.append("Lancement putty telnet vers " + ZoneIp.getText() + " avec le user root" );
 				            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
-		            	    /*
-		            	    SmartRobot SuperRobot = new SmartRobot();
-				            SuperRobot.delay(1000);
-				            SuperRobot.keyPress(KeyEvent.VK_R);
-				            SuperRobot.delay(100);
-				            SuperRobot.keyPress(KeyEvent.VK_O);
-				            SuperRobot.delay(100);
-				            SuperRobot.keyPress(KeyEvent.VK_O);
-				            SuperRobot.delay(100);
-				            SuperRobot.keyPress(KeyEvent.VK_T);
-				            SuperRobot.delay(100);
-				            SuperRobot.keyPress(KeyEvent.VK_ENTER); 
-				            ZoneTextLog.append("Lancement putty telnet pour " + ZoneIp.getText() + " avec le user root" );
+				            LanceUneFois = false;
+				            MesBoutonsLogin.clearSelection();
+				            
+		            	     
+		             }
+		             		             		             
+		             if (BoutonRadioSalle.isSelected() == true && LanceUneFois == true ) {
+		            	 
+		            	 	Runtime.getRuntime().exec(String.format("cmd.exe /c start D:\\AlphaPilote\\Putty.exe " + TextZoneIp +" -telnet -l salle"));
+		            	 	ZoneTextLog.append("Lancement putty telnet vers " + ZoneIp.getText() + " avec le user salle" );
 				            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
-				            */ 
+				            LanceUneFois = false;
+				            MesBoutonsLogin.clearSelection();
+		            	     
 		             }
-		             else{
-		            	 Runtime.getRuntime().exec(String.format("cmd.exe /c start D:\\AlphaPilote\\Putty.exe -telnet " + TextZoneIp ));
-		            	 ZoneTextLog.append("Lancement putty telnet pour " + ZoneIp.getText());
-				         ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
+		             if (LanceUneFois == true){
+		            	 	Runtime.getRuntime().exec(String.format("cmd.exe /c start D:\\AlphaPilote\\Putty.exe -telnet " + TextZoneIp ));
+		            	 	ZoneTextLog.append("Lancement putty telnet vers " + ZoneIp.getText());
+		            	 	ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
+		            	 	LanceUneFois = false;
+		            	 	MesBoutonsLogin.clearSelection();
 		             }
-		             		             
+		             // Lancement avec User perso, à faire quand la config remontera le user UNIX
+		             	             
 		       		            
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					ZoneTextLog.append("Erreur, impossible de trouver putty.exe dans D:\\AlphaPilote");
+            	 	ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 				}
 				
 				
@@ -383,9 +453,7 @@ public class UserInterface extends JFrame{
 			            
 			            ZoneTextLog.append("Ping vers " + ZoneIp.getText() + " en cours ...");
 			            ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
-			            
-			            
-			            
+			         
 			            //MaBarreProgression.setValue(0);
 			            p.waitFor();
 			            
@@ -426,6 +494,19 @@ public class UserInterface extends JFrame{
 					}
 			    }				
 		
+		});
+		
+		ZoneIp.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				AWTEvent mouseReleased;
+				
+				BoutonValideIp.getMouseListeners();
+				
+				//ZoneTextLog.append(BoutonValideIp.getMouseListeners());
+				//BoutonValideIp.dispatchEvent();
+				//mouseReleased(MouseEvent e) {
+			}
 		});
 		
 		
