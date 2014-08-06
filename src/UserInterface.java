@@ -459,8 +459,7 @@ public class UserInterface extends JFrame{
 				}
 				MaComboBox.removeAllItems();
 				MaComboBox.setModel(new DefaultComboBoxModel(ListeMachinePourComboBox));
-				//MaComboBox.removeAllItems();
-				//MaComboBox.addItem("test111111");
+
 				
 			}
 		});

@@ -48,11 +48,22 @@ class AfficheurFlux implements Runnable {
                 	RetourFluxAfficheur = "Ping KO - Impossible de trouver l'hôte" + "\n\r";
                 
                 } 
-                if (ligne.lastIndexOf("Utilisation") != -1) {
+                if (ligne.lastIndexOf("count") != -1) {
                 	find = false;
                 	RetourFluxAfficheur = "Ping KO - Commande incorrecte" + "\n\r";
             
                 }
+                if (ligne.lastIndexOf("incorrecte") != -1) {
+                	find = false;
+                	RetourFluxAfficheur = "Ping KO - Commande incorrecte" + "\n\r";
+            
+                }
+                if (ligne.lastIndexOf("IPv6") != -1) {
+                	find = false;
+                	RetourFluxAfficheur = "Ping KO - Commande incorrecte" + "\n\r";
+            
+                }
+                
                 if (ligne.lastIndexOf("octet") != -1) {
                 	find = true;
                 	String LigneFinale = ligne.substring(10);
