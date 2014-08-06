@@ -1,24 +1,30 @@
-import java.awt.AWTEvent;
 import java.awt.AWTException;
 import java.awt.Checkbox;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.List;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
-import java.awt.event.KeyAdapter;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -34,20 +40,23 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
-import java.awt.Toolkit;
 
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+
+import javax.swing.DefaultComboBoxModel;
 
 public class UserInterface extends JFrame{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JTextField ZoneIp;
+	private JComboBox MaComboBox;
+	private String MachineDansMaComboBox;
+	
 	String CheminQuick3270 = "C:\\Program Files (x86)\\Quick3270 Secure\\Quick3270.exe";
 	String CheminQuick3270ProfileGmvs = "D:\\AlphaPilote\\GMVS.ecf";
 	String CheminPutty = "D:\\AlphaPilote\\Putty.exe";
-	//CheminQuick3270ProfileGmvs
-
+	
 	public UserInterface() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(UserInterface.class.getResource("/javax/swing/plaf/metal/icons/ocean/computer.gif")));
 		setTitle(" AlphaPilote v0.1    -     Etienne PFISTNER");
@@ -124,10 +133,7 @@ public class UserInterface extends JFrame{
 					
 					ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuGmvs.getText());
 		            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
-					
-		            
-		            
-		            
+				
 		            UserInterfaceConfig UserInterfacePourDemande = new UserInterfaceConfig();
 		            if ( UserInterfacePourDemande.DemandeEtatAutoLoginGmvs() == true)
 		            {
@@ -171,17 +177,9 @@ public class UserInterface extends JFrame{
 		PaneZoneConnexion.setSize(new Dimension(10, 10));
 		PaneZoneConnexion.setOpaque(false);
 		PaneZoneConnexion.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Connexion", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(255, 99, 71)));
-		PaneZoneConnexion.setBounds(6, 2, 308, 224);
+		PaneZoneConnexion.setBounds(10, 2, 308, 180);
 		getContentPane().add(PaneZoneConnexion);
 		PaneZoneConnexion.setLayout(null);
-		
-		ZoneIp = new JTextField();
-		
-		ZoneIp.setBounds(6, 17, 147, 20);
-		PaneZoneConnexion.add(ZoneIp);
-		ZoneIp.setText("192.168.0.253");
-		ZoneIp.setColumns(10);
-		
 		
 		JButton BoutonValideIp = new JButton("Ping");
 		BoutonValideIp.setBounds(226, 16, 72, 23);
@@ -190,14 +188,12 @@ public class UserInterface extends JFrame{
 		JButton BoutonValideTelnet = new JButton("Telnet");
 		BoutonValideTelnet.setBounds(216, 50, 82, 23);
 		PaneZoneConnexion.add(BoutonValideTelnet);
-		
-		
-		
-		
 	
 		JButton BoutonValideSsh = new JButton("SSH");
 		BoutonValideSsh.setBounds(216, 84, 82, 23);
 		PaneZoneConnexion.add(BoutonValideSsh);
+		
+		
 		
 		JMenuItem MenuOdip = new JMenuItem("ODIP");
 		MenuOdip.addMouseListener(new MouseAdapter() {
@@ -228,7 +224,7 @@ public class UserInterface extends JFrame{
 		JMenu MenuConfiguration = new JMenu("Configuration");
 		BarreMenuPrincipale.add(MenuConfiguration);
 		
-		JMenuItem MenuModifierFichierConfig = new JMenuItem("Modifier fichier de config");
+		JMenuItem MenuModifierFichierConfig = new JMenuItem("Editer configuration MVS/UNIX");
 		MenuModifierFichierConfig.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
@@ -242,6 +238,27 @@ public class UserInterface extends JFrame{
 		});
 		MenuModifierFichierConfig.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/scene/web/skin/Copy_16x16_JFX.png")));
 		MenuConfiguration.add(MenuModifierFichierConfig);
+		
+		JMenuItem MenuModifierFichierMachine = new JMenuItem("Editer machines");
+		MenuModifierFichierMachine.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				
+				UserInterfaceMachine PageMachine = new UserInterfaceMachine();
+				
+				PageMachine.setVisible(true);
+				PageMachine.setSize(640,480);;
+				//ZoneTextLog.append(MachineDansMaComboBox);
+				//ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
+				
+				
+				
+			}
+		});
+	            
+	            
+	            
+		MenuConfiguration.add(MenuModifierFichierMachine);
 		
 		JMenu MenuAPropos = new JMenu("A propos d'AlphaPilote");
 		BarreMenuPrincipale.add(MenuAPropos);
@@ -299,11 +316,21 @@ public class UserInterface extends JFrame{
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
 				
-				String TextZoneIp = ZoneIp.getText();
+				
+				GestionMachine MaMachine = new GestionMachine();
+				String Resultatdemande = MaMachine.DemandeIp(MachineDansMaComboBox);
+				String ResultatdemandeSave = Resultatdemande;
+				
+				//String TextZoneIp = ZoneIp.getText();
+				if (Resultatdemande == null)
+				{
+					Resultatdemande = MachineDansMaComboBox;
+					ResultatdemandeSave = MachineDansMaComboBox;
+				}
 				
 				try {
-					Runtime.getRuntime().exec(String.format("mstsc.exe /v:" + TextZoneIp ));
-					ZoneTextLog.append("Lancement mstsc pour " + ZoneIp.getText()  );
+					Runtime.getRuntime().exec(String.format("mstsc.exe /v:" + Resultatdemande ));
+					ZoneTextLog.append("Lancement mstsc pour " + Resultatdemande  );
 		            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 				} catch (IOException e1) {
 					
@@ -328,7 +355,7 @@ public class UserInterface extends JFrame{
 		
 		JPanel ZoneConnexionAutoLogin = new JPanel();
 		ZoneConnexionAutoLogin.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Auto login", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 102, 204)));
-		ZoneConnexionAutoLogin.setBounds(6, 44, 147, 114);
+		ZoneConnexionAutoLogin.setBounds(10, 54, 147, 114);
 		PaneZoneConnexion.add(ZoneConnexionAutoLogin);
 		ZoneConnexionAutoLogin.setLayout(null);
 		
@@ -359,8 +386,23 @@ public class UserInterface extends JFrame{
 				CheckBoxPassword.setBounds(83, 72, 54, 22);
 				ZoneConnexionAutoLogin.add(CheckBoxPassword);
 		
+		JComboBox MaComboBox = new JComboBox();
+		MaComboBox.setAutoscrolls(true);
+		MaComboBox.setMaximumRowCount(10);
+		//MaComboBox.setModel(new DefaultComboBoxModel(new String[] {" ", "vintage", "vtom", "femat", "192.168.0.1", "aazeaz", "sdfsd", "hfdghrt", "jrtyy", "xchn", "tyudjc", "bn"}));
+		MaComboBox.setBounds(10, 17, 128, 20);
+		MaComboBox.setEditable(true);
+		AutoCompleteDecorator.decorate(MaComboBox);
+		PaneZoneConnexion.add(MaComboBox);
 		
-		
+		MaComboBox.addItemListener(new ItemListener(){
+			  public void itemStateChanged(ItemEvent ie){
+			  MachineDansMaComboBox = (String)MaComboBox.getSelectedItem();
+			  //ZoneTextLog.append(MachineDansMaComboBox);
+			  //ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
+			  
+			  }
+			  });
 		
 		JProgressBar MaBarreProgression = new JProgressBar();
 		MaBarreProgression.setBounds(10, 237, 164, 20);
@@ -380,12 +422,13 @@ public class UserInterface extends JFrame{
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
 				
+				
+//LECTURE USER UNIX --------------------------------------------------------
 				int CodeRetour = 5;
-				String UserG = "";
 				String UserUnix = "";
 				GestionConfig MaConfig = new GestionConfig();
 				CodeRetour = MaConfig.LireConfig();
-				UserG = MaConfig.DemandeUser("G");
+				//UserG = MaConfig.DemandeUser("G");
 				UserUnix = MaConfig.DemandeUser("Unix");
 				if (CodeRetour == 0)
 				{
@@ -401,19 +444,50 @@ public class UserInterface extends JFrame{
 					ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 					
 				}
+//FIN LECTURE USER UNIX--------------------------------------------------------			
 				
+ 				GestionMachine MaMachine = new GestionMachine();
+				
+				//ArrayList<String> ReturnLigne = null;
+				String[] ListeMachinePourComboBox = {"NO MACHINE"};
+				try {
+					ListeMachinePourComboBox = MaMachine.LireFichierGlossary();
+					
+				} catch (IOException e) 
+				{
+					e.printStackTrace();
+				}
+				MaComboBox.removeAllItems();
+				MaComboBox.setModel(new DefaultComboBoxModel(ListeMachinePourComboBox));
+				//MaComboBox.removeAllItems();
+				//MaComboBox.addItem("test111111");
 				
 			}
 		});
 		BoutonChargerConfig.setBounds(6, 16, 126, 23);
 		ZoneConfig.add(BoutonChargerConfig);
+	
+		
+		
+		
 		BoutonValideSsh.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				
-									
+				GestionMachine MaMachine = new GestionMachine();
+				String Resultatdemande = MaMachine.DemandeIp(MachineDansMaComboBox);
+				String ResultatdemandeSave = Resultatdemande;
+				
+				//String TextZoneIp = ZoneIp.getText();
+				if (Resultatdemande == null)
+				{
+					Resultatdemande = MachineDansMaComboBox;
+					ResultatdemandeSave = MachineDansMaComboBox;
+				}					
+				
+				
 					//final String CHEMIN = "D:\\";
-					String TextZoneIp = ZoneIp.getText();
+					//String TextZoneIp = ZoneIp.getText();
 					
 					try {
 						//Runtime.getRuntime().exec(String.format("cmd.exe /c start D:\\AlphaPilote\\Putty.exe -ssh " + TextZoneIp ));
@@ -424,8 +498,8 @@ public class UserInterface extends JFrame{
 			            
 			             if (BoutonRadioRoot.isSelected() == true && LanceUneFois == true ) {
 			            	 
-			            	 	Runtime.getRuntime().exec(String.format(CheminPutty + " " + TextZoneIp +" -ssh -l root"));
-			            	 	ZoneTextLog.append("Lancement putty ssh vers " + ZoneIp.getText() + " avec le user root" );
+			            	 	Runtime.getRuntime().exec(String.format(CheminPutty + " " + Resultatdemande +" -ssh -l root"));
+			            	 	ZoneTextLog.append("Lancement putty ssh vers " + Resultatdemande + " avec le user root" );
 					            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 					            LanceUneFois = false;
 					            MesBoutonsLogin.clearSelection();
@@ -434,8 +508,8 @@ public class UserInterface extends JFrame{
 			             		             		             
 			             if (BoutonRadioSalle.isSelected() == true && LanceUneFois == true ) {
 			            	 
-			            	 	Runtime.getRuntime().exec(String.format(CheminPutty + " " + TextZoneIp +" -ssh -l salle"));
-			            	 	ZoneTextLog.append("Lancement putty ssh vers " + ZoneIp.getText() + " avec le user salle" );
+			            	 	Runtime.getRuntime().exec(String.format(CheminPutty + " " + Resultatdemande +" -ssh -l salle"));
+			            	 	ZoneTextLog.append("Lancement putty ssh vers " + Resultatdemande + " avec le user salle" );
 					            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 					            LanceUneFois = false;
 					            MesBoutonsLogin.clearSelection();
@@ -444,8 +518,8 @@ public class UserInterface extends JFrame{
 					     if (BoutonRadioUserPerso.isSelected() == true && LanceUneFois == true && CheckBoxPassword.getState() == false) {
 					            	 
 				            	 	String EtatBouton = BoutonRadioUserPerso.getText();
-				            	 	Runtime.getRuntime().exec(String.format(CheminPutty + " " + TextZoneIp +" -ssh -l "+EtatBouton));
-				            	 	ZoneTextLog.append("Lancement putty ssh vers " + ZoneIp.getText() + " avec le user " + BoutonRadioUserPerso.getText() );
+				            	 	Runtime.getRuntime().exec(String.format(CheminPutty + " " + Resultatdemande +" -ssh -l "+EtatBouton));
+				            	 	ZoneTextLog.append("Lancement putty ssh vers " + Resultatdemande + " avec le user " + BoutonRadioUserPerso.getText() );
 						            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 						            LanceUneFois = false;
 						            MesBoutonsLogin.clearSelection();
@@ -455,8 +529,8 @@ public class UserInterface extends JFrame{
 				          if (BoutonRadioUserPerso.isSelected() == true && LanceUneFois == true && CheckBoxPassword.getState() == true) {
 				            	 	
 				            	 	String EtatBouton = BoutonRadioUserPerso.getText();
-				            	 	Runtime.getRuntime().exec(String.format(CheminPutty + " " + TextZoneIp +" -ssh -l "+EtatBouton));
-				            	 	ZoneTextLog.append("Lancement putty ssh vers " + ZoneIp.getText() + " avec le user " +EtatBouton+" et le mot de passe" );
+				            	 	Runtime.getRuntime().exec(String.format(CheminPutty + " " + Resultatdemande +" -ssh -l "+EtatBouton));
+				            	 	ZoneTextLog.append("Lancement putty ssh vers " + Resultatdemande + " avec le user " +EtatBouton+" et le mot de passe" );
 						            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 						            LanceUneFois = false;
 						            MesBoutonsLogin.clearSelection();
@@ -491,8 +565,8 @@ public class UserInterface extends JFrame{
 			      
 			             
 			             if (LanceUneFois == true){
-			            	 	Runtime.getRuntime().exec(String.format(CheminPutty + " "+ TextZoneIp + " -ssh" ));
-			            	 	ZoneTextLog.append("Lancement putty ssh vers " + ZoneIp.getText());
+			            	 	Runtime.getRuntime().exec(String.format(CheminPutty + " "+ Resultatdemande + " -ssh" ));
+			            	 	ZoneTextLog.append("Lancement putty ssh vers " + Resultatdemande);
 			            	 	ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 			            	 	LanceUneFois = false;
 			            	 	MesBoutonsLogin.clearSelection();
@@ -524,7 +598,19 @@ public class UserInterface extends JFrame{
 			public void mouseReleased(MouseEvent arg0) {
 				
 				//final String CHEMIN = "D:\\";
-				String TextZoneIp = ZoneIp.getText();
+				
+				GestionMachine MaMachine = new GestionMachine();
+				String Resultatdemande = MaMachine.DemandeIp(MachineDansMaComboBox);
+				String ResultatdemandeSave = Resultatdemande;
+				//ResultatPing.setForeground(Color.GRAY);
+				//String TextZoneIp = ZoneIp.getText();
+				if (Resultatdemande == null)
+				{
+					Resultatdemande = MachineDansMaComboBox;
+					ResultatdemandeSave = MachineDansMaComboBox;
+				}
+				
+				//String TextZoneIp = ZoneIp.getText();
 				
 				try {
 					
@@ -532,8 +618,8 @@ public class UserInterface extends JFrame{
 		            
 		             if (BoutonRadioRoot.isSelected() == true && LanceUneFois == true ) {
 		            	 
-		            	 	Runtime.getRuntime().exec(String.format(CheminPutty + " "+ TextZoneIp +" -telnet -l root"));
-		            	 	ZoneTextLog.append("Lancement putty telnet vers " + ZoneIp.getText() + " avec le user root" );
+		            	 	Runtime.getRuntime().exec(String.format(CheminPutty + " "+ Resultatdemande +" -telnet -l root"));
+		            	 	ZoneTextLog.append("Lancement putty telnet vers " + Resultatdemande + " avec le user root" );
 				            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 				            LanceUneFois = false;
 				            MesBoutonsLogin.clearSelection();
@@ -543,8 +629,8 @@ public class UserInterface extends JFrame{
 		             		             		             
 		             if (BoutonRadioSalle.isSelected() == true && LanceUneFois == true ) {
 		            	 
-		            	 	Runtime.getRuntime().exec(String.format(CheminPutty + " " + TextZoneIp +" -telnet -l salle"));
-		            	 	ZoneTextLog.append("Lancement putty telnet vers " + ZoneIp.getText() + " avec le user salle" );
+		            	 	Runtime.getRuntime().exec(String.format(CheminPutty + " " + Resultatdemande +" -telnet -l salle"));
+		            	 	ZoneTextLog.append("Lancement putty telnet vers " + Resultatdemande + " avec le user salle" );
 				            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 				            LanceUneFois = false;
 				            MesBoutonsLogin.clearSelection();
@@ -554,8 +640,8 @@ public class UserInterface extends JFrame{
 		             if (BoutonRadioUserPerso.isSelected() == true && LanceUneFois == true && CheckBoxPassword.getState() == false) {
 		            	 
 		            	 	String EtatBouton = BoutonRadioUserPerso.getText();
-		            	 	Runtime.getRuntime().exec(String.format(CheminPutty + " " + TextZoneIp +" -telnet -l "+EtatBouton));
-		            	 	ZoneTextLog.append("Lancement putty telnet vers " + ZoneIp.getText() + " avec le user " + BoutonRadioUserPerso.getText() );
+		            	 	Runtime.getRuntime().exec(String.format(CheminPutty + " " + Resultatdemande +" -telnet -l "+EtatBouton));
+		            	 	ZoneTextLog.append("Lancement putty telnet vers " + Resultatdemande + " avec le user " + BoutonRadioUserPerso.getText() );
 				            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 				            LanceUneFois = false;
 				            MesBoutonsLogin.clearSelection();
@@ -565,8 +651,8 @@ public class UserInterface extends JFrame{
 		             if (BoutonRadioUserPerso.isSelected() == true && LanceUneFois == true && CheckBoxPassword.getState() == true) {
 		            	 	
 		            	 	String EtatBouton = BoutonRadioUserPerso.getText();
-		            	 	Runtime.getRuntime().exec(String.format(CheminPutty + " " + TextZoneIp +" -telnet -l "+EtatBouton));
-		            	 	ZoneTextLog.append("Lancement putty telnet vers " + ZoneIp.getText() + " avec le user " +EtatBouton+" et le mot de passe" );
+		            	 	Runtime.getRuntime().exec(String.format(CheminPutty + " " + Resultatdemande +" -telnet -l "+EtatBouton));
+		            	 	ZoneTextLog.append("Lancement putty telnet vers " + Resultatdemande + " avec le user " +EtatBouton+" et le mot de passe" );
 				            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 				            LanceUneFois = false;
 				            MesBoutonsLogin.clearSelection();
@@ -598,8 +684,8 @@ public class UserInterface extends JFrame{
 		             if (LanceUneFois == true){
 		            	 	//Runtime.getRuntime().exec(String.format("cmd.exe /c start D:\\AlphaPilote\\Putty.exe -telnet " + TextZoneIp ));
 		            	 	
-		            	 	Runtime.getRuntime().exec(String.format(CheminPutty+" " + TextZoneIp ));
-		            	 	ZoneTextLog.append("Lancement putty telnet vers " + ZoneIp.getText());
+		            	 	Runtime.getRuntime().exec(String.format(CheminPutty+" " + Resultatdemande ));
+		            	 	ZoneTextLog.append("Lancement putty telnet vers " + Resultatdemande);
 		            	 	ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 		            	 	LanceUneFois = false;
 		            	 	MesBoutonsLogin.clearSelection();
@@ -628,28 +714,41 @@ public class UserInterface extends JFrame{
 			}
 	
 		});
+		
+		
 		BoutonValideIp.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
-								
+		
+				GestionMachine MaMachine = new GestionMachine();
+				String Resultatdemande = MaMachine.DemandeIp(MachineDansMaComboBox);
+				String ResultatdemandeSave = Resultatdemande;
 				ResultatPing.setForeground(Color.GRAY);
-				String TextZoneIp = ZoneIp.getText();
+				//String TextZoneIp = ZoneIp.getText();
+				if (Resultatdemande == null)
+				{
+					Resultatdemande = MachineDansMaComboBox;
+					ResultatdemandeSave = MachineDansMaComboBox;
+				}
 				
-				TextZoneIp = TextZoneIp + "\"";
-				//System.out.println(TextZoneIp);	
+				Resultatdemande = Resultatdemande + "\"";
 				
-				StringBuffer StringFinal = new StringBuffer (TextZoneIp);  
+				
+				StringBuffer StringFinal = new StringBuffer (Resultatdemande);  
 				String guillemet = "\"ping ";  
 				StringFinal.insert (0, guillemet);  
-				TextZoneIp = StringFinal.toString();	
-				//System.out.println (TextZoneIp); 	
+				Resultatdemande = StringFinal.toString();	
+				ZoneTextLog.append("Ping vers " + ResultatdemandeSave + " en cours ...");
+	            ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+					
 				
 				final String CHEMIN = "D:\\";
 			    
 			        try {
 			        	//System.setOut(new PrintStream(System.out, true, "IBM850"));
+			        	
 			        	ResultatPing.setForeground(Color.GRAY);
-			            ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/C", TextZoneIp, " -n 1");
+			            ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/C", Resultatdemande, " -n 1");
 			            pb.directory(new File(CHEMIN));
 			            
 			            Map<String, String> env = pb.environment();
@@ -664,11 +763,7 @@ public class UserInterface extends JFrame{
 			            AfficheurFlux fluxErreur = new AfficheurFlux(p.getErrorStream());
 			            new Thread(fluxSortie).start();
 			            new Thread(fluxErreur).start();
-			            
-			            ZoneTextLog.append("Ping vers " + ZoneIp.getText() + " en cours ...");
-			            ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
-			         
-			            //MaBarreProgression.setValue(0);
+			           
 			            p.waitFor();
 			            
 			            Boolean resultping = fluxSortie.LecteurFind();
@@ -696,7 +791,7 @@ public class UserInterface extends JFrame{
 			            ZoneTextLog.append(fluxSortie.LecteurDeFlux());
 
 			        } catch (IOException e1) {
-			            e1.printStackTrace();
+			            
 			            ZoneTextLog.append("PING KO - Echec de la commande");
 			            ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
 			            GestionLog MaLog = new GestionLog();
@@ -713,30 +808,8 @@ public class UserInterface extends JFrame{
 						 e1.printStackTrace();
 					}
 			    }				
-		
 		});
-		
-		ZoneIp.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyTyped(KeyEvent e) {
-				AWTEvent mouseReleased;
-				
-				BoutonValideIp.getMouseListeners();
-				
-				//ZoneTextLog.append(BoutonValideIp.getMouseListeners());
-				//BoutonValideIp.dispatchEvent();
-				//mouseReleased(MouseEvent e) {
-			}
-		});
-		
-		
+
 	}
-		
-	public String getZoneIpText() {
-		return ZoneIp.getText();
-		
-	}
-	public void setZoneIpText(String text) {
-		ZoneIp.setText(text);
-	}
+
 }

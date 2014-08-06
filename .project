@@ -14,21 +14,4 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<filteredResources>
-		<filter>
-			<id>1407243696625</id>
-			<name>icon</name>
-			<type>5</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-*</arguments>
-			</matcher>
-		</filter>
-	</filteredResources>
-	<variableList>
-		<variable>
-			<name>ICON_LOC</name>
-			<value>file:/H:/JAVA/Workspace/AlphaPilote/icon</value>
-		</variable>
-	</variableList>
 </projectDescription>

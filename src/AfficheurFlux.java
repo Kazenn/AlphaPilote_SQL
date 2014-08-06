@@ -46,7 +46,13 @@ class AfficheurFlux implements Runnable {
                 if (ligne.lastIndexOf("trouver") != -1) {
                 	find = false;
                 	RetourFluxAfficheur = "Ping KO - Impossible de trouver l'hôte" + "\n\r";
-                }       
+                
+                } 
+                if (ligne.lastIndexOf("Utilisation") != -1) {
+                	find = false;
+                	RetourFluxAfficheur = "Ping KO - Commande incorrecte" + "\n\r";
+            
+                }
                 if (ligne.lastIndexOf("octet") != -1) {
                 	find = true;
                 	String LigneFinale = ligne.substring(10);
