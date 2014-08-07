@@ -53,9 +53,13 @@ public class UserInterface extends JFrame{
 	private JComboBox MaComboBox;
 	private String MachineDansMaComboBox;
 	
-	String CheminQuick3270 = "C:\\Program Files (x86)\\Quick3270 Secure\\Quick3270.exe";
-	String CheminQuick3270ProfileGmvs = "D:\\AlphaPilote\\GMVS.ecf";
+	String CheminQuick3270 = "D:\\AlphaPilote\\Quick3270\\Quick3270.exe";
 	String CheminPutty = "D:\\AlphaPilote\\Putty.exe";
+	
+	
+	String CheminQuick3270ProfileGmvs = "D:\\AlphaPilote\\GMVS.ecf";
+	String CheminQuick3270ProfileSyno = "D:\\AlphaPilote\\Quick3270\\Profiles\\Macro_syno_test.ecf";
+	
 	
 	public UserInterface() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(UserInterface.class.getResource("/javax/swing/plaf/metal/icons/ocean/computer.gif")));
@@ -116,6 +120,38 @@ public class UserInterface extends JFrame{
 		SousMenuConnexionMvs.add(MenuGmvs);
 		
 		MenuGmvs.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/webkit/prism/resources/mediaVolumeThumb.png")));
+		
+		JMenu SousMenuConnexionUnix = new JMenu("Unix");
+		MenuConnexionMvs.add(SousMenuConnexionUnix);
+		
+		JMenuItem MenuSyno = new JMenuItem("Syno");
+		MenuSyno.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				GestionLog MaLog = new GestionLog();
+				
+				
+				ProcessBuilder builder = new ProcessBuilder(new String[] { CheminQuick3270, CheminQuick3270ProfileSyno });
+				
+				try {
+					Process process = builder.start();
+					ZoneTextLog.append("Ouverture connexion telnet vers " + MenuSyno.getText());
+		            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
+					
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour GMVS : " +e);
+					ZoneTextLog.append("Erreur au lancement : Consulter la log." );
+		            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
+					
+				}
+				
+				
+				
+			}
+		});
+		SousMenuConnexionUnix.add(MenuSyno);
 		
 		MenuGmvs.addMouseListener(new MouseAdapter() {
 			@Override
@@ -412,12 +448,13 @@ public class UserInterface extends JFrame{
 		MaBarreProgression.setForeground(new Color(60, 179, 113));
 		
 		JPanel ZoneConfig = new JPanel();
-		ZoneConfig.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Configuration", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(255, 99, 71)));
+		ZoneConfig.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Raccourcis", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(255, 99, 71)));
 		ZoneConfig.setBounds(486, 2, 216, 146);
 		getContentPane().add(ZoneConfig);
 		ZoneConfig.setLayout(null);
 		
-		JButton BoutonChargerConfig = new JButton("Charger config");
+		JButton BoutonChargerConfig = new JButton("Recharger configuration");
+		BoutonChargerConfig.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/scene/web/skin/Redo_16x16_JFX.png")));
 		BoutonChargerConfig.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
@@ -428,8 +465,30 @@ public class UserInterface extends JFrame{
 				String UserUnix = "";
 				GestionConfig MaConfig = new GestionConfig();
 				CodeRetour = MaConfig.LireConfig();
-				//UserG = MaConfig.DemandeUser("G");
-				UserUnix = MaConfig.DemandeUser("Unix");
+				
+				MaConfig.DemandeUser("Unix");
+				MaConfig.DemandePassword("Unix");
+				
+				
+				MaConfig.DemandeUser("Gmvs");
+				MaConfig.DemandePassword("Gmvs");
+				
+				
+				MaConfig.DemandeUser("Sysa");
+				MaConfig.DemandePassword("Sysa");
+				
+				
+				MaConfig.DemandeUser("Kmvs");
+				MaConfig.DemandePassword("Kmvs");
+				
+				
+				MaConfig.DemandeUser("Zmvs");
+				MaConfig.DemandePassword("Zmvs");
+				
+				MaConfig.DemandeUser("Sysg");
+				MaConfig.DemandePassword("Sysg");
+				
+				
 				if (CodeRetour == 0)
 				{
 					ZoneTextLog.append("Chargement config OK");
@@ -456,14 +515,49 @@ public class UserInterface extends JFrame{
 				} catch (IOException e) 
 				{
 					e.printStackTrace();
+					GestionLog MaLog = new GestionLog();
+					MaLog.EcrireDansFichierLog("Erreur de l'alimentation de la zone saisie machine(ip) : " +e);
+					ZoneTextLog.append("Erreur de l'alimentation de la zone saisie machine(ip) : Consulter la log." );
+		            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
+					
 				}
 				MaComboBox.removeAllItems();
 				MaComboBox.setModel(new DefaultComboBoxModel(ListeMachinePourComboBox));
 
+// LECTURE USER PROFILE--------------------------------------------------------		
+				
+				
+				GestionProfile GP = new GestionProfile();
+				try {
+					GP.ModifierPasswordProfile("Gmvs",MaConfig.DemandePassword("Gmvs"));
+					GP.ModifierUserProfile("Gmvs", MaConfig.DemandeUser("Gmvs"));
+					
+					GP.ModifierPasswordProfile("Sysg",MaConfig.DemandePassword("Sysg"));
+					GP.ModifierUserProfile("Sysg", MaConfig.DemandeUser("Sysg"));
+					
+					GP.ModifierPasswordProfile("Zmvs",MaConfig.DemandePassword("Zmvs"));
+					GP.ModifierUserProfile("Zmvs", MaConfig.DemandeUser("Zmvs"));
+					
+					GP.ModifierPasswordProfile("Kmvs",MaConfig.DemandePassword("Kmvs"));
+					GP.ModifierUserProfile("Kmvs", MaConfig.DemandeUser("Kmvs"));
+					
+					GP.ModifierPasswordProfile("Sysa",MaConfig.DemandePassword("Sysa"));
+					GP.ModifierUserProfile("Sysa", MaConfig.DemandeUser("Sysa"));
+					
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					GestionLog MaLog = new GestionLog();
+					MaLog.EcrireDansFichierLog("Erreur lors du chargement des macros : " +e);
+					ZoneTextLog.append("Erreur lors du chargement des macros : Consulter la log." );
+		            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
+					
+				}
+				
 				
 			}
 		});
-		BoutonChargerConfig.setBounds(6, 16, 126, 23);
+		BoutonChargerConfig.setBounds(6, 16, 200, 23);
 		ZoneConfig.add(BoutonChargerConfig);
 	
 		
@@ -810,5 +904,4 @@ public class UserInterface extends JFrame{
 		});
 
 	}
-
 }

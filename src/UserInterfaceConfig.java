@@ -14,9 +14,11 @@ import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
+
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.SystemColor;
+import java.io.IOException;
 
 
 public class UserInterfaceConfig extends JFrame{
@@ -183,7 +185,7 @@ public class UserInterfaceConfig extends JFrame{
 		ZoneConfigXenos.add(CheckBoxAutoSysg);
 		
 		JLabel LabelConfigValide = new JLabel("");
-		LabelConfigValide.setBounds(0, 309, 145, 9);
+		LabelConfigValide.setBounds(0, 330, 145, 9);
 		LabelConfigValide.setForeground(new Color(60, 179, 113));
 		LabelConfigValide.setFont(new Font("Verdana", Font.PLAIN, 12));
 		getContentPane().add(LabelConfigValide);
@@ -193,7 +195,7 @@ public class UserInterfaceConfig extends JFrame{
 		
 		
 		JProgressBar ProgressBarValideConfig = new JProgressBar();
-		ProgressBarValideConfig.setBounds(0, 323, 175, 19);
+		ProgressBarValideConfig.setBounds(0, 350, 175, 19);
 		ProgressBarValideConfig.setStringPainted(true);
 		ProgressBarValideConfig.setForeground(new Color(34, 139, 34));
 		getContentPane().add(ProgressBarValideConfig);
@@ -201,7 +203,7 @@ public class UserInterfaceConfig extends JFrame{
 		ProgressBarValideConfig.setValue(0);
 		
 		JButton BoutonValiderConfig = new JButton("Valider la configuration");
-		BoutonValiderConfig.setBounds(0, 347, 175, 51);
+		BoutonValiderConfig.setBounds(0, 380, 175, 51);
 		BoutonValiderConfig.setMargin(new Insets(1, 1, 1, 1));
 		getContentPane().add(BoutonValiderConfig);
 		BoutonValiderConfig.setIcon(new ImageIcon(UserInterfaceConfig.class.getResource("/com/sun/javafx/scene/control/skin/caspian/images/capslock-icon.png")));
@@ -221,11 +223,14 @@ public class UserInterfaceConfig extends JFrame{
 				String PassKmvs = TextConfigKmvsPassword.getText();
 				String UserZmvs = TextConfigZmvsUser.getText();
 				String PassZmvs = TextConfigZmvsPassword.getText();
+				String UserSysg = TextConfigSysgUser.getText();
+				String PassSysg = TextConfigSysgPassword.getText();
 				
 				
 				LabelConfigValide.setForeground(Color.GRAY);
 				LabelConfigValide.setText("");
 				GestionConfig MaConfig = new GestionConfig();
+				
 				EcritureValideOuErreur = MaConfig.EcrireUser("user", "Unix" , UserUnix);
 				ProgressBarValideConfig.setValue(10);
 				EcritureValideOuErreur = MaConfig.EcrireUser("user", "Gmvs" , UserGmvs);
@@ -236,6 +241,8 @@ public class UserInterfaceConfig extends JFrame{
 				ProgressBarValideConfig.setValue(40);
 				EcritureValideOuErreur = MaConfig.EcrireUser("user", "Zmvs" , UserZmvs);
 				ProgressBarValideConfig.setValue(50);
+				EcritureValideOuErreur = MaConfig.EcrireUser("user", "Sysg" , UserSysg);
+				
 				
 				EcritureValideOuErreur = MaConfig.EcrirePassword("password", "Unix", PassUnix);
 				ProgressBarValideConfig.setValue(60);
@@ -243,22 +250,50 @@ public class UserInterfaceConfig extends JFrame{
 				ProgressBarValideConfig.setValue(70);
 				EcritureValideOuErreur = MaConfig.EcrirePassword("password", "Sysa", PassSysa);
 				ProgressBarValideConfig.setValue(80);
-				
 				EcritureValideOuErreur = MaConfig.EcrirePassword("password", "Kmvs", PassKmvs);
 				ProgressBarValideConfig.setValue(90);
 				EcritureValideOuErreur = MaConfig.EcrirePassword("password", "Zmvs", PassZmvs);
+				ProgressBarValideConfig.setValue(95);
+				EcritureValideOuErreur = MaConfig.EcrirePassword("password", "Sysg", PassSysg);
 				ProgressBarValideConfig.setValue(100);
+				
 				
 				System.out.println(EcritureValideOuErreur);
 				LabelConfigValide.setText("Config sauvegard\u00E9e!");
 				LabelConfigValide.setForeground(new Color(60, 179, 113));
 				
 				
+				
+				GestionProfile GP = new GestionProfile();
+				
+					try {
+						GP.ModifierPasswordProfile("Gmvs",MaConfig.DemandePassword("Gmvs"));
+						GP.ModifierUserProfile("Gmvs", MaConfig.DemandeUser("Gmvs"));
+						
+						GP.ModifierPasswordProfile("Sysg",MaConfig.DemandePassword("Sysg"));
+						GP.ModifierUserProfile("Sysg", MaConfig.DemandeUser("Sysg"));
+						
+						GP.ModifierPasswordProfile("Zmvs",MaConfig.DemandePassword("Zmvs"));
+						GP.ModifierUserProfile("Zmvs", MaConfig.DemandeUser("Zmvs"));
+						
+						GP.ModifierPasswordProfile("Kmvs",MaConfig.DemandePassword("Kmvs"));
+						GP.ModifierUserProfile("Kmvs", MaConfig.DemandeUser("Kmvs"));
+						
+						GP.ModifierPasswordProfile("Sysa",MaConfig.DemandePassword("Sysa"));
+						GP.ModifierUserProfile("Sysa", MaConfig.DemandeUser("Sysa"));
+					
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					
+				
+				
 			}
 		});
 		
 		BoutonRechargerConfig = new JButton("Recharger la configuration");
-		BoutonRechargerConfig.setBounds(180, 347, 153, 51);
+		BoutonRechargerConfig.setBounds(185, 380, 153, 51);
 		BoutonRechargerConfig.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {

@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Properties;
+import java.util.stream.Stream;
 
 
 public class GestionMachine {
@@ -78,11 +79,13 @@ public class GestionMachine {
 		BufferedReader input = new BufferedReader(new FileReader(configPath));
 		String[] ListeMachinePourComboBox;
 		String line = "vide class";
+		
 		try {
 			while (( line = input.readLine()) != null)
 			{
 				line = line.split("=")[0];
 			    strings.add(line);
+		  
 			}
 				//return line;
 		} catch (FileNotFoundException e) {
