@@ -155,5 +155,66 @@ public class GestionConfig {
 	
 	}
 	
+	public String DemandeAutoConnect(String Machine)
+	{
+		String ResultatDemandeAutoConnect = "";
+		
+		int CodeRetour = 5;
+		//String configPath="D:\\AlphaPilote\\config.txt";
+		Properties properties=new Properties();
+		try 
+		{
+			FileInputStream in =new FileInputStream(configPath);
+			properties.load(in);
+			in.close();
+			ResultatDemandeAutoConnect = properties.getProperty("autoconnect" + Machine);
+			CodeRetour = 0;
+
+		} 
+		catch (IOException e) {
+			//System.out.println("Impssible de trouver le fichier de configuration");
+			CodeRetour = 1;
+
+		}
+
+	return ResultatDemandeAutoConnect;
+	
+	}	
+	
+	
+	public String EcrireAutoConnect(String autoconnect , String Machine , String AutoConnectAEcrire)
+	{
+		 
+		 String ValidationEcriture = "";
+		 int CodeRetour = 5;
+		 //String configPath="D:\\AlphaPilote\\config.txt";
+		 Properties properties=new Properties();
+		 File FichierConfig = new File(configPath);
+		 FileInputStream stream;
+		try {
+			 
+			 stream = new FileInputStream(FichierConfig);
+			 properties.load(stream);
+			 properties.setProperty(autoconnect + Machine , AutoConnectAEcrire);
+			 FileOutputStream oStream = new FileOutputStream(FichierConfig) ;
+			 properties.store(oStream, "Fichier de configuration des users et password");
+			 ValidationEcriture = "Fichier correctement enregistré";
+			 CodeRetour = 0;
+		} catch (FileNotFoundException e) {
+
+			e.printStackTrace();
+			ValidationEcriture = "Impossible de trouver le fichier : " + e;
+		} catch (IOException e) {
+
+			e.printStackTrace();
+			ValidationEcriture = "Erreur lors de l'écriture du fichier : " + e;
+		}
+		 
+		 CodeRetour = 1;
+		 
+	return ValidationEcriture;
+	
+	}
+	
 	
 }

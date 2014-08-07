@@ -44,6 +44,7 @@ import javax.swing.border.TitledBorder;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 import javax.swing.DefaultComboBoxModel;
+import java.awt.Insets;
 
 public class UserInterface extends JFrame{
 	/**
@@ -57,8 +58,25 @@ public class UserInterface extends JFrame{
 	String CheminPutty = "D:\\AlphaPilote\\Putty.exe";
 	
 	
-	String CheminQuick3270ProfileGmvs = "D:\\AlphaPilote\\GMVS.ecf";
-	String CheminQuick3270ProfileSyno = "D:\\AlphaPilote\\Quick3270\\Profiles\\Macro_syno_test.ecf";
+	String CheminQuick3270ProfileGmvs = "D:\\AlphaPilote\\Quick3270\\Profiles\\GMVS.ecf";
+	String CheminQuick3270MacroGmvs = "D:\\AlphaPilote\\Quick3270\\Profiles\\GMVS.qmc";
+	String CheminQuick3270ProfileGmvs_no_auto_login = "D:\\AlphaPilote\\Quick3270\\Profiles\\GMVS_no_auto_login.ecf";
+	
+	String CheminQuick3270ProfileKmvs = "D:\\AlphaPilote\\Quick3270\\Profiles\\KMVS.ecf";
+	String CheminQuick3270MacroKmvs = "D:\\AlphaPilote\\Quick3270\\Profiles\\KMVS.qmc";
+	String CheminQuick3270ProfileKmvs_no_auto_login = "D:\\AlphaPilote\\Quick3270\\Profiles\\KMVS_no_auto_login.ecf";
+	
+	String CheminQuick3270ProfileZmvs = "D:\\AlphaPilote\\Quick3270\\Profiles\\ZMVS.ecf";
+	String CheminQuick3270MacroZmvs = "D:\\AlphaPilote\\Quick3270\\Profiles\\Zmvs.qmc";
+	String CheminQuick3270ProfileZmvs_no_auto_login = "D:\\AlphaPilote\\Quick3270\\Profiles\\ZMVS_no_auto_login.ecf";
+	
+	String CheminQuick3270ProfileSysa = "D:\\AlphaPilote\\Quick3270\\Profiles\\Sysa.ecf";
+	String CheminQuick3270MacroSysa = "D:\\AlphaPilote\\Quick3270\\Profiles\\Sysa.qmc";
+	String CheminQuick3270ProfileSysa_no_auto_login = "D:\\AlphaPilote\\Quick3270\\Profiles\\Sysa_no_auto_login.ecf";
+	
+	String CheminQuick3270ProfileSysg = "D:\\AlphaPilote\\Quick3270\\Profiles\\Sysg.ecf";
+	String CheminQuick3270MacroSysg = "D:\\AlphaPilote\\Quick3270\\Profiles\\Sysg.qmc";
+	String CheminQuick3270ProfileSysg_no_auto_login = "D:\\AlphaPilote\\Quick3270\\Profiles\\Sysg_no_auto_login.ecf";
 	
 	
 	public UserInterface() {
@@ -116,97 +134,235 @@ public class UserInterface extends JFrame{
 		SousMenuConnexionMvs.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/webkit/prism/resources/mediaPlayDisabled.png")));
 		MenuConnexionMvs.add(SousMenuConnexionMvs);
 		
+		JMenuItem MenuZmvs = new JMenuItem("Zmvs (CFF)");
+		MenuZmvs.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				
+				GestionLog MaLog = new GestionLog();
+				UserInterfaceConfig UserInterfaceConfigPourDemande = new UserInterfaceConfig();
+								
+				try {
+					
+					if ( UserInterfaceConfigPourDemande.DemandeEtatAutoLoginZmvs() == true)
+		            {
+		            
+						ProcessBuilder builder = new ProcessBuilder(new String[] { CheminQuick3270, CheminQuick3270ProfileZmvs });
+						Process p = builder.start();
+						
+						ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuZmvs.getText() + " AUTOLOGIN");
+			            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
+		            	
+		            }
+					
+					if ( UserInterfaceConfigPourDemande.DemandeEtatAutoLoginZmvs() == false)
+		            {
+						
+						ProcessBuilder builder = new ProcessBuilder(new String[] { CheminQuick3270, CheminQuick3270ProfileZmvs_no_auto_login });
+						Process p = builder.start();
+						
+						ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuZmvs.getText());
+			            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
+				
+		            }
+				
+				} catch (IOException e1) {
+					e1.printStackTrace();
+					MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour ZMVS : " +e1);
+					ZoneTextLog.append("Erreur au lancement : Consulter la log." );
+		            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
+				
+				}
+			
+			}
+		});
+		
+		JMenuItem MenuSysa = new JMenuItem("Sysa");
+		MenuSysa.setIcon(new ImageIcon(UserInterface.class.getResource("/javax/swing/plaf/metal/icons/ocean/maximize-pressed.gif")));
+		MenuSysa.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				
+				GestionLog MaLog = new GestionLog();
+				UserInterfaceConfig UserInterfaceConfigPourDemande = new UserInterfaceConfig();
+								
+				try {
+					
+					if ( UserInterfaceConfigPourDemande.DemandeEtatAutoLoginSysa() == true)
+		            {
+		            
+						ProcessBuilder builder = new ProcessBuilder(new String[] { CheminQuick3270, CheminQuick3270ProfileSysa });
+						Process p = builder.start();
+						
+						ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuSysa.getText() + " AUTOLOGIN");
+			            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
+		            	
+		            }
+					
+					if ( UserInterfaceConfigPourDemande.DemandeEtatAutoLoginSysa() == false)
+		            {
+						
+						ProcessBuilder builder = new ProcessBuilder(new String[] { CheminQuick3270, CheminQuick3270ProfileSysa_no_auto_login });
+						Process p = builder.start();
+						
+						ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuSysa.getText());
+			            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
+						
+		            }
+				
+				} catch (IOException e1) {
+					e1.printStackTrace();
+					MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour Sysa : " +e1);
+					ZoneTextLog.append("Erreur au lancement : Consulter la log." );
+		            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
+					
+				}	
+				
+				
+			}
+		});
+		SousMenuConnexionMvs.add(MenuSysa);
+		
+		JMenuItem MenuKmvs = new JMenuItem("Kmvs (IP0)");
+		MenuKmvs.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				
+				
+				GestionLog MaLog = new GestionLog();
+				UserInterfaceConfig UserInterfaceConfigPourDemande = new UserInterfaceConfig();
+								
+				try {
+					
+					if ( UserInterfaceConfigPourDemande.DemandeEtatAutoLoginKmvs() == true)
+		            {
+		            
+						ProcessBuilder builder = new ProcessBuilder(new String[] { CheminQuick3270, CheminQuick3270ProfileKmvs });
+						Process p = builder.start();
+						
+						ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuKmvs.getText() + " AUTOLOGIN");
+			            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
+		            	
+		            }
+					
+					if ( UserInterfaceConfigPourDemande.DemandeEtatAutoLoginKmvs() == false)
+		            {
+						
+						ProcessBuilder builder = new ProcessBuilder(new String[] { CheminQuick3270, CheminQuick3270ProfileKmvs_no_auto_login });
+						Process p = builder.start();					
+						ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuKmvs.getText());
+			            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
+						
+		            }
+				
+				} catch (IOException e1) {
+					e1.printStackTrace();
+					MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour KMVS : " +e1);
+					ZoneTextLog.append("Erreur au lancement : Consulter la log." );
+		            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
+				
+				}
+			
+			}
+		});
+		SousMenuConnexionMvs.add(MenuKmvs);
+		SousMenuConnexionMvs.add(MenuZmvs);
+		
+		JMenuItem MenuSysg = new JMenuItem("Sysg (XENOS)");
+		MenuSysg.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				
+				
+				GestionLog MaLog = new GestionLog();
+				UserInterfaceConfig UserInterfaceConfigPourDemande = new UserInterfaceConfig();
+								
+				try {
+					
+					if ( UserInterfaceConfigPourDemande.DemandeEtatAutoLoginSysg() == true)
+		            {
+		            
+						ProcessBuilder builder = new ProcessBuilder(new String[] { CheminQuick3270, CheminQuick3270ProfileSysg });
+						Process p = builder.start();
+						ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuSysg.getText() + " AUTOLOGIN");
+			            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
+		            	
+		            }
+					
+					if ( UserInterfaceConfigPourDemande.DemandeEtatAutoLoginSysg() == false)
+		            {
+						
+						ProcessBuilder builder = new ProcessBuilder(new String[] { CheminQuick3270, CheminQuick3270ProfileSysg_no_auto_login });
+						Process p = builder.start();
+						
+						ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuSysg.getText());
+			            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
+				
+		            }
+			
+				} catch (IOException e1) {
+					e1.printStackTrace();
+					MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour Sysg : " +e1);
+					ZoneTextLog.append("Erreur au lancement : Consulter la log." );
+		            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
+					
+				}
+			}
+				
+				
+			
+		});
+		SousMenuConnexionMvs.add(MenuSysg);
+		
+		JSeparator SeparateurMenuConnexionMvs = new JSeparator();
+		SousMenuConnexionMvs.add(SeparateurMenuConnexionMvs);
+		
 		JMenuItem MenuGmvs = new JMenuItem("TPX Gmvs");
 		SousMenuConnexionMvs.add(MenuGmvs);
 		
 		MenuGmvs.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/webkit/prism/resources/mediaVolumeThumb.png")));
 		
-		JMenu SousMenuConnexionUnix = new JMenu("Unix");
-		MenuConnexionMvs.add(SousMenuConnexionUnix);
-		
-		JMenuItem MenuSyno = new JMenuItem("Syno");
-		MenuSyno.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent arg0) {
-				GestionLog MaLog = new GestionLog();
-				
-				
-				ProcessBuilder builder = new ProcessBuilder(new String[] { CheminQuick3270, CheminQuick3270ProfileSyno });
-				
-				try {
-					Process process = builder.start();
-					ZoneTextLog.append("Ouverture connexion telnet vers " + MenuSyno.getText());
-		            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
-					
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour GMVS : " +e);
-					ZoneTextLog.append("Erreur au lancement : Consulter la log." );
-		            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
-					
-				}
-				
-				
-				
-			}
-		});
-		SousMenuConnexionUnix.add(MenuSyno);
-		
 		MenuGmvs.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
 				GestionLog MaLog = new GestionLog();
-				
+				UserInterfaceConfig UserInterfaceConfigPourDemande = new UserInterfaceConfig();
 								
 				try {
 					
-					
-					//String CheminQuick3270 = "C:\\Program Files (x86)\\Quick3270 Secure\\Quick3270.exe";
-					//String CheminQuick3270ProfileGmvs = "D:\\AlphaPilote\\GMVS.ecf";
-					ProcessBuilder builder = new ProcessBuilder(new String[] { CheminQuick3270, CheminQuick3270ProfileGmvs });
-					Process p = builder.start();
-					
-					ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuGmvs.getText());
-		            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
-				
-		            UserInterfaceConfig UserInterfacePourDemande = new UserInterfaceConfig();
-		            if ( UserInterfacePourDemande.DemandeEtatAutoLoginGmvs() == true)
+					if ( UserInterfaceConfigPourDemande.DemandeEtatAutoLoginGmvs() == true)
 		            {
-		           
-		            SmartRobot SuperRobot = new SmartRobot();
-		            SuperRobot.delay(500);
-		            SuperRobot.type("tpx");
-		            SuperRobot.delay(50);
-		            SuperRobot.keyPress(KeyEvent.VK_ENTER);
 		            
-		            GestionConfig MaConfig = new GestionConfig();
-		            String UserDemande = MaConfig.DemandeUser("Gmvs");
-		            String PassDemande = MaConfig.DemandePassword("Gmvs");
-		            
-		            SuperRobot.delay(250);
-		            SuperRobot.type(UserDemande);
-		            SuperRobot.keyPress(KeyEvent.VK_TAB);
-		            SuperRobot.type(PassDemande);
-		            SuperRobot.keyPress(KeyEvent.VK_ENTER);
+						ProcessBuilder builder = new ProcessBuilder(new String[] { CheminQuick3270, CheminQuick3270ProfileGmvs });
+						Process p = builder.start();
+						ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuGmvs.getText() + " AUTOLOGIN");
+			            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
+		            	
 		            }
 					
+					if ( UserInterfaceConfigPourDemande.DemandeEtatAutoLoginGmvs() == false)
+		            {
+						
+						ProcessBuilder builder = new ProcessBuilder(new String[] { CheminQuick3270, CheminQuick3270ProfileGmvs_no_auto_login });
+						Process p = builder.start();
+						
+						ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuGmvs.getText());
+			            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
+				
+		            }
+			
 				} catch (IOException e1) {
-					
+					e1.printStackTrace();
 					MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour GMVS : " +e1);
 					ZoneTextLog.append("Erreur au lancement : Consulter la log." );
 		            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
-					e1.printStackTrace();
 					
-				} catch (AWTException e) {
-					e.printStackTrace();
-					MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour GMVS : " +e);
-					ZoneTextLog.append("Erreur au lancement : Consulter la log." );
-		            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 				}
-				
 			}
 		});
+		
+		JMenu SousMenuConnexionUnix = new JMenu("Unix");
+		MenuConnexionMvs.add(SousMenuConnexionUnix);
 		getContentPane().setLayout(null);
 		
 		JPanel PaneZoneConnexion = new JPanel();
@@ -296,7 +452,7 @@ public class UserInterface extends JFrame{
 	            
 		MenuConfiguration.add(MenuModifierFichierMachine);
 		
-		JMenu MenuAPropos = new JMenu("A propos d'AlphaPilote");
+		JMenu MenuAPropos = new JMenu("Aide");
 		BarreMenuPrincipale.add(MenuAPropos);
 		
 		JMenuItem MenuLogErreurs = new JMenuItem("Log d'erreurs");
@@ -390,25 +546,28 @@ public class UserInterface extends JFrame{
 		PaneZoneConnexion.add(ResultatPing);
 		
 		JPanel ZoneConnexionAutoLogin = new JPanel();
-		ZoneConnexionAutoLogin.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Auto login", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 102, 204)));
-		ZoneConnexionAutoLogin.setBounds(10, 54, 147, 114);
+		ZoneConnexionAutoLogin.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Auto login (SSH seulement)", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 102, 204)));
+		ZoneConnexionAutoLogin.setBounds(10, 54, 178, 114);
 		PaneZoneConnexion.add(ZoneConnexionAutoLogin);
 		ZoneConnexionAutoLogin.setLayout(null);
 		
 		
 		
 		JRadioButton BoutonRadioRoot = new JRadioButton("root");
-		BoutonRadioRoot.setBounds(6, 16, 70, 23);
+		BoutonRadioRoot.setMargin(new Insets(0, 0, 0, 0));
+		BoutonRadioRoot.setBounds(6, 18, 70, 23);
 		ZoneConnexionAutoLogin.add(BoutonRadioRoot);
 		
 		
 		JRadioButton BoutonRadioSalle = new JRadioButton("salle");
+		BoutonRadioSalle.setMargin(new Insets(0, 0, 0, 0));
 		BoutonRadioSalle.setBounds(6, 42, 70, 27);
 		ZoneConnexionAutoLogin.add(BoutonRadioSalle);
 		
 		
 		JRadioButton BoutonRadioUserPerso = new JRadioButton("j0*****");
-		BoutonRadioUserPerso.setBounds(6, 72, 70, 18);
+		BoutonRadioUserPerso.setMargin(new Insets(0, 0, 0, 0));
+		BoutonRadioUserPerso.setBounds(6, 74, 70, 18);
 		ZoneConnexionAutoLogin.add(BoutonRadioUserPerso);
 		
 		
@@ -419,7 +578,7 @@ public class UserInterface extends JFrame{
 				MesBoutonsLogin.add(BoutonRadioUserPerso);
 				
 				Checkbox CheckBoxPassword = new Checkbox("+ pass");
-				CheckBoxPassword.setBounds(83, 72, 54, 22);
+				CheckBoxPassword.setBounds(82, 74, 63, 18);
 				ZoneConnexionAutoLogin.add(CheckBoxPassword);
 		
 		JComboBox MaComboBox = new JComboBox();
@@ -462,11 +621,11 @@ public class UserInterface extends JFrame{
 				
 //LECTURE USER UNIX --------------------------------------------------------
 				int CodeRetour = 5;
-				String UserUnix = "";
+				String UserUnix = "#Erreur#";
 				GestionConfig MaConfig = new GestionConfig();
 				CodeRetour = MaConfig.LireConfig();
 				
-				MaConfig.DemandeUser("Unix");
+				UserUnix = MaConfig.DemandeUser("Unix");
 				MaConfig.DemandePassword("Unix");
 				
 				
@@ -489,20 +648,7 @@ public class UserInterface extends JFrame{
 				MaConfig.DemandePassword("Sysg");
 				
 				
-				if (CodeRetour == 0)
-				{
-					ZoneTextLog.append("Chargement config OK");
-					ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
-					BoutonRadioUserPerso.setText(UserUnix);
-					
-					
-				}
-				if (CodeRetour == 1)
-				{
-					ZoneTextLog.append("Problème chargement config");
-					ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
-					
-				}
+				
 //FIN LECTURE USER UNIX--------------------------------------------------------			
 				
  				GestionMachine MaMachine = new GestionMachine();
@@ -554,6 +700,22 @@ public class UserInterface extends JFrame{
 					
 				}
 				
+				if (CodeRetour == 0)
+				{
+					ZoneTextLog.append("Configuration rechargée avec succés");
+					ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
+					BoutonRadioUserPerso.setText(UserUnix);
+					
+					
+				}
+				if (CodeRetour == 1)
+				{
+					ZoneTextLog.append("Problème rechargement config");
+					ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
+					BoutonRadioUserPerso.setText("#Erreur");
+					
+				}
+				
 				
 			}
 		});
@@ -577,15 +739,8 @@ public class UserInterface extends JFrame{
 					Resultatdemande = MachineDansMaComboBox;
 					ResultatdemandeSave = MachineDansMaComboBox;
 				}					
-				
-				
-					//final String CHEMIN = "D:\\";
-					//String TextZoneIp = ZoneIp.getText();
-					
+			
 					try {
-						//Runtime.getRuntime().exec(String.format("cmd.exe /c start D:\\AlphaPilote\\Putty.exe -ssh " + TextZoneIp ));
-						//ZoneTextLog.append("Lancement putty ssh pour " + ZoneIp.getText()  );
-			            //ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 						
 						Boolean LanceUneFois = true;
 			            

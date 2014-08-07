@@ -51,7 +51,7 @@ public class UserInterfaceConfig extends JFrame{
 		ZoneConfigUnix.add(LabelConfigUnixPassword);
 		
 		JPanel ZoneConfigGmvs = new JPanel();
-		ZoneConfigGmvs.setBounds(150, 0, 145, 105);
+		ZoneConfigGmvs.setBounds(186, 233, 150, 105);
 		ZoneConfigGmvs.setLayout(null);
 		ZoneConfigGmvs.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "TPX Gmvs", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		getContentPane().add(ZoneConfigGmvs);
@@ -75,14 +75,14 @@ public class UserInterfaceConfig extends JFrame{
 		ZoneConfigGmvs.add(LabelConfigGmvsPassword);
 		
 		CheckBoxAutoGmvs = new JCheckBox("Auto connect");
-		CheckBoxAutoGmvs.setMargin(new Insets(0, 0, 0, 0));
 		CheckBoxAutoGmvs.setSelected(true);
-		CheckBoxAutoGmvs.setBounds(16, 85, 97, 14);
+		CheckBoxAutoGmvs.setMargin(new Insets(0, 0, 0, 0));
+		CheckBoxAutoGmvs.setBounds(6, 82, 97, 14);
 		ZoneConfigGmvs.add(CheckBoxAutoGmvs);
 		
 					
 		ZoneConfigSysa = new JPanel();
-		ZoneConfigSysa.setBounds(300, 0, 150, 105);
+		ZoneConfigSysa.setBounds(186, 0, 150, 105);
 		ZoneConfigSysa.setLayout(null);
 		ZoneConfigSysa.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Sysa", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		getContentPane().add(ZoneConfigSysa);
@@ -105,9 +105,15 @@ public class UserInterfaceConfig extends JFrame{
 		LabelConfigSysaPassword.setBounds(6, 50, 38, 14);
 		ZoneConfigSysa.add(LabelConfigSysaPassword);
 		
+		CheckBoxAutoSysa = new JCheckBox("Auto connect");
+		CheckBoxAutoSysa.setSelected(true);
+		CheckBoxAutoSysa.setMargin(new Insets(0, 0, 0, 0));
+		CheckBoxAutoSysa.setBounds(6, 82, 97, 14);
+		ZoneConfigSysa.add(CheckBoxAutoSysa);
+		
 		
 		ZoneConfigZmvs = new JPanel();
-		ZoneConfigZmvs.setBounds(150, 116, 145, 101);
+		ZoneConfigZmvs.setBounds(186, 116, 150, 101);
 		ZoneConfigZmvs.setLayout(null);
 		ZoneConfigZmvs.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Zmvs (CFF)", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		getContentPane().add(ZoneConfigZmvs);
@@ -130,8 +136,14 @@ public class UserInterfaceConfig extends JFrame{
 		LabelConfigZmvsPassword.setBounds(6, 50, 38, 14);
 		ZoneConfigZmvs.add(LabelConfigZmvsPassword);
 		
+		CheckBoxAutoZmvs = new JCheckBox("Auto connect");
+		CheckBoxAutoZmvs.setSelected(true);
+		CheckBoxAutoZmvs.setMargin(new Insets(0, 0, 0, 0));
+		CheckBoxAutoZmvs.setBounds(6, 80, 97, 14);
+		ZoneConfigZmvs.add(CheckBoxAutoZmvs);
+		
 		ZoneConfigKmvs = new JPanel();
-		ZoneConfigKmvs.setBounds(300, 116, 150, 101);
+		ZoneConfigKmvs.setBounds(346, 116, 150, 101);
 		ZoneConfigKmvs.setLayout(null);
 		ZoneConfigKmvs.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Kmvs (IP0)", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		getContentPane().add(ZoneConfigKmvs);
@@ -154,10 +166,16 @@ public class UserInterfaceConfig extends JFrame{
 		LabelConfigKmvsPassword.setBounds(6, 50, 38, 14);
 		ZoneConfigKmvs.add(LabelConfigKmvsPassword);
 		
+		CheckBoxAutoKmvs = new JCheckBox("Auto connect");
+		CheckBoxAutoKmvs.setSelected(true);
+		CheckBoxAutoKmvs.setMargin(new Insets(0, 0, 0, 0));
+		CheckBoxAutoKmvs.setBounds(6, 78, 97, 14);
+		ZoneConfigKmvs.add(CheckBoxAutoKmvs);
+		
 		JPanel ZoneConfigXenos = new JPanel();
 		ZoneConfigXenos.setLayout(null);
 		ZoneConfigXenos.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Sysg (Xenos)", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		ZoneConfigXenos.setBounds(460, 0, 145, 105);
+		ZoneConfigXenos.setBounds(346, 0, 150, 105);
 		getContentPane().add(ZoneConfigXenos);
 		
 		TextConfigSysgUser = new JTextField();
@@ -178,14 +196,14 @@ public class UserInterfaceConfig extends JFrame{
 		LabelConfigSysgPassword.setBounds(6, 50, 38, 14);
 		ZoneConfigXenos.add(LabelConfigSysgPassword);
 		
-		JCheckBox CheckBoxAutoSysg = new JCheckBox("Auto connect");
+		CheckBoxAutoSysg = new JCheckBox("Auto connect");
 		CheckBoxAutoSysg.setMargin(new Insets(0, 0, 0, 0));
 		CheckBoxAutoSysg.setSelected(true);
-		CheckBoxAutoSysg.setBounds(16, 85, 97, 14);
+		CheckBoxAutoSysg.setBounds(6, 82, 97, 14);
 		ZoneConfigXenos.add(CheckBoxAutoSysg);
 		
 		JLabel LabelConfigValide = new JLabel("");
-		LabelConfigValide.setBounds(0, 330, 145, 9);
+		LabelConfigValide.setBounds(10, 319, 145, 19);
 		LabelConfigValide.setForeground(new Color(60, 179, 113));
 		LabelConfigValide.setFont(new Font("Verdana", Font.PLAIN, 12));
 		getContentPane().add(LabelConfigValide);
@@ -195,7 +213,7 @@ public class UserInterfaceConfig extends JFrame{
 		
 		
 		JProgressBar ProgressBarValideConfig = new JProgressBar();
-		ProgressBarValideConfig.setBounds(0, 350, 175, 19);
+		ProgressBarValideConfig.setBounds(10, 350, 175, 19);
 		ProgressBarValideConfig.setStringPainted(true);
 		ProgressBarValideConfig.setForeground(new Color(34, 139, 34));
 		getContentPane().add(ProgressBarValideConfig);
@@ -203,7 +221,7 @@ public class UserInterfaceConfig extends JFrame{
 		ProgressBarValideConfig.setValue(0);
 		
 		JButton BoutonValiderConfig = new JButton("Valider la configuration");
-		BoutonValiderConfig.setBounds(0, 380, 175, 51);
+		BoutonValiderConfig.setBounds(10, 380, 175, 51);
 		BoutonValiderConfig.setMargin(new Insets(1, 1, 1, 1));
 		getContentPane().add(BoutonValiderConfig);
 		BoutonValiderConfig.setIcon(new ImageIcon(UserInterfaceConfig.class.getResource("/com/sun/javafx/scene/control/skin/caspian/images/capslock-icon.png")));
@@ -215,16 +233,26 @@ public class UserInterfaceConfig extends JFrame{
 				String EcritureValideOuErreur = "";
 				String UserUnix = TextConfigUnixUser.getText();
 				String PassUnix = TextConfigUnixPassword.getText();
+				
 				String UserGmvs = TextConfigGmvsUser.getText();
 				String PassGmvs = TextConfigGmvsPassword.getText();
+				Boolean EtatAutoConnectGmvs = CheckBoxAutoGmvs.isSelected();
+				
 				String UserSysa = TextConfigSysaUser.getText();
 				String PassSysa = TextConfigSysaPassword.getText();
+				Boolean EtatAutoConnectSysa = CheckBoxAutoSysa.isSelected();
+				
 				String UserKmvs = TextConfigKmvsUser.getText();
 				String PassKmvs = TextConfigKmvsPassword.getText();
+				Boolean EtatAutoConnectKmvs = CheckBoxAutoKmvs.isSelected();
+				
 				String UserZmvs = TextConfigZmvsUser.getText();
 				String PassZmvs = TextConfigZmvsPassword.getText();
+				Boolean EtatAutoConnectZmvs = CheckBoxAutoZmvs.isSelected();
+				
 				String UserSysg = TextConfigSysgUser.getText();
 				String PassSysg = TextConfigSysgPassword.getText();
+				Boolean EtatAutoConnectSysg = CheckBoxAutoSysg.isSelected();
 				
 				
 				LabelConfigValide.setForeground(Color.GRAY);
@@ -256,6 +284,32 @@ public class UserInterfaceConfig extends JFrame{
 				ProgressBarValideConfig.setValue(95);
 				EcritureValideOuErreur = MaConfig.EcrirePassword("password", "Sysg", PassSysg);
 				ProgressBarValideConfig.setValue(100);
+				
+				
+				if (EtatAutoConnectGmvs == true)
+				MaConfig.EcrireAutoConnect("autoconnect", "Gmvs", "true");
+				if (EtatAutoConnectGmvs == false)
+				MaConfig.EcrireAutoConnect("autoconnect", "Gmvs", "false");
+				
+				if (EtatAutoConnectSysa == true)
+				MaConfig.EcrireAutoConnect("autoconnect", "Sysa", "true");
+				if (EtatAutoConnectSysa == false)
+				MaConfig.EcrireAutoConnect("autoconnect", "Sysa", "false");
+					
+				if (EtatAutoConnectSysg == true)
+				MaConfig.EcrireAutoConnect("autoconnect", "Sysg", "true");
+				if (EtatAutoConnectSysg == false)
+				MaConfig.EcrireAutoConnect("autoconnect", "Sysg", "false");
+						
+				if (EtatAutoConnectKmvs == true)
+				MaConfig.EcrireAutoConnect("autoconnect", "Kmvs", "true");
+				if (EtatAutoConnectKmvs == false)
+				MaConfig.EcrireAutoConnect("autoconnect", "Kmvs", "false");
+							
+				if (EtatAutoConnectZmvs == true)
+				MaConfig.EcrireAutoConnect("autoconnect", "Zmvs", "true");
+				if (EtatAutoConnectZmvs == false)
+				MaConfig.EcrireAutoConnect("autoconnect", "Zmvs", "false");
 				
 				
 				System.out.println(EcritureValideOuErreur);
@@ -293,7 +347,7 @@ public class UserInterfaceConfig extends JFrame{
 		});
 		
 		BoutonRechargerConfig = new JButton("Recharger la configuration");
-		BoutonRechargerConfig.setBounds(185, 380, 153, 51);
+		BoutonRechargerConfig.setBounds(201, 380, 153, 51);
 		BoutonRechargerConfig.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
@@ -301,14 +355,28 @@ public class UserInterfaceConfig extends JFrame{
 				int CodeRetour = 5;
 				String UserGmvs = "#erreur";
 				String PassGmvs = "#erreur";
+				String ResultatDemandeAutoConnectGmvs = null ;
+				
 				String UserUnix = "#erreur";
 				String PassUnix = "#erreur";
+				
+				
+				
 				String UserSysa = "#erreur";
 				String PassSysa = "#erreur";
+				String ResultatDemandeAutoConnectSysa = null ;
+				
 				String UserKmvs = "#erreur";
 				String PassKmvs = "#erreur";
+				String ResultatDemandeAutoConnectKmvs = null ;
+				
 				String UserZmvs = "#erreur";
 				String PassZmvs = "#erreur";
+				String ResultatDemandeAutoConnectZmvs = null ;
+				
+				String UserSysg = "#erreur";
+				String PassSysg = "#erreur";
+				String ResultatDemandeAutoConnectSysg = null ;
 				
 				ProgressBarValideConfig.setValue(0);
 				LabelConfigValide.setForeground(Color.GRAY);
@@ -328,21 +396,57 @@ public class UserInterfaceConfig extends JFrame{
 					PassGmvs = MaConfig.DemandePassword("Gmvs");
 					TextConfigGmvsUser.setText(UserGmvs);
 					TextConfigGmvsPassword.setText(PassGmvs);
+					ResultatDemandeAutoConnectGmvs = MaConfig.DemandeAutoConnect("Gmvs");
+					if (ResultatDemandeAutoConnectGmvs.equals("true"))
+						CheckBoxAutoGmvs.setSelected(true);
+					if (ResultatDemandeAutoConnectGmvs.equals("false"))
+						CheckBoxAutoGmvs.setSelected(false);
+						
+					
 					
 					UserSysa = MaConfig.DemandeUser("Sysa");
 					PassSysa = MaConfig.DemandePassword("Sysa");
 					TextConfigSysaUser.setText(UserSysa);
 					TextConfigSysaPassword.setText(PassSysa);
+					ResultatDemandeAutoConnectSysa = MaConfig.DemandeAutoConnect("Sysa");
+					if (ResultatDemandeAutoConnectSysa.equals("true"))
+						CheckBoxAutoSysa.setSelected(true);
+					if (ResultatDemandeAutoConnectSysa.equals("false"))
+						CheckBoxAutoSysa.setSelected(false);;
+					
 					
 					UserKmvs = MaConfig.DemandeUser("Kmvs");
 					PassKmvs = MaConfig.DemandePassword("Kmvs");
 					TextConfigKmvsUser.setText(UserKmvs);
 					TextConfigKmvsPassword.setText(PassKmvs);
+					ResultatDemandeAutoConnectKmvs = MaConfig.DemandeAutoConnect("Kmvs");
+					if (ResultatDemandeAutoConnectKmvs.equals("true"))
+						CheckBoxAutoKmvs.setSelected(true);
+					if (ResultatDemandeAutoConnectKmvs.equals("false"))
+						CheckBoxAutoKmvs.setSelected(false);
+					
 					
 					UserZmvs = MaConfig.DemandeUser("Zmvs");
 					PassZmvs = MaConfig.DemandePassword("Zmvs");
 					TextConfigZmvsUser.setText(UserZmvs);
 					TextConfigZmvsPassword.setText(PassZmvs);
+					ResultatDemandeAutoConnectZmvs = MaConfig.DemandeAutoConnect("Zmvs");
+					if (ResultatDemandeAutoConnectZmvs.equals("true"))
+						CheckBoxAutoZmvs.setSelected(true);
+					if (ResultatDemandeAutoConnectZmvs.equals("false"))
+						CheckBoxAutoZmvs.setSelected(false);
+					
+					
+					UserSysg = MaConfig.DemandeUser("Sysg");
+					PassSysg = MaConfig.DemandePassword("Sysg");
+					TextConfigSysgUser.setText(UserSysg);
+					TextConfigSysgPassword.setText(PassSysg);
+					ResultatDemandeAutoConnectSysg = MaConfig.DemandeAutoConnect("Sysg");
+					if (ResultatDemandeAutoConnectSysg.equals("true"))
+						CheckBoxAutoSysg.setSelected(true);
+					if (ResultatDemandeAutoConnectSysg.equals("false"))
+						CheckBoxAutoSysg.setSelected(false);
+					
 					
 				}
 				if (CodeRetour == 1)
@@ -367,14 +471,29 @@ public class UserInterfaceConfig extends JFrame{
 		int CodeRetour = 5;
 		String UserGmvs = "#erreur";
 		String PassGmvs = "#erreur";
+		String ResultatDemandeAutoConnectGmvs = null ;
+		
 		String UserUnix = "#erreur";
 		String PassUnix = "#erreur";
+		
+		
+		
 		String UserSysa = "#erreur";
 		String PassSysa = "#erreur";
+		String ResultatDemandeAutoConnectSysa = null ;
+		
 		String UserKmvs = "#erreur";
 		String PassKmvs = "#erreur";
+		String ResultatDemandeAutoConnectKmvs = null ;
+		
 		String UserZmvs = "#erreur";
 		String PassZmvs = "#erreur";
+		String ResultatDemandeAutoConnectZmvs = null ;
+		
+		String UserSysg = "#erreur";
+		String PassSysg = "#erreur";
+		String ResultatDemandeAutoConnectSysg = null ;
+		
 		GestionConfig MaConfig = new GestionConfig();
 		CodeRetour = MaConfig.LireConfig();
 		//UserG = MaConfig.DemandeUser("G");
@@ -390,21 +509,58 @@ public class UserInterfaceConfig extends JFrame{
 			PassGmvs = MaConfig.DemandePassword("Gmvs");
 			TextConfigGmvsUser.setText(UserGmvs);
 			TextConfigGmvsPassword.setText(PassGmvs);
+			ResultatDemandeAutoConnectGmvs = MaConfig.DemandeAutoConnect("Gmvs");
+			if (ResultatDemandeAutoConnectGmvs.equals("true"))
+				CheckBoxAutoGmvs.setSelected(true);
+			if (ResultatDemandeAutoConnectGmvs.equals("false"))
+				CheckBoxAutoGmvs.setSelected(false);
+				
+			
 			
 			UserSysa = MaConfig.DemandeUser("Sysa");
 			PassSysa = MaConfig.DemandePassword("Sysa");
 			TextConfigSysaUser.setText(UserSysa);
 			TextConfigSysaPassword.setText(PassSysa);
+			ResultatDemandeAutoConnectSysa = MaConfig.DemandeAutoConnect("Sysa");
+			if (ResultatDemandeAutoConnectSysa.equals("true"))
+				CheckBoxAutoSysa.setSelected(true);
+			if (ResultatDemandeAutoConnectSysa.equals("false"))
+				CheckBoxAutoSysa.setSelected(false);;
+			
 			
 			UserKmvs = MaConfig.DemandeUser("Kmvs");
 			PassKmvs = MaConfig.DemandePassword("Kmvs");
 			TextConfigKmvsUser.setText(UserKmvs);
 			TextConfigKmvsPassword.setText(PassKmvs);
+			ResultatDemandeAutoConnectKmvs = MaConfig.DemandeAutoConnect("Kmvs");
+			if (ResultatDemandeAutoConnectKmvs.equals("true"))
+				CheckBoxAutoKmvs.setSelected(true);
+			if (ResultatDemandeAutoConnectKmvs.equals("false"))
+				CheckBoxAutoKmvs.setSelected(false);
+			
 			
 			UserZmvs = MaConfig.DemandeUser("Zmvs");
 			PassZmvs = MaConfig.DemandePassword("Zmvs");
 			TextConfigZmvsUser.setText(UserZmvs);
 			TextConfigZmvsPassword.setText(PassZmvs);
+			ResultatDemandeAutoConnectZmvs = MaConfig.DemandeAutoConnect("Zmvs");
+			if (ResultatDemandeAutoConnectZmvs.equals("true"))
+				CheckBoxAutoZmvs.setSelected(true);
+			if (ResultatDemandeAutoConnectZmvs.equals("false"))
+				CheckBoxAutoZmvs.setSelected(false);
+			
+			
+			
+			UserSysg = MaConfig.DemandeUser("Sysg");
+			PassSysg = MaConfig.DemandePassword("Sysg");
+			TextConfigSysgUser.setText(UserSysg);
+			TextConfigSysgPassword.setText(PassSysg);
+			ResultatDemandeAutoConnectSysg = MaConfig.DemandeAutoConnect("Sysg");
+			if (ResultatDemandeAutoConnectSysg.equals("true"))
+				CheckBoxAutoSysg.setSelected(true);
+			if (ResultatDemandeAutoConnectSysg.equals("false"))
+				CheckBoxAutoSysg.setSelected(false);
+			
 			
 		}
 		if (CodeRetour == 1)
@@ -420,9 +576,30 @@ public class UserInterfaceConfig extends JFrame{
 	{
 		return CheckBoxAutoGmvs.isSelected();
 	}
+	public Boolean DemandeEtatAutoLoginZmvs() 
+	{
+		return CheckBoxAutoZmvs.isSelected();
+	}
+	public Boolean DemandeEtatAutoLoginKmvs() 
+	{
+		return CheckBoxAutoKmvs.isSelected();
+	}
+	public Boolean DemandeEtatAutoLoginSysa() 
+	{
+		return CheckBoxAutoSysa.isSelected();
+	}
+	public Boolean DemandeEtatAutoLoginSysg() 
+	{
+		return CheckBoxAutoSysg.isSelected();
+	}
 
 
 	private static final long serialVersionUID = 1L;
+	private JCheckBox CheckBoxAutoGmvs;
+	private JCheckBox CheckBoxAutoZmvs;
+	private JCheckBox CheckBoxAutoKmvs;
+	private JCheckBox CheckBoxAutoSysa;
+	private JCheckBox CheckBoxAutoSysg;
 	private JTextField TextConfigUnixUser;
 	private JTextField TextConfigUnixPassword;
 	private JPanel ZoneConfigUnix;
@@ -443,10 +620,12 @@ public class UserInterfaceConfig extends JFrame{
 	private JTextField TextConfigZmvsPassword;
 	private JLabel LabelConfigZmvsUser;
 	private JLabel LabelConfigZmvsPassword;
-	private JCheckBox CheckBoxAutoGmvs;
+	
+	
 	private JButton BoutonRechargerConfig;
 	private JTextField TextConfigSysgUser;
 	private JTextField TextConfigSysgPassword;
+	
 }
 
 
