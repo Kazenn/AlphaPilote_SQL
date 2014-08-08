@@ -70,10 +70,13 @@ public class GestionConfig {
 		Properties properties=new Properties();
 		try 
 		{
+			
 			FileInputStream in =new FileInputStream(configPath);
 			properties.load(in);
 			in.close();
 			Password = properties.getProperty("password" + Machine);
+			GestionEncryption SecuriteFichierConfig = new GestionEncryption();
+			Password = SecuriteFichierConfig.DemandeDecryption(Password);
 			CodeRetour = 0;
 
 		} 
@@ -131,7 +134,8 @@ public class GestionConfig {
 		 File FichierConfig = new File(configPath);
 		 FileInputStream stream;
 		try {
-			 
+			 GestionEncryption SecuriteFichierConfig = new GestionEncryption();
+			 PasswordAEcrire = SecuriteFichierConfig.DemandeEncryption(PasswordAEcrire);
 			 stream = new FileInputStream(FichierConfig);
 			 properties.load(stream);
 			 properties.setProperty(Password + Machine , PasswordAEcrire);

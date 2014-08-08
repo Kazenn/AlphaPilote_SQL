@@ -20,6 +20,9 @@ import java.awt.GridBagConstraints;
 import java.awt.SystemColor;
 import java.io.IOException;
 
+import javax.swing.JPasswordField;
+import javax.swing.DropMode;
+
 
 public class UserInterfaceConfig extends JFrame{
 	public UserInterfaceConfig() {
@@ -33,11 +36,13 @@ public class UserInterfaceConfig extends JFrame{
 		ZoneConfigUnix.setLayout(null);
 		
 		TextConfigUnixUser = new JTextField();
+		TextConfigUnixUser.setText("User unix");
 		TextConfigUnixUser.setBounds(54, 16, 86, 20);
 		ZoneConfigUnix.add(TextConfigUnixUser);
 		TextConfigUnixUser.setColumns(10);
 		
 		TextConfigUnixPassword = new JTextField();
+		TextConfigUnixPassword.setText("pass");
 		TextConfigUnixPassword.setBounds(54, 47, 86, 20);
 		ZoneConfigUnix.add(TextConfigUnixPassword);
 		TextConfigUnixPassword.setColumns(10);
@@ -57,14 +62,10 @@ public class UserInterfaceConfig extends JFrame{
 		getContentPane().add(ZoneConfigGmvs);
 		
 		TextConfigGmvsUser = new JTextField();
+		TextConfigGmvsUser.setText("User gmvs");
 		TextConfigGmvsUser.setColumns(10);
 		TextConfigGmvsUser.setBounds(47, 16, 86, 20);
 		ZoneConfigGmvs.add(TextConfigGmvsUser);
-		
-		TextConfigGmvsPassword = new JTextField();
-		TextConfigGmvsPassword.setColumns(10);
-		TextConfigGmvsPassword.setBounds(47, 47, 86, 20);
-		ZoneConfigGmvs.add(TextConfigGmvsPassword);
 		
 		JLabel LabelConfigGmvsUser = new JLabel("User");
 		LabelConfigGmvsUser.setBounds(6, 19, 38, 14);
@@ -80,6 +81,11 @@ public class UserInterfaceConfig extends JFrame{
 		CheckBoxAutoGmvs.setBounds(6, 82, 97, 14);
 		ZoneConfigGmvs.add(CheckBoxAutoGmvs);
 		
+		TextConfigGmvsPassword = new JPasswordField();
+		TextConfigGmvsPassword.setText("pass");
+		TextConfigGmvsPassword.setBounds(47, 47, 86, 20);
+		ZoneConfigGmvs.add(TextConfigGmvsPassword);
+		
 					
 		ZoneConfigSysa = new JPanel();
 		ZoneConfigSysa.setBounds(186, 0, 150, 105);
@@ -88,14 +94,10 @@ public class UserInterfaceConfig extends JFrame{
 		getContentPane().add(ZoneConfigSysa);
 		
 		TextConfigSysaUser = new JTextField();
+		TextConfigSysaUser.setText("User sysa");
 		TextConfigSysaUser.setColumns(10);
 		TextConfigSysaUser.setBounds(54, 16, 86, 20);
 		ZoneConfigSysa.add(TextConfigSysaUser);
-		
-		TextConfigSysaPassword = new JTextField();
-		TextConfigSysaPassword.setColumns(10);
-		TextConfigSysaPassword.setBounds(54, 47, 86, 20);
-		ZoneConfigSysa.add(TextConfigSysaPassword);
 		
 		LabelConfigSysaUser = new JLabel("User");
 		LabelConfigSysaUser.setBounds(6, 19, 38, 14);
@@ -111,6 +113,11 @@ public class UserInterfaceConfig extends JFrame{
 		CheckBoxAutoSysa.setBounds(6, 82, 97, 14);
 		ZoneConfigSysa.add(CheckBoxAutoSysa);
 		
+		TextConfigSysaPassword = new JPasswordField();
+		TextConfigSysaPassword.setText("pass");
+		TextConfigSysaPassword.setBounds(54, 47, 86, 20);
+		ZoneConfigSysa.add(TextConfigSysaPassword);
+		
 		
 		ZoneConfigZmvs = new JPanel();
 		ZoneConfigZmvs.setBounds(186, 116, 150, 101);
@@ -119,14 +126,10 @@ public class UserInterfaceConfig extends JFrame{
 		getContentPane().add(ZoneConfigZmvs);
 		
 		TextConfigZmvsUser = new JTextField();
+		TextConfigZmvsUser.setText("User zmvs");
 		TextConfigZmvsUser.setColumns(10);
 		TextConfigZmvsUser.setBounds(54, 16, 86, 20);
 		ZoneConfigZmvs.add(TextConfigZmvsUser);
-		
-		TextConfigZmvsPassword = new JTextField();
-		TextConfigZmvsPassword.setColumns(10);
-		TextConfigZmvsPassword.setBounds(54, 47, 86, 20);
-		ZoneConfigZmvs.add(TextConfigZmvsPassword);
 		
 		LabelConfigZmvsUser = new JLabel("User");
 		LabelConfigZmvsUser.setBounds(6, 19, 38, 14);
@@ -142,6 +145,11 @@ public class UserInterfaceConfig extends JFrame{
 		CheckBoxAutoZmvs.setBounds(6, 80, 97, 14);
 		ZoneConfigZmvs.add(CheckBoxAutoZmvs);
 		
+		TextConfigZmvsPassword = new JPasswordField();
+		TextConfigZmvsPassword.setText("pass");
+		TextConfigZmvsPassword.setBounds(54, 47, 86, 20);
+		ZoneConfigZmvs.add(TextConfigZmvsPassword);
+		
 		ZoneConfigKmvs = new JPanel();
 		ZoneConfigKmvs.setBounds(346, 116, 150, 101);
 		ZoneConfigKmvs.setLayout(null);
@@ -149,14 +157,10 @@ public class UserInterfaceConfig extends JFrame{
 		getContentPane().add(ZoneConfigKmvs);
 		
 		TextConfigKmvsUser = new JTextField();
+		TextConfigKmvsUser.setText("User kmvs");
 		TextConfigKmvsUser.setColumns(10);
 		TextConfigKmvsUser.setBounds(54, 16, 86, 20);
 		ZoneConfigKmvs.add(TextConfigKmvsUser);
-		
-		TextConfigKmvsPassword = new JTextField();
-		TextConfigKmvsPassword.setColumns(10);
-		TextConfigKmvsPassword.setBounds(54, 47, 86, 20);
-		ZoneConfigKmvs.add(TextConfigKmvsPassword);
 		
 		LabelConfigKmvsUser = new JLabel("User");
 		LabelConfigKmvsUser.setBounds(6, 19, 38, 14);
@@ -172,6 +176,11 @@ public class UserInterfaceConfig extends JFrame{
 		CheckBoxAutoKmvs.setBounds(6, 78, 97, 14);
 		ZoneConfigKmvs.add(CheckBoxAutoKmvs);
 		
+		TextConfigKmvsPassword = new JPasswordField();
+		TextConfigKmvsPassword.setText("pass");
+		TextConfigKmvsPassword.setBounds(54, 47, 86, 20);
+		ZoneConfigKmvs.add(TextConfigKmvsPassword);
+		
 		JPanel ZoneConfigXenos = new JPanel();
 		ZoneConfigXenos.setLayout(null);
 		ZoneConfigXenos.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Sysg (Xenos)", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
@@ -179,14 +188,10 @@ public class UserInterfaceConfig extends JFrame{
 		getContentPane().add(ZoneConfigXenos);
 		
 		TextConfigSysgUser = new JTextField();
+		TextConfigSysgUser.setText("User sysg");
 		TextConfigSysgUser.setColumns(10);
 		TextConfigSysgUser.setBounds(47, 16, 86, 20);
 		ZoneConfigXenos.add(TextConfigSysgUser);
-		
-		TextConfigSysgPassword = new JTextField();
-		TextConfigSysgPassword.setColumns(10);
-		TextConfigSysgPassword.setBounds(47, 47, 86, 20);
-		ZoneConfigXenos.add(TextConfigSysgPassword);
 		
 		JLabel LabelConfigSysgUser = new JLabel("User");
 		LabelConfigSysgUser.setBounds(6, 19, 38, 14);
@@ -201,6 +206,11 @@ public class UserInterfaceConfig extends JFrame{
 		CheckBoxAutoSysg.setSelected(true);
 		CheckBoxAutoSysg.setBounds(6, 82, 97, 14);
 		ZoneConfigXenos.add(CheckBoxAutoSysg);
+		
+		TextConfigSysgPassword = new JPasswordField();
+		TextConfigSysgPassword.setText("pass");
+		TextConfigSysgPassword.setBounds(47, 47, 86, 20);
+		ZoneConfigXenos.add(TextConfigSysgPassword);
 		
 		JLabel LabelConfigValide = new JLabel("");
 		LabelConfigValide.setBounds(10, 319, 145, 19);
@@ -229,28 +239,34 @@ public class UserInterfaceConfig extends JFrame{
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				
+				@SuppressWarnings("unused")
 				int CodeRetour = 5;
 				String EcritureValideOuErreur = "";
 				String UserUnix = TextConfigUnixUser.getText();
 				String PassUnix = TextConfigUnixPassword.getText();
 				
 				String UserGmvs = TextConfigGmvsUser.getText();
+				@SuppressWarnings("deprecation")
 				String PassGmvs = TextConfigGmvsPassword.getText();
 				Boolean EtatAutoConnectGmvs = CheckBoxAutoGmvs.isSelected();
 				
 				String UserSysa = TextConfigSysaUser.getText();
+				@SuppressWarnings("deprecation")
 				String PassSysa = TextConfigSysaPassword.getText();
 				Boolean EtatAutoConnectSysa = CheckBoxAutoSysa.isSelected();
 				
 				String UserKmvs = TextConfigKmvsUser.getText();
+				@SuppressWarnings("deprecation")
 				String PassKmvs = TextConfigKmvsPassword.getText();
 				Boolean EtatAutoConnectKmvs = CheckBoxAutoKmvs.isSelected();
 				
 				String UserZmvs = TextConfigZmvsUser.getText();
+				@SuppressWarnings("deprecation")
 				String PassZmvs = TextConfigZmvsPassword.getText();
 				Boolean EtatAutoConnectZmvs = CheckBoxAutoZmvs.isSelected();
 				
 				String UserSysg = TextConfigSysgUser.getText();
+				@SuppressWarnings("deprecation")
 				String PassSysg = TextConfigSysgPassword.getText();
 				Boolean EtatAutoConnectSysg = CheckBoxAutoSysg.isSelected();
 				
@@ -262,6 +278,7 @@ public class UserInterfaceConfig extends JFrame{
 				EcritureValideOuErreur = MaConfig.EcrireUser("user", "Unix" , UserUnix);
 				ProgressBarValideConfig.setValue(10);
 				EcritureValideOuErreur = MaConfig.EcrireUser("user", "Gmvs" , UserGmvs);
+				
 				ProgressBarValideConfig.setValue(20);
 				EcritureValideOuErreur = MaConfig.EcrireUser("user", "Sysa" , UserSysa);
 				ProgressBarValideConfig.setValue(30);
@@ -604,28 +621,32 @@ public class UserInterfaceConfig extends JFrame{
 	private JTextField TextConfigUnixPassword;
 	private JPanel ZoneConfigUnix;
 	private JTextField TextConfigGmvsUser;
-	private JTextField TextConfigGmvsPassword;
+	
 	private JPanel ZoneConfigSysa;
 	private JTextField TextConfigSysaUser;
-	private JTextField TextConfigSysaPassword;
+	
 	private JLabel LabelConfigSysaUser;
 	private JLabel LabelConfigSysaPassword;
 	private JPanel ZoneConfigKmvs;
 	private JTextField TextConfigKmvsUser;
-	private JTextField TextConfigKmvsPassword;
+	
 	private JLabel LabelConfigKmvsUser;
 	private JLabel LabelConfigKmvsPassword;
 	private JPanel ZoneConfigZmvs;
 	private JTextField TextConfigZmvsUser;
-	private JTextField TextConfigZmvsPassword;
+	
 	private JLabel LabelConfigZmvsUser;
 	private JLabel LabelConfigZmvsPassword;
 	
 	
 	private JButton BoutonRechargerConfig;
 	private JTextField TextConfigSysgUser;
-	private JTextField TextConfigSysgPassword;
 	
+	private JPasswordField TextConfigGmvsPassword;
+	private JPasswordField TextConfigSysaPassword;
+	private JPasswordField TextConfigZmvsPassword;
+	private JPasswordField TextConfigKmvsPassword;
+	private JPasswordField TextConfigSysgPassword;
 }
 
 

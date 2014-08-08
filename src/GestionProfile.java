@@ -44,7 +44,7 @@ public class GestionProfile {
 				}
 
 				out.close();
-
+				input.close();
 		return CodeRetour;
 		
 		
