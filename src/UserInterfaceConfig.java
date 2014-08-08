@@ -22,6 +22,7 @@ import java.io.IOException;
 
 import javax.swing.JPasswordField;
 import javax.swing.DropMode;
+import javax.swing.JInternalFrame;
 
 
 public class UserInterfaceConfig extends JFrame{

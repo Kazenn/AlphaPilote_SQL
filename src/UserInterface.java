@@ -1,13 +1,12 @@
 import java.awt.AWTException;
 import java.awt.Checkbox;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.List;
+import java.awt.Insets;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -17,11 +16,11 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -36,26 +35,33 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
-import javax.swing.DefaultComboBoxModel;
-import java.awt.Insets;
-
 public class UserInterface extends JFrame{
 	/**
 	 * 
 	 */
+	Component LastEntered;
 	private static final long serialVersionUID = 1L;
 	private JComboBox MaComboBox;
 	private String MachineDansMaComboBox;
+	private JTextArea ZoneTextLog;
+	private JLabel LabelTestFichierConfig;
+	private JLabel LabelTestFichierMachine;
+	private JLabel LabelTestFichierLog;
+	private JLabel labelTestCouleurOk;
+	private JLabel labelTestCouleurNok;
 	
 	String CheminQuick3270 = "D:\\AlphaPilote\\Quick3270\\Quick3270.exe";
-	String CheminPutty = "D:\\AlphaPilote\\Putty.exe";
+	String CheminPutty = "D:\\AlphaPilote\\Putty\\Putty.exe";
+	
+	String CheminFicherConfig ="D:\\AlphaPilote\\config.txt";
+	String CheminFicherLog ="D:\\AlphaPilote\\log.txt";
+	String CheminFicherMachine ="D:\\AlphaPilote\\machine.txt";
 	
 	
 	String CheminQuick3270ProfileGmvs = "D:\\AlphaPilote\\Quick3270\\Profiles\\GMVS.ecf";
@@ -90,7 +96,9 @@ public class UserInterface extends JFrame{
 		BarreMenuPrincipale.add(MenuFichier);
 		
 		JMenuItem MenuQuitter = new JMenuItem("Quitter");
-		MenuQuitter.setIcon(new ImageIcon(UserInterface.class.getResource("/javax/swing/plaf/metal/icons/ocean/error.png")));
+		
+		final ImageIcon IconQuitter = new ImageIcon(getClass().getResource("/door-open-icon.png"));
+		MenuQuitter.setIcon(IconQuitter);
 		MenuQuitter.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
@@ -98,6 +106,26 @@ public class UserInterface extends JFrame{
 				System.exit(code_retour);
 				}
 		});
+		
+		JMenuItem MenuTestAccesFichiers = new JMenuItem("Tester l'acc\u00E8s aux fichiers");
+		MenuTestAccesFichiers.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+			
+				int RetourTest = TestAccesFichier();
+				if (RetourTest == 1)
+				{
+					ZoneTextLog.append("L'accès à tous les fichiers est valide"+"\n");
+					
+				}
+			
+			}
+		});
+		MenuTestAccesFichiers.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/scene/web/skin/Copy_16x16_JFX.png")));
+		MenuFichier.add(MenuTestAccesFichiers);
+		
+		JSeparator SeparateurMenuFichier = new JSeparator();
+		MenuFichier.add(SeparateurMenuFichier);
 		
 		
 		MenuQuitter.setBackground(Color.RED);
@@ -109,21 +137,71 @@ public class UserInterface extends JFrame{
 		SeparateurFichierFavoris.setOrientation(SwingConstants.VERTICAL);
 		BarreMenuPrincipale.add(SeparateurFichierFavoris);
 		
-		JMenu mnFavorisPilotage = new JMenu("Favoris Pilotage");
-		BarreMenuPrincipale.add(mnFavorisPilotage);
+		JMenu MenuFavoris = new JMenu("Favoris web");
+		BarreMenuPrincipale.add(MenuFavoris);
 		
 		JScrollPane ScrollZoneTextLog = new JScrollPane();
 		ScrollZoneTextLog.setViewportBorder(new TitledBorder(null, "Log", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(255, 69, 0)));
-		ScrollZoneTextLog.setBounds(10, 268, 564, 201);
+		ScrollZoneTextLog.setBounds(10, 268, 478, 201);
 		getContentPane().add(ScrollZoneTextLog);
 		
-		JTextArea ZoneTextLog = new JTextArea();
+		ZoneTextLog = new JTextArea();
 		ScrollZoneTextLog.setViewportView(ZoneTextLog);
 		ZoneTextLog.setWrapStyleWord(true);
 		ZoneTextLog.setLineWrap(true);
 		ZoneTextLog.setFont(new Font("Verdana", Font.PLAIN, 11));
 		ZoneTextLog.setBackground(Color.LIGHT_GRAY);
 		ZoneTextLog.setEditable(false);
+		
+		JMenu MenuOutils = new JMenu("Outils");
+		BarreMenuPrincipale.add(MenuOutils);
+		
+		JMenuItem MenuPutty = new JMenuItem("Putty");
+		final ImageIcon IconPutty = new ImageIcon(getClass().getResource("/putty-icon.png"));
+		MenuPutty.setIcon(IconPutty);
+		MenuPutty.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				GestionLog MaLog = new GestionLog();
+				ProcessBuilder builder = new ProcessBuilder(new String[] { CheminPutty});
+				try {
+					Process p = builder.start();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					MaLog.EcrireDansFichierLog("Erreur au lancement de putty : " +e);
+					ZoneTextLog.append("Erreur au lancement : Consulter la log."+"\n" );
+		            
+					
+				}
+				
+			}
+		});
+		MenuOutils.add(MenuPutty);
+		
+		JMenuItem MenuQuick3270 = new JMenuItem("Quick3270");
+		final ImageIcon IconQuick3270 = new ImageIcon(getClass().getResource("/quick3270-icon.png"));
+		MenuQuick3270.setIcon(IconQuick3270);
+		MenuQuick3270.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				
+				GestionLog MaLog = new GestionLog();
+				ProcessBuilder builder = new ProcessBuilder(new String[] { CheminQuick3270});
+				try {
+					Process p = builder.start();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+					MaLog.EcrireDansFichierLog("Erreur au lancement de putty : " +e1);
+					ZoneTextLog.append("Erreur au lancement : Consulter la log."+"\n" );
+		            
+					
+				}
+				
+			}
+		});
+		MenuOutils.add(MenuQuick3270);
 		
 		
 		
@@ -135,6 +213,8 @@ public class UserInterface extends JFrame{
 		MenuConnexionMvs.add(SousMenuConnexionMvs);
 		
 		JMenuItem MenuZmvs = new JMenuItem("Zmvs (CFF)");
+		final ImageIcon IconZmvs = new ImageIcon(getClass().getResource("/Letter-Z-icon.png"));
+		MenuZmvs.setIcon(IconZmvs);
 		MenuZmvs.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
@@ -178,7 +258,8 @@ public class UserInterface extends JFrame{
 		});
 		
 		JMenuItem MenuSysa = new JMenuItem("Sysa");
-		MenuSysa.setIcon(new ImageIcon(UserInterface.class.getResource("/javax/swing/plaf/metal/icons/ocean/maximize-pressed.gif")));
+		final ImageIcon IconSysa = new ImageIcon(getClass().getResource("/Letter-A-blue-icon.png"));
+		MenuSysa.setIcon(IconSysa);
 		MenuSysa.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
@@ -224,6 +305,8 @@ public class UserInterface extends JFrame{
 		SousMenuConnexionMvs.add(MenuSysa);
 		
 		JMenuItem MenuKmvs = new JMenuItem("Kmvs (IP0)");
+		final ImageIcon IconKmvs = new ImageIcon(getClass().getResource("/Letter-K-red-icon.png"));
+		MenuKmvs.setIcon(IconKmvs);
 		MenuKmvs.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
@@ -269,6 +352,8 @@ public class UserInterface extends JFrame{
 		SousMenuConnexionMvs.add(MenuZmvs);
 		
 		JMenuItem MenuSysg = new JMenuItem("Sysg (XENOS)");
+		final ImageIcon IconSysg = new ImageIcon(getClass().getResource("/g-icon.png"));
+		MenuSysg.setIcon(IconSysg);
 		MenuSysg.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
@@ -360,9 +445,6 @@ public class UserInterface extends JFrame{
 				}
 			}
 		});
-		
-		JMenu SousMenuConnexionUnix = new JMenu("Unix");
-		MenuConnexionMvs.add(SousMenuConnexionUnix);
 		getContentPane().setLayout(null);
 		
 		JPanel PaneZoneConnexion = new JPanel();
@@ -411,7 +493,7 @@ public class UserInterface extends JFrame{
 		});
 		
 		MenuOdip.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/scene/web/skin/IncreaseIndent_16x16_JFX.png")));
-		mnFavorisPilotage.add(MenuOdip);
+		MenuFavoris.add(MenuOdip);
 		
 		JMenu MenuConfiguration = new JMenu("Configuration");
 		BarreMenuPrincipale.add(MenuConfiguration);
@@ -430,27 +512,6 @@ public class UserInterface extends JFrame{
 		});
 		MenuModifierFichierConfig.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/scene/web/skin/Copy_16x16_JFX.png")));
 		MenuConfiguration.add(MenuModifierFichierConfig);
-		
-		JMenuItem MenuModifierFichierMachine = new JMenuItem("Editer machines");
-		MenuModifierFichierMachine.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent arg0) {
-				
-				UserInterfaceMachine PageMachine = new UserInterfaceMachine();
-				
-				PageMachine.setVisible(true);
-				PageMachine.setSize(640,480);;
-				//ZoneTextLog.append(MachineDansMaComboBox);
-				//ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
-				
-				
-				
-			}
-		});
-	            
-	            
-	            
-		MenuConfiguration.add(MenuModifierFichierMachine);
 		
 		JMenu MenuAPropos = new JMenu("Aide");
 		BarreMenuPrincipale.add(MenuAPropos);
@@ -581,7 +642,7 @@ public class UserInterface extends JFrame{
 				CheckBoxPassword.setBounds(82, 74, 63, 18);
 				ZoneConnexionAutoLogin.add(CheckBoxPassword);
 		
-		JComboBox MaComboBox = new JComboBox();
+		MaComboBox = new JComboBox();
 		MaComboBox.setAutoscrolls(true);
 		MaComboBox.setMaximumRowCount(10);
 		//MaComboBox.setModel(new DefaultComboBoxModel(new String[] {" ", "vintage", "vtom", "femat", "192.168.0.1", "aazeaz", "sdfsd", "hfdghrt", "jrtyy", "xchn", "tyudjc", "bn"}));
@@ -608,13 +669,14 @@ public class UserInterface extends JFrame{
 		
 		JPanel ZoneConfig = new JPanel();
 		ZoneConfig.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Raccourcis", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(255, 99, 71)));
-		ZoneConfig.setBounds(486, 2, 216, 146);
+		ZoneConfig.setBounds(558, 2, 216, 146);
 		getContentPane().add(ZoneConfig);
 		ZoneConfig.setLayout(null);
 		
 		JButton BoutonChargerConfig = new JButton("Recharger configuration");
-		BoutonChargerConfig.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/scene/web/skin/Redo_16x16_JFX.png")));
-		BoutonChargerConfig.addMouseListener(new MouseAdapter() {
+		final ImageIcon IconBoutonRecharger = new ImageIcon(getClass().getResource("/reload-icon.png"));
+		BoutonChargerConfig.setIcon(IconBoutonRecharger);
+		BoutonChargerConfig.addMouseListener(new MouseAdapter() {			
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
 				
@@ -721,6 +783,44 @@ public class UserInterface extends JFrame{
 		});
 		BoutonChargerConfig.setBounds(6, 16, 200, 23);
 		ZoneConfig.add(BoutonChargerConfig);
+		
+		JPanel PanelZoneTestFichier = new JPanel();
+		PanelZoneTestFichier.setForeground(new Color(255, 69, 0));
+		PanelZoneTestFichier.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Test d'acc\u00E8s aux fichiers", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(255, 99, 71)));
+		PanelZoneTestFichier.setBounds(511, 308, 164, 161);
+		getContentPane().add(PanelZoneTestFichier);
+		PanelZoneTestFichier.setLayout(null);
+		
+		LabelTestFichierConfig = new JLabel(" Fichier configuration");
+		LabelTestFichierConfig.setBounds(6, 30, 122, 14);
+		PanelZoneTestFichier.add(LabelTestFichierConfig);
+		LabelTestFichierConfig.setOpaque(true);
+		LabelTestFichierConfig.setBackground(new Color(192, 192, 192));
+		LabelTestFichierConfig.setToolTipText("");
+		
+		LabelTestFichierMachine = new JLabel(" Fichier machine");
+		LabelTestFichierMachine.setBounds(6, 55, 95, 14);
+		PanelZoneTestFichier.add(LabelTestFichierMachine);
+		LabelTestFichierMachine.setBackground(new Color(192, 192, 192));
+		LabelTestFichierMachine.setOpaque(true);
+		
+		LabelTestFichierLog = new JLabel(" Ficher log");
+		LabelTestFichierLog.setBounds(6, 80, 59, 14);
+		PanelZoneTestFichier.add(LabelTestFichierLog);
+		LabelTestFichierLog.setBackground(new Color(192, 192, 192));
+		LabelTestFichierLog.setOpaque(true);
+		
+		labelTestCouleurOk = new JLabel(" Acc\u00E8s OK");
+		labelTestCouleurOk.setBounds(6, 136, 59, 14);
+		PanelZoneTestFichier.add(labelTestCouleurOk);
+		labelTestCouleurOk.setOpaque(true);
+		labelTestCouleurOk.setBackground(new Color(60, 179, 113));
+		
+		labelTestCouleurNok = new JLabel(" Acc\u00E8s NOK");
+		labelTestCouleurNok.setBounds(75, 136, 73, 14);
+		PanelZoneTestFichier.add(labelTestCouleurNok);
+		labelTestCouleurNok.setOpaque(true);
+		labelTestCouleurNok.setBackground(new Color(178, 34, 34));
 	
 		
 		
@@ -845,6 +945,7 @@ public class UserInterface extends JFrame{
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
 				
+				
 				//final String CHEMIN = "D:\\";
 				
 				GestionMachine MaMachine = new GestionMachine();
@@ -967,37 +1068,33 @@ public class UserInterface extends JFrame{
 		BoutonValideIp.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
-		
+				LastEntered = e.getComponent();
 				GestionMachine MaMachine = new GestionMachine();
-				String Resultatdemande = MaMachine.DemandeIp(MachineDansMaComboBox);
-				String ResultatdemandeSave = Resultatdemande;
+				String ResultatDemandeTest = MaMachine.DemandeIp(MachineDansMaComboBox);
+				String ResultatdemandeSave = ResultatDemandeTest;
+				
 				ResultatPing.setForeground(Color.GRAY);
-				//String TextZoneIp = ZoneIp.getText();
-				if (Resultatdemande == null)
+				
+				if (ResultatDemandeTest == null)
 				{
-					Resultatdemande = MachineDansMaComboBox;
+					ResultatDemandeTest = MachineDansMaComboBox;
 					ResultatdemandeSave = MachineDansMaComboBox;
+					
 				}
-				
-				Resultatdemande = Resultatdemande + "\"";
-				
-				
-				StringBuffer StringFinal = new StringBuffer (Resultatdemande);  
-				String guillemet = "\"ping ";  
-				StringFinal.insert (0, guillemet);  
-				Resultatdemande = StringFinal.toString();	
+								
 				ZoneTextLog.append("Ping vers " + ResultatdemandeSave + " en cours ...");
 	            ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
 					
 				
-				final String CHEMIN = "D:\\";
+				//final String CHEMIN = "D:\\";
 			    
 			        try {
 			        	//System.setOut(new PrintStream(System.out, true, "IBM850"));
 			        	
 			        	ResultatPing.setForeground(Color.GRAY);
-			            ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/C", Resultatdemande, " -n 1");
-			            pb.directory(new File(CHEMIN));
+			            
+			            ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/C", " ping "+ResultatDemandeTest+" -n 1");
+			            //pb.directory(new File(CHEMIN));
 			            
 			            Map<String, String> env = pb.environment();
 			            for (Entry<?, ?> entry : env.entrySet()) {
@@ -1031,32 +1128,104 @@ public class UserInterface extends JFrame{
 			        		ResultatPing.setForeground(Color.RED);
 			        	}
 			         
-			            //MaBarreProgression.setValue(100);
-			             
-			            //ZoneTextLog.append(fluxSortie.RetourFluxAfficheur);
-			            //String TESTTTEST = fluxSortie.LecteurDeFlux();
-			            //ZoneTextLog.setForeground(Color.GREEN);
-			            ZoneTextLog.append(fluxSortie.LecteurDeFlux());
+			            String CharASupprimer = "ÿ"; 
+			            String LigneRetourPourAffichage = fluxSortie.LecteurDeFlux();
+			            LigneRetourPourAffichage = LigneRetourPourAffichage.replaceAll(CharASupprimer," ");
+			            ZoneTextLog.append(LigneRetourPourAffichage);
+			            
 
 			        } catch (IOException e1) {
-			            
+			        	e1.printStackTrace();
 			            ZoneTextLog.append("PING KO - Echec de la commande");
 			            ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
 			            GestionLog MaLog = new GestionLog();
 						MaLog.EcrireDansFichierLog("Erreur au lancement du ping : " +e);
 						
-						e1.printStackTrace();
+						
 			            
 			         } catch (InterruptedException e1) {
-						
+			        	 e1.printStackTrace();
 			        	 ZoneTextLog.append("PING KO - Echec de la commande");
 				         ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
 				         GestionLog MaLog = new GestionLog();
 						 MaLog.EcrireDansFichierLog("Erreur au lancement du ping : " +e1);
-						 e1.printStackTrace();
+						 
 					}
-			    }				
+			    }	
+			
+			
+			//LANCE AU CHARGEMENT DE LA FENETRE PRINCIPALE
+					int RetourTest = TestAccesFichier();
+					
+					
+					
+			
 		});
 
+	}
+	
+	
+	public int TestAccesFichier()
+	{
+		
+		File FichierMachine = new File(CheminFicherMachine);
+		if (FichierMachine.exists())
+		{
+			LabelTestFichierMachine.setBackground(new Color(60, 179, 113));
+			LabelTestFichierMachine.setOpaque(true);		
+		}
+		else
+		{
+			ZoneTextLog.append("Impossible de trouver le fichier : "+CheminFicherMachine +"\n");
+			LabelTestFichierMachine.setBackground(new Color(178, 34, 34));
+			LabelTestFichierConfig.setOpaque(true);
+			GestionLog MaLog = new GestionLog();
+			MaLog.EcrireDansFichierLog("Erreur lors du test présence du fichier machine dans : "+CheminFicherMachine);
+		}
+		File FichierConfig = new File(CheminFicherConfig);
+		if (FichierConfig.exists())
+		{
+			LabelTestFichierConfig.setBackground(new Color(60, 179, 113));
+			LabelTestFichierConfig.setOpaque(true);		
+		}
+		else
+		{
+			ZoneTextLog.append("Impossible de trouver le config : "+CheminFicherConfig+"\n");
+			LabelTestFichierConfig.setBackground(new Color(178, 34, 34));
+			LabelTestFichierConfig.setOpaque(true);
+			GestionLog MaLog = new GestionLog();
+			MaLog.EcrireDansFichierLog("Erreur lors du test présence du fichier config dans : "+CheminFicherMachine);
+		}
+		File FichierLog = new File(CheminFicherLog);
+		if (FichierLog.exists())
+		{
+			LabelTestFichierLog.setBackground(new Color(60, 179, 113));
+			LabelTestFichierLog.setOpaque(true);		
+		}
+		else
+		{
+			ZoneTextLog.append("Impossible de trouver le log : "+CheminFicherLog+"\n");
+			ZoneTextLog.append("Création d'un nouveau fichier de log"+"\n");
+			LabelTestFichierLog.setBackground(new Color(178, 34, 34));
+			LabelTestFichierLog.setOpaque(true);
+			GestionLog MaLog = new GestionLog();
+			MaLog.EcrireDansFichierLog("Erreur lors du test présence du log config dans : "+CheminFicherMachine);
+			
+		}
+		return 1;	
+	}
+	
+	
+	
+	
+	protected ImageIcon createImageIcon(String path,String description) 
+	{
+	    java.net.URL imgURL = getClass().getResource(path);
+	    if (imgURL != null) {
+	        return new ImageIcon(imgURL, description);
+	    } else {
+	        System.err.println("Couldn't find file: " + path);
+	        return null;
+	    }
 	}
 }

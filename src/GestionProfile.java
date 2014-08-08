@@ -86,6 +86,7 @@ public int ModifierUserProfile(String Machine, String User) throws IOException
 				}
 
 				out.close();
+				input.close();
 
 		return CodeRetour;
 		

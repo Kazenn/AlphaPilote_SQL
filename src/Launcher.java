@@ -6,7 +6,7 @@ public class Launcher {
 	UserInterface frame = new UserInterface();
 	
 	frame.setVisible(true);
-	frame.setSize(900,668);;
+	frame.setSize(800,550);;
 	
 	
 	

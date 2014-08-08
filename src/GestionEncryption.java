@@ -24,7 +24,7 @@ public class GestionEncryption {
 		StrongTextEncryptor Decrypteur = new StrongTextEncryptor();
 		Decrypteur.setPassword(MotDePasse);
 		StringApresDecryption = Decrypteur.decrypt(StringDemande);
-		System.out.println(StringApresDecryption);
+		//System.out.println(StringApresDecryption);
 		
 		return StringApresDecryption;
 		

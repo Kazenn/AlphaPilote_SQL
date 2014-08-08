@@ -19,6 +19,7 @@ class AfficheurFlux implements Runnable {
     }
 
     private BufferedReader getBufferedReader(InputStream is) {
+    	
         return new BufferedReader(new InputStreamReader(is));
     }
 
@@ -31,7 +32,7 @@ class AfficheurFlux implements Runnable {
             while ((ligne = br.readLine()) != null) {
             	
             	PrintStream ps = null;
-            	ps = new PrintStream(System.out, true, "ISO-8859-1");
+            	ps = new PrintStream(System.out, true, "IBM850");
 
             	ps.println(ligne);
             	
