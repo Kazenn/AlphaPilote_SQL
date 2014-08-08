@@ -8,16 +8,23 @@ import java.util.Properties;
 
 public class GestionConfig {
 
-	String configPath="D:\\AlphaPilote\\config.txt";
+	String CheminFichierConfig= "CheminVide";
+	GestionChemin RequeteChemin = new GestionChemin();
+	
+	
 	
 	public int LireConfig() 
 	{
+		
+		//UserInterface UI = new UserInterface();
+		// CheminFichierConfig = UI.DemandeCheminConfig();
+		 
 		 int CodeRetour = 0;
-		 //String configPath="D:\\AlphaPilote\\config.txt";
+		 //String CheminFichierConfig="D:\\AlphaPilote\\config.txt";
 		 Properties properties=new Properties();
 		 try 
 		 {
-		 FileInputStream in =new FileInputStream(configPath);
+		 FileInputStream in =new FileInputStream(RequeteChemin.DemandeChemin("CheminFichierConfig"));
 		 properties.load(in);
 		 in.close();
 		 //System.out.println(properties.getProperty("user"));
@@ -38,13 +45,16 @@ public class GestionConfig {
 	
 	public String DemandeUser(String Machine)
 		{
+		//UserInterface UI = new UserInterface();
+		//CheminFichierConfig = UI.DemandeCheminConfig();
+		
 	 String User = "";
 	 int CodeRetour = 5;
-	 //String configPath="D:\\AlphaPilote\\config.txt";
+	 //String CheminFichierConfig="D:\\AlphaPilote\\config.txt";
 	 Properties properties=new Properties();
 	 try 
 	 {
-	 FileInputStream in =new FileInputStream(configPath);
+	 FileInputStream in =new FileInputStream(RequeteChemin.DemandeChemin("CheminFichierConfig"));
 	 properties.load(in);
 	 in.close();
 	 User = properties.getProperty("user" + Machine);
@@ -64,14 +74,16 @@ public class GestionConfig {
 	
 	public String DemandePassword(String Machine)
 	{
+		//UserInterface UI = new UserInterface();
+		//CheminFichierConfig = UI.DemandeCheminConfig();
 		String Password = "";
 		int CodeRetour = 5;
-		//String configPath="D:\\AlphaPilote\\config.txt";
+		//String CheminFichierConfig="D:\\AlphaPilote\\config.txt";
 		Properties properties=new Properties();
 		try 
 		{
 			
-			FileInputStream in =new FileInputStream(configPath);
+			FileInputStream in =new FileInputStream(RequeteChemin.DemandeChemin("CheminFichierConfig"));
 			properties.load(in);
 			in.close();
 			Password = properties.getProperty("password" + Machine);
@@ -92,19 +104,20 @@ public class GestionConfig {
 
 	public String EcrireUser(String User , String Machine , String UserAEcrire)
 	{
-		 
+		//UserInterface UI = new UserInterface(); 
+		//CheminFichierConfig = UI.DemandeCheminConfig();
 		 String ValidationEcriture = "";
 		 int CodeRetour = 5;
-		 //String configPath="D:\\AlphaPilote\\config.txt";
+		 //String CheminFichierConfig="D:\\AlphaPilote\\config.txt";
 		 Properties properties=new Properties();
-		 File FichierConfig = new File(configPath);
+		 File FichierConfig = new File(CheminFichierConfig);
 		 FileInputStream stream;
 		try {
 			 
-			 stream = new FileInputStream(FichierConfig);
+			 stream = new FileInputStream(RequeteChemin.DemandeChemin("CheminFichierConfig"));
 			 properties.load(stream);
 			 properties.setProperty(User + Machine , UserAEcrire);
-			 FileOutputStream oStream = new FileOutputStream(FichierConfig) ;
+			 FileOutputStream oStream = new FileOutputStream(RequeteChemin.DemandeChemin("CheminFichierConfig")) ;
 			 properties.store(oStream, "Fichier de configuration des users et password");
 			 ValidationEcriture = "User pour " + Machine +" est correctement enregistré";
 			 CodeRetour = 0;
@@ -126,20 +139,21 @@ public class GestionConfig {
 	
 	public String EcrirePassword(String Password , String Machine , String PasswordAEcrire)
 	{
-		 
+		//UserInterface UI = new UserInterface();
+		//CheminFichierConfig = UI.DemandeCheminConfig();
 		 String ValidationEcriture = "";
 		 int CodeRetour = 5;
-		 //String configPath="D:\\AlphaPilote\\config.txt";
+		 //String CheminFichierConfig="D:\\AlphaPilote\\config.txt";
 		 Properties properties=new Properties();
-		 File FichierConfig = new File(configPath);
+		 File FichierConfig = new File(RequeteChemin.DemandeChemin("CheminFichierConfig"));
 		 FileInputStream stream;
 		try {
 			 GestionEncryption SecuriteFichierConfig = new GestionEncryption();
 			 PasswordAEcrire = SecuriteFichierConfig.DemandeEncryption(PasswordAEcrire);
-			 stream = new FileInputStream(FichierConfig);
+			 stream = new FileInputStream(RequeteChemin.DemandeChemin("CheminFichierConfig"));
 			 properties.load(stream);
 			 properties.setProperty(Password + Machine , PasswordAEcrire);
-			 FileOutputStream oStream = new FileOutputStream(FichierConfig) ;
+			 FileOutputStream oStream = new FileOutputStream(RequeteChemin.DemandeChemin("CheminFichierConfig")) ;
 			 properties.store(oStream, "Fichier de configuration des users et password");
 			 ValidationEcriture = "Fichier correctement enregistré";
 			 CodeRetour = 0;
@@ -161,14 +175,15 @@ public class GestionConfig {
 	
 	public String DemandeAutoConnect(String Machine)
 	{
+		
 		String ResultatDemandeAutoConnect = "";
 		
 		int CodeRetour = 5;
-		//String configPath="D:\\AlphaPilote\\config.txt";
+		
 		Properties properties=new Properties();
 		try 
 		{
-			FileInputStream in =new FileInputStream(configPath);
+			FileInputStream in =new FileInputStream(RequeteChemin.DemandeChemin("CheminFichierConfig"));
 			properties.load(in);
 			in.close();
 			ResultatDemandeAutoConnect = properties.getProperty("autoconnect" + Machine);
@@ -188,19 +203,20 @@ public class GestionConfig {
 	
 	public String EcrireAutoConnect(String autoconnect , String Machine , String AutoConnectAEcrire)
 	{
-		 
+		//UserInterface UI = new UserInterface();
+		//CheminFichierConfig = UI.DemandeCheminConfig();
 		 String ValidationEcriture = "";
 		 int CodeRetour = 5;
-		 //String configPath="D:\\AlphaPilote\\config.txt";
+		 //String CheminFichierConfig="D:\\AlphaPilote\\config.txt";
 		 Properties properties=new Properties();
-		 File FichierConfig = new File(configPath);
+		 File FichierConfig = new File(RequeteChemin.DemandeChemin("CheminFichierConfig"));
 		 FileInputStream stream;
 		try {
 			 
-			 stream = new FileInputStream(FichierConfig);
+			 stream = new FileInputStream(RequeteChemin.DemandeChemin("CheminFichierConfig"));
 			 properties.load(stream);
 			 properties.setProperty(autoconnect + Machine , AutoConnectAEcrire);
-			 FileOutputStream oStream = new FileOutputStream(FichierConfig) ;
+			 FileOutputStream oStream = new FileOutputStream(RequeteChemin.DemandeChemin("CheminFichierConfig")) ;
 			 properties.store(oStream, "Fichier de configuration des users et password");
 			 ValidationEcriture = "Fichier correctement enregistré";
 			 CodeRetour = 0;

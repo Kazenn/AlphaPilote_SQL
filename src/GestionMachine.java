@@ -11,30 +11,26 @@ public class GestionMachine {
 	
 	
 	
-	String configPath="D:\\AlphaPilote\\machine.txt";
+	String CheminFichierMachine="D:\\AlphaPilote\\machine.txt";
+	GestionChemin RequeteChemin = new GestionChemin();
 	
 	public int LireFichierMachine() 
 	{
 		 int CodeRetour = 0;
-		 
 		 Properties properties=new Properties();
 		 try 
 		 {
-		 FileInputStream in =new FileInputStream(configPath);
+		 FileInputStream in =new FileInputStream(RequeteChemin.DemandeChemin("CheminFichierMachine"));
 		 properties.load(in);
 		 in.close();
-		 //System.out.println(properties.getProperty("user"));
-		 //System.out.println(properties.getProperty("password"));
-		 
+				 
 		 CodeRetour = 0;
 		 } 
 		 catch (IOException e) {
-		 //System.out.println("Impssible de trouver le fichier de configuration");
+		 
 		 CodeRetour = 1;
 		 }
-		 
-		 //let's do the magic
-		 
+		
 		return CodeRetour;
 		 
 		}
@@ -42,13 +38,14 @@ public class GestionMachine {
 	
 	public String DemandeIp(String Machine)
 	{
+		//UserInterface UI = new UserInterface();
 		String AdresseIp = "";
 		int CodeRetour = 5;
-		
+		//CheminFichierMachine = UI.DemandeCheminConfig();
 		Properties properties=new Properties();
 		try 
 		{
-			FileInputStream in =new FileInputStream(configPath);
+			FileInputStream in =new FileInputStream(RequeteChemin.DemandeChemin("CheminFichierMachine"));
 			properties.load(in);
 			in.close();
 			AdresseIp = properties.getProperty(Machine);
@@ -68,10 +65,11 @@ public class GestionMachine {
 	public String[] LireFichierGlossary() throws IOException
 	{
 		ArrayList<String> strings = new ArrayList<String>();
-		BufferedReader input = new BufferedReader(new FileReader(configPath));
+		BufferedReader input = new BufferedReader(new FileReader(RequeteChemin.DemandeChemin("CheminFichierMachine")));
 		String[] ListeMachinePourComboBox;
 		String line = "vide class";
-		
+		//UserInterface UI = new UserInterface();
+		//CheminFichierMachine = UI.DemandeCheminConfig();
 		try {
 			while (( line = input.readLine()) != null)
 			{

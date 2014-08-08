@@ -232,10 +232,12 @@ public class UserInterfaceConfig extends JFrame{
 		ProgressBarValideConfig.setValue(0);
 		
 		JButton BoutonValiderConfig = new JButton("Valider la configuration");
+		final ImageIcon IconValider = new ImageIcon(getClass().getResource("/Ok-icon.png"));
+		BoutonValiderConfig.setIcon(IconValider);
+		
 		BoutonValiderConfig.setBounds(10, 380, 175, 51);
 		BoutonValiderConfig.setMargin(new Insets(1, 1, 1, 1));
 		getContentPane().add(BoutonValiderConfig);
-		BoutonValiderConfig.setIcon(new ImageIcon(UserInterfaceConfig.class.getResource("/com/sun/javafx/scene/control/skin/caspian/images/capslock-icon.png")));
 		BoutonValiderConfig.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
@@ -365,7 +367,7 @@ public class UserInterfaceConfig extends JFrame{
 		});
 		
 		BoutonRechargerConfig = new JButton("Recharger la configuration");
-		BoutonRechargerConfig.setBounds(201, 380, 153, 51);
+		BoutonRechargerConfig.setBounds(186, 380, 175, 51);
 		BoutonRechargerConfig.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
@@ -377,9 +379,6 @@ public class UserInterfaceConfig extends JFrame{
 				
 				String UserUnix = "#erreur";
 				String PassUnix = "#erreur";
-				
-				
-				
 				String UserSysa = "#erreur";
 				String PassSysa = "#erreur";
 				String ResultatDemandeAutoConnectSysa = null ;

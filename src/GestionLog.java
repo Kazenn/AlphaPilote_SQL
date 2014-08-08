@@ -3,10 +3,12 @@ import java.text.SimpleDateFormat;
 
 public class GestionLog {
 	String CheminLog="D:\\AlphaPilote\\log.txt";
-	                   
+	GestionChemin RequeteChemin = new GestionChemin();
+	              
 	public void EcrireDansFichierLog(String ChaineDansFichier) 
 	{
-		
+		//UserInterface UI = new UserInterface();  
+		//CheminLog = UI.DemandeCheminConfig();
 	                FileOutputStream FichierSortie; // declare a file output object
 	                PrintStream FluxEcriture; // declare a print stream object
 	           
@@ -14,7 +16,7 @@ public class GestionLog {
 	                String LaDateHeure = SimpleDate.format(new java.util.Date());
 	                     
 	                try {
-	                	FichierSortie = new FileOutputStream(CheminLog, true);
+	                	FichierSortie = new FileOutputStream(RequeteChemin.DemandeChemin("CheminFichierLog"), true);
 						FluxEcriture = new PrintStream(FichierSortie, true);
 	                	FluxEcriture.println ("["+LaDateHeure+"] " + ChaineDansFichier);
 	                	FluxEcriture.close();

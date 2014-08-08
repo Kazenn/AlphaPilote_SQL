@@ -10,16 +10,18 @@ import java.util.ArrayList;
 
 public class GestionProfile {
 	
+	GestionChemin RequeteChemin = new GestionChemin();
+	
 	public int ModifierPasswordProfile(String Machine, String Password) throws IOException
 	
 	{
 		int CodeRetour = 5;
-		String ConfigPath = "D:\\AlphaPilote\\Quick3270\\Macro\\"+Machine+".qmc";
+		String ConfigPath = RequeteChemin.DemandeChemin("CheminQuick3270ProfileGeneral")+Machine+".qmc";
 		
 		String LignePassword = "SendKeys "+"\""+Password+"<"+"Enter"+">"+"\"";
 		//BufferedWriter bw = new BufferedWriter(new FileWriter(ConfigPath));
 		ArrayList<String> TableauArray = new ArrayList<String>();
-		BufferedReader input = new BufferedReader(new FileReader(ConfigPath));
+		BufferedReader input = new BufferedReader(new FileReader(RequeteChemin.DemandeChemin("CheminQuick3270ProfileGeneral")+Machine+".qmc"));
 		String[] TableauTempo;
 		String line = "vide class";
 		
@@ -36,7 +38,7 @@ public class GestionProfile {
 		}
 		TableauTempo = (String[]) TableauArray.toArray(new String[0]);
 		TableauTempo[10] = LignePassword;
-				File file = new File(ConfigPath);
+				File file = new File(RequeteChemin.DemandeChemin("CheminQuick3270ProfileGeneral")+Machine+".qmc");
 				PrintWriter out = new PrintWriter(new FileWriter(file));
 
 				for (String LaLigne : TableauTempo) {
@@ -55,13 +57,14 @@ public class GestionProfile {
 public int ModifierUserProfile(String Machine, String User) throws IOException
 	
 	{
+		
 		int CodeRetour = 5;
-		String ConfigPath = "D:\\AlphaPilote\\Quick3270\\Macro\\"+Machine+".qmc";
+		String ConfigPath = RequeteChemin.DemandeChemin("CheminQuick3270ProfileGeneral")+Machine+".qmc";
 		
 		String LignePassword = "SendKeys "+"\""+User+"<"+"Enter"+">"+"\"";
 		
 		ArrayList<String> TableauArray = new ArrayList<String>();
-		BufferedReader input = new BufferedReader(new FileReader(ConfigPath));
+		BufferedReader input = new BufferedReader(new FileReader(RequeteChemin.DemandeChemin("CheminQuick3270ProfileGeneral")+Machine+".qmc"));
 		String[] TableauTempo;
 		String line = "vide class";
 		
@@ -78,7 +81,7 @@ public int ModifierUserProfile(String Machine, String User) throws IOException
 		}
 		TableauTempo = (String[]) TableauArray.toArray(new String[0]);
 		TableauTempo[8] = LignePassword;
-				File file = new File(ConfigPath);
+				File file = new File(RequeteChemin.DemandeChemin("CheminQuick3270ProfileGeneral")+Machine+".qmc");
 				PrintWriter out = new PrintWriter(new FileWriter(file));
 
 				for (String LaLigne : TableauTempo) {

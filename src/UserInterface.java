@@ -55,14 +55,18 @@ public class UserInterface extends JFrame{
 	private JLabel LabelTestFichierLog;
 	private JLabel labelTestCouleurOk;
 	private JLabel labelTestCouleurNok;
+	private String UserNameStation = "Username non reconnu";
 	
 	String CheminQuick3270 = "D:\\AlphaPilote\\Quick3270\\Quick3270.exe";
 	String CheminPutty = "D:\\AlphaPilote\\Putty\\Putty.exe";
+	/*
+	//String CheminFichierConfig ="D:\\AlphaPilote\\config.txt";
+	//String CheminFichierLog ="D:\\AlphaPilote\\log.txt";
+	//String CheminFichierMachine ="D:\\AlphaPilote\\machine.txt";
 	
-	String CheminFicherConfig ="D:\\AlphaPilote\\config.txt";
-	String CheminFicherLog ="D:\\AlphaPilote\\log.txt";
-	String CheminFicherMachine ="D:\\AlphaPilote\\machine.txt";
-	
+	String CheminFichierConfig ="D:\\AlphaPilote\\"+UserNameStation+"\\config.txt";
+	String CheminFichierLog ="D:\\AlphaPilote\\"+UserNameStation+"\\log.txt";
+	String CheminFichierMachine ="D:\\AlphaPilote\\machine.txt";
 	
 	String CheminQuick3270ProfileGmvs = "D:\\AlphaPilote\\Quick3270\\Profiles\\GMVS.ecf";
 	String CheminQuick3270MacroGmvs = "D:\\AlphaPilote\\Quick3270\\Profiles\\GMVS.qmc";
@@ -83,11 +87,16 @@ public class UserInterface extends JFrame{
 	String CheminQuick3270ProfileSysg = "D:\\AlphaPilote\\Quick3270\\Profiles\\Sysg.ecf";
 	String CheminQuick3270MacroSysg = "D:\\AlphaPilote\\Quick3270\\Profiles\\Sysg.qmc";
 	String CheminQuick3270ProfileSysg_no_auto_login = "D:\\AlphaPilote\\Quick3270\\Profiles\\Sysg_no_auto_login.ecf";
+	*/
+
+
 	
 	
 	public UserInterface() {
+		UserNameStation = System.getProperty("user.name");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(UserInterface.class.getResource("/javax/swing/plaf/metal/icons/ocean/computer.gif")));
-		setTitle(" AlphaPilote v0.1    -     Etienne PFISTNER");
+		setTitle(" AlphaPilote v0.1 - Environnement chargé pour "+UserNameStation+"");
+		
 		
 		JMenuBar BarreMenuPrincipale = new JMenuBar();
 		setJMenuBar(BarreMenuPrincipale);
@@ -163,7 +172,9 @@ public class UserInterface extends JFrame{
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
 				GestionLog MaLog = new GestionLog();
-				ProcessBuilder builder = new ProcessBuilder(new String[] { CheminPutty});
+				GestionChemin Chemin = new GestionChemin();
+				
+				ProcessBuilder builder = new ProcessBuilder(new String[] {Chemin.DemandeChemin("CheminPutty")});
 				try {
 					Process p = builder.start();
 				} catch (IOException e) {
@@ -185,9 +196,9 @@ public class UserInterface extends JFrame{
 		MenuQuick3270.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				
+				GestionChemin Chemin = new GestionChemin();
 				GestionLog MaLog = new GestionLog();
-				ProcessBuilder builder = new ProcessBuilder(new String[] { CheminQuick3270});
+				ProcessBuilder builder = new ProcessBuilder(new String[] {Chemin.DemandeChemin("CheminQuick3270")});
 				try {
 					Process p = builder.start();
 				} catch (IOException e1) {
@@ -221,13 +232,15 @@ public class UserInterface extends JFrame{
 				
 				GestionLog MaLog = new GestionLog();
 				UserInterfaceConfig UserInterfaceConfigPourDemande = new UserInterfaceConfig();
+				GestionChemin RequeteChemin = new GestionChemin();
+				
 								
 				try {
 					
 					if ( UserInterfaceConfigPourDemande.DemandeEtatAutoLoginZmvs() == true)
 		            {
 		            
-						ProcessBuilder builder = new ProcessBuilder(new String[] { CheminQuick3270, CheminQuick3270ProfileZmvs });
+						ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileZmvs") });
 						Process p = builder.start();
 						
 						ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuZmvs.getText() + " AUTOLOGIN");
@@ -238,7 +251,7 @@ public class UserInterface extends JFrame{
 					if ( UserInterfaceConfigPourDemande.DemandeEtatAutoLoginZmvs() == false)
 		            {
 						
-						ProcessBuilder builder = new ProcessBuilder(new String[] { CheminQuick3270, CheminQuick3270ProfileZmvs_no_auto_login });
+						ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileZmvs_no_auto_login") });
 						Process p = builder.start();
 						
 						ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuZmvs.getText());
@@ -266,13 +279,13 @@ public class UserInterface extends JFrame{
 				
 				GestionLog MaLog = new GestionLog();
 				UserInterfaceConfig UserInterfaceConfigPourDemande = new UserInterfaceConfig();
-								
+				GestionChemin RequeteChemin = new GestionChemin();				
 				try {
 					
 					if ( UserInterfaceConfigPourDemande.DemandeEtatAutoLoginSysa() == true)
 		            {
 		            
-						ProcessBuilder builder = new ProcessBuilder(new String[] { CheminQuick3270, CheminQuick3270ProfileSysa });
+						ProcessBuilder builder = new ProcessBuilder(new String[] {RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileSysa")});
 						Process p = builder.start();
 						
 						ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuSysa.getText() + " AUTOLOGIN");
@@ -283,7 +296,7 @@ public class UserInterface extends JFrame{
 					if ( UserInterfaceConfigPourDemande.DemandeEtatAutoLoginSysa() == false)
 		            {
 						
-						ProcessBuilder builder = new ProcessBuilder(new String[] { CheminQuick3270, CheminQuick3270ProfileSysa_no_auto_login });
+						ProcessBuilder builder = new ProcessBuilder(new String[] {RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileSysa_no_auto_login")});
 						Process p = builder.start();
 						
 						ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuSysa.getText());
@@ -314,13 +327,13 @@ public class UserInterface extends JFrame{
 				
 				GestionLog MaLog = new GestionLog();
 				UserInterfaceConfig UserInterfaceConfigPourDemande = new UserInterfaceConfig();
-								
+				GestionChemin RequeteChemin = new GestionChemin();				
 				try {
 					
 					if ( UserInterfaceConfigPourDemande.DemandeEtatAutoLoginKmvs() == true)
 		            {
 		            
-						ProcessBuilder builder = new ProcessBuilder(new String[] { CheminQuick3270, CheminQuick3270ProfileKmvs });
+						ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileKmvs") });
 						Process p = builder.start();
 						
 						ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuKmvs.getText() + " AUTOLOGIN");
@@ -331,7 +344,7 @@ public class UserInterface extends JFrame{
 					if ( UserInterfaceConfigPourDemande.DemandeEtatAutoLoginKmvs() == false)
 		            {
 						
-						ProcessBuilder builder = new ProcessBuilder(new String[] { CheminQuick3270, CheminQuick3270ProfileKmvs_no_auto_login });
+						ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileKmvs_no_auto_login") });
 						Process p = builder.start();					
 						ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuKmvs.getText());
 			            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
@@ -361,13 +374,13 @@ public class UserInterface extends JFrame{
 				
 				GestionLog MaLog = new GestionLog();
 				UserInterfaceConfig UserInterfaceConfigPourDemande = new UserInterfaceConfig();
-								
+				GestionChemin RequeteChemin = new GestionChemin();				
 				try {
 					
 					if ( UserInterfaceConfigPourDemande.DemandeEtatAutoLoginSysg() == true)
 		            {
 		            
-						ProcessBuilder builder = new ProcessBuilder(new String[] { CheminQuick3270, CheminQuick3270ProfileSysg });
+						ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileSysg") });
 						Process p = builder.start();
 						ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuSysg.getText() + " AUTOLOGIN");
 			            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
@@ -377,7 +390,7 @@ public class UserInterface extends JFrame{
 					if ( UserInterfaceConfigPourDemande.DemandeEtatAutoLoginSysg() == false)
 		            {
 						
-						ProcessBuilder builder = new ProcessBuilder(new String[] { CheminQuick3270, CheminQuick3270ProfileSysg_no_auto_login });
+						ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileSysg_no_auto_login") });
 						Process p = builder.start();
 						
 						ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuSysg.getText());
@@ -412,13 +425,14 @@ public class UserInterface extends JFrame{
 			public void mouseReleased(MouseEvent arg0) {
 				GestionLog MaLog = new GestionLog();
 				UserInterfaceConfig UserInterfaceConfigPourDemande = new UserInterfaceConfig();
+				GestionChemin RequeteChemin = new GestionChemin();
 								
 				try {
 					
 					if ( UserInterfaceConfigPourDemande.DemandeEtatAutoLoginGmvs() == true)
 		            {
 		            
-						ProcessBuilder builder = new ProcessBuilder(new String[] { CheminQuick3270, CheminQuick3270ProfileGmvs });
+						ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileGmvs") });
 						Process p = builder.start();
 						ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuGmvs.getText() + " AUTOLOGIN");
 			            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
@@ -428,7 +442,7 @@ public class UserInterface extends JFrame{
 					if ( UserInterfaceConfigPourDemande.DemandeEtatAutoLoginGmvs() == false)
 		            {
 						
-						ProcessBuilder builder = new ProcessBuilder(new String[] { CheminQuick3270, CheminQuick3270ProfileGmvs_no_auto_login });
+						ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileGmvs_no_auto_login") });
 						Process p = builder.start();
 						
 						ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuGmvs.getText());
@@ -521,11 +535,10 @@ public class UserInterface extends JFrame{
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
 				
-				
-	            //pb.CheminQuick3270ProfileGmvs(new File(CHEMIN));
-								//ProcessBuilder builder = new ProcessBuilder(new String[] { CheminQuick3270, CheminQuick3270ProfileGmvs });
+				GestionChemin RequeteChemin = new GestionChemin();
+	            
 				try {
-					ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/C", "start D:\\AlphaPilote\\log.txt");
+					ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/C", "start ",RequeteChemin.DemandeChemin("CheminFichierLog"));
 					Process p = builder.start();
 				} catch (IOException e) {
 					
@@ -549,7 +562,7 @@ public class UserInterface extends JFrame{
 			public void mouseReleased(MouseEvent e) {
 				
 				Desktop desktop = Desktop.getDesktop(); 
-			    String message = "mailto:epfistner@gmail.com?subject=Bug_ou_suggestion_pour_AlphaPilote&body=Fichier_log_attache&attachment=d:/AlphaPilote/log.txt"; 
+			    String message = "mailto:epfistner@gmail.com?subject=AlphaPilote";
 			    URI uri = URI.create(message); 
 			    try {
 					desktop.mail(uri);
@@ -724,7 +737,7 @@ public class UserInterface extends JFrame{
 				{
 					e.printStackTrace();
 					GestionLog MaLog = new GestionLog();
-					MaLog.EcrireDansFichierLog("Erreur de l'alimentation de la zone saisie machine(ip) : " +e);
+					MaLog.EcrireDansFichierLog("Erreur dans la saisie machine(ip) : " +e);
 					ZoneTextLog.append("Erreur de l'alimentation de la zone saisie machine(ip) : Consulter la log." );
 		            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 					
@@ -804,7 +817,7 @@ public class UserInterface extends JFrame{
 		LabelTestFichierMachine.setBackground(new Color(192, 192, 192));
 		LabelTestFichierMachine.setOpaque(true);
 		
-		LabelTestFichierLog = new JLabel(" Ficher log");
+		LabelTestFichierLog = new JLabel(" Fichier log");
 		LabelTestFichierLog.setBounds(6, 80, 59, 14);
 		PanelZoneTestFichier.add(LabelTestFichierLog);
 		LabelTestFichierLog.setBackground(new Color(192, 192, 192));
@@ -832,6 +845,7 @@ public class UserInterface extends JFrame{
 				GestionMachine MaMachine = new GestionMachine();
 				String Resultatdemande = MaMachine.DemandeIp(MachineDansMaComboBox);
 				String ResultatdemandeSave = Resultatdemande;
+				GestionChemin RequeteChemin = new GestionChemin();
 				
 				//String TextZoneIp = ZoneIp.getText();
 				if (Resultatdemande == null)
@@ -846,7 +860,7 @@ public class UserInterface extends JFrame{
 			            
 			             if (BoutonRadioRoot.isSelected() == true && LanceUneFois == true ) {
 			            	 
-			            	 	Runtime.getRuntime().exec(String.format(CheminPutty + " " + Resultatdemande +" -ssh -l root"));
+			            	 	Runtime.getRuntime().exec(String.format(RequeteChemin.DemandeChemin("CheminPutty") + " " + Resultatdemande +" -ssh -l root"));
 			            	 	ZoneTextLog.append("Lancement putty ssh vers " + Resultatdemande + " avec le user root" );
 					            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 					            LanceUneFois = false;
@@ -856,7 +870,7 @@ public class UserInterface extends JFrame{
 			             		             		             
 			             if (BoutonRadioSalle.isSelected() == true && LanceUneFois == true ) {
 			            	 
-			            	 	Runtime.getRuntime().exec(String.format(CheminPutty + " " + Resultatdemande +" -ssh -l salle"));
+			            	 	Runtime.getRuntime().exec(String.format(RequeteChemin.DemandeChemin("CheminPutty") + " " + Resultatdemande +" -ssh -l salle"));
 			            	 	ZoneTextLog.append("Lancement putty ssh vers " + Resultatdemande + " avec le user salle" );
 					            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 					            LanceUneFois = false;
@@ -866,7 +880,7 @@ public class UserInterface extends JFrame{
 					     if (BoutonRadioUserPerso.isSelected() == true && LanceUneFois == true && CheckBoxPassword.getState() == false) {
 					            	 
 				            	 	String EtatBouton = BoutonRadioUserPerso.getText();
-				            	 	Runtime.getRuntime().exec(String.format(CheminPutty + " " + Resultatdemande +" -ssh -l "+EtatBouton));
+				            	 	Runtime.getRuntime().exec(String.format(RequeteChemin.DemandeChemin("CheminPutty") + " " + Resultatdemande +" -ssh -l "+EtatBouton));
 				            	 	ZoneTextLog.append("Lancement putty ssh vers " + Resultatdemande + " avec le user " + BoutonRadioUserPerso.getText() );
 						            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 						            LanceUneFois = false;
@@ -877,7 +891,7 @@ public class UserInterface extends JFrame{
 				          if (BoutonRadioUserPerso.isSelected() == true && LanceUneFois == true && CheckBoxPassword.getState() == true) {
 				            	 	
 				            	 	String EtatBouton = BoutonRadioUserPerso.getText();
-				            	 	Runtime.getRuntime().exec(String.format(CheminPutty + " " + Resultatdemande +" -ssh -l "+EtatBouton));
+				            	 	Runtime.getRuntime().exec(String.format(RequeteChemin.DemandeChemin("CheminPutty") + " " + Resultatdemande +" -ssh -l "+EtatBouton));
 				            	 	ZoneTextLog.append("Lancement putty ssh vers " + Resultatdemande + " avec le user " +EtatBouton+" et le mot de passe" );
 						            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 						            LanceUneFois = false;
@@ -913,7 +927,7 @@ public class UserInterface extends JFrame{
 			      
 			             
 			             if (LanceUneFois == true){
-			            	 	Runtime.getRuntime().exec(String.format(CheminPutty + " "+ Resultatdemande + " -ssh" ));
+			            	 	Runtime.getRuntime().exec(String.format(RequeteChemin.DemandeChemin("CheminPutty") + " "+ Resultatdemande + " -ssh" ));
 			            	 	ZoneTextLog.append("Lancement putty ssh vers " + Resultatdemande);
 			            	 	ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 			            	 	LanceUneFois = false;
@@ -951,6 +965,7 @@ public class UserInterface extends JFrame{
 				GestionMachine MaMachine = new GestionMachine();
 				String Resultatdemande = MaMachine.DemandeIp(MachineDansMaComboBox);
 				String ResultatdemandeSave = Resultatdemande;
+				GestionChemin RequeteChemin = new GestionChemin();
 				//ResultatPing.setForeground(Color.GRAY);
 				//String TextZoneIp = ZoneIp.getText();
 				if (Resultatdemande == null)
@@ -967,7 +982,7 @@ public class UserInterface extends JFrame{
 		            
 		             if (BoutonRadioRoot.isSelected() == true && LanceUneFois == true ) {
 		            	 
-		            	 	Runtime.getRuntime().exec(String.format(CheminPutty + " "+ Resultatdemande +" -telnet -l root"));
+		            	 	Runtime.getRuntime().exec(String.format(RequeteChemin.DemandeChemin("CheminPutty") + " "+ Resultatdemande +" -telnet -l root"));
 		            	 	ZoneTextLog.append("Lancement putty telnet vers " + Resultatdemande + " avec le user root" );
 				            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 				            LanceUneFois = false;
@@ -978,7 +993,7 @@ public class UserInterface extends JFrame{
 		             		             		             
 		             if (BoutonRadioSalle.isSelected() == true && LanceUneFois == true ) {
 		            	 
-		            	 	Runtime.getRuntime().exec(String.format(CheminPutty + " " + Resultatdemande +" -telnet -l salle"));
+		            	 	Runtime.getRuntime().exec(String.format(RequeteChemin.DemandeChemin("CheminPutty") + " " + Resultatdemande +" -telnet -l salle"));
 		            	 	ZoneTextLog.append("Lancement putty telnet vers " + Resultatdemande + " avec le user salle" );
 				            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 				            LanceUneFois = false;
@@ -989,7 +1004,7 @@ public class UserInterface extends JFrame{
 		             if (BoutonRadioUserPerso.isSelected() == true && LanceUneFois == true && CheckBoxPassword.getState() == false) {
 		            	 
 		            	 	String EtatBouton = BoutonRadioUserPerso.getText();
-		            	 	Runtime.getRuntime().exec(String.format(CheminPutty + " " + Resultatdemande +" -telnet -l "+EtatBouton));
+		            	 	Runtime.getRuntime().exec(String.format(RequeteChemin.DemandeChemin("CheminPutty") + " " + Resultatdemande +" -telnet -l "+EtatBouton));
 		            	 	ZoneTextLog.append("Lancement putty telnet vers " + Resultatdemande + " avec le user " + BoutonRadioUserPerso.getText() );
 				            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 				            LanceUneFois = false;
@@ -1000,7 +1015,7 @@ public class UserInterface extends JFrame{
 		             if (BoutonRadioUserPerso.isSelected() == true && LanceUneFois == true && CheckBoxPassword.getState() == true) {
 		            	 	
 		            	 	String EtatBouton = BoutonRadioUserPerso.getText();
-		            	 	Runtime.getRuntime().exec(String.format(CheminPutty + " " + Resultatdemande +" -telnet -l "+EtatBouton));
+		            	 	Runtime.getRuntime().exec(String.format(RequeteChemin.DemandeChemin("CheminPutty") + " " + Resultatdemande +" -telnet -l "+EtatBouton));
 		            	 	ZoneTextLog.append("Lancement putty telnet vers " + Resultatdemande + " avec le user " +EtatBouton+" et le mot de passe" );
 				            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 				            LanceUneFois = false;
@@ -1033,7 +1048,7 @@ public class UserInterface extends JFrame{
 		             if (LanceUneFois == true){
 		            	 	//Runtime.getRuntime().exec(String.format("cmd.exe /c start D:\\AlphaPilote\\Putty.exe -telnet " + TextZoneIp ));
 		            	 	
-		            	 	Runtime.getRuntime().exec(String.format(CheminPutty+" " + Resultatdemande ));
+		            	 	Runtime.getRuntime().exec(String.format(RequeteChemin.DemandeChemin("CheminPutty")+" " + Resultatdemande ));
 		            	 	ZoneTextLog.append("Lancement putty telnet vers " + Resultatdemande);
 		            	 	ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 		            	 	LanceUneFois = false;
@@ -1043,19 +1058,19 @@ public class UserInterface extends JFrame{
 		             	             
 		       		            
 				} catch (IOException e) {
-					
+					e.printStackTrace();
 					GestionLog MaLog = new GestionLog();
 					MaLog.EcrireDansFichierLog("Erreur au lancement de putty : " +e);
 					ZoneTextLog.append("Erreur au lancement : Consulter la log." );
 		            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
-					e.printStackTrace();
+					
 				} catch (AWTException e) {
-					
+					e.printStackTrace();
 					GestionLog MaLog = new GestionLog();
 					MaLog.EcrireDansFichierLog("Erreur au lancement de putty : " +e);
 					ZoneTextLog.append("Erreur au lancement : Consulter la log." );
 		            ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
-					e.printStackTrace();
+					
 				}
 				
 				
@@ -1150,12 +1165,15 @@ public class UserInterface extends JFrame{
 				         GestionLog MaLog = new GestionLog();
 						 MaLog.EcrireDansFichierLog("Erreur au lancement du ping : " +e1);
 						 
+						 
 					}
 			    }	
 			
 			
 			//LANCE AU CHARGEMENT DE LA FENETRE PRINCIPALE
+					
 					int RetourTest = TestAccesFichier();
+					
 					
 					
 					
@@ -1165,10 +1183,11 @@ public class UserInterface extends JFrame{
 	}
 	
 	
+	
 	public int TestAccesFichier()
 	{
-		
-		File FichierMachine = new File(CheminFicherMachine);
+		GestionChemin RequeteChemin = new GestionChemin();
+		File FichierMachine = new File(RequeteChemin.DemandeChemin("CheminFichierMachine"));
 		if (FichierMachine.exists())
 		{
 			LabelTestFichierMachine.setBackground(new Color(60, 179, 113));
@@ -1176,13 +1195,13 @@ public class UserInterface extends JFrame{
 		}
 		else
 		{
-			ZoneTextLog.append("Impossible de trouver le fichier : "+CheminFicherMachine +"\n");
+			ZoneTextLog.append("Impossible de trouver le fichier : "+RequeteChemin.DemandeChemin("CheminFichierMachine")+"\n");
 			LabelTestFichierMachine.setBackground(new Color(178, 34, 34));
 			LabelTestFichierConfig.setOpaque(true);
 			GestionLog MaLog = new GestionLog();
-			MaLog.EcrireDansFichierLog("Erreur lors du test présence du fichier machine dans : "+CheminFicherMachine);
+			MaLog.EcrireDansFichierLog("Erreur lors du test présence du fichier machine dans : "+RequeteChemin.DemandeChemin("CheminFichierMachine"));
 		}
-		File FichierConfig = new File(CheminFicherConfig);
+		File FichierConfig = new File(RequeteChemin.DemandeChemin("CheminFichierConfig"));
 		if (FichierConfig.exists())
 		{
 			LabelTestFichierConfig.setBackground(new Color(60, 179, 113));
@@ -1190,13 +1209,13 @@ public class UserInterface extends JFrame{
 		}
 		else
 		{
-			ZoneTextLog.append("Impossible de trouver le config : "+CheminFicherConfig+"\n");
+			ZoneTextLog.append("Impossible de trouver le config : "+RequeteChemin.DemandeChemin("CheminFichierConfig")+"\n");
 			LabelTestFichierConfig.setBackground(new Color(178, 34, 34));
 			LabelTestFichierConfig.setOpaque(true);
 			GestionLog MaLog = new GestionLog();
-			MaLog.EcrireDansFichierLog("Erreur lors du test présence du fichier config dans : "+CheminFicherMachine);
+			MaLog.EcrireDansFichierLog("Erreur lors du test présence du fichier config dans : "+RequeteChemin.DemandeChemin("CheminFichierMachine"));
 		}
-		File FichierLog = new File(CheminFicherLog);
+		File FichierLog = new File(RequeteChemin.DemandeChemin("CheminFichierLog"));
 		if (FichierLog.exists())
 		{
 			LabelTestFichierLog.setBackground(new Color(60, 179, 113));
@@ -1204,20 +1223,18 @@ public class UserInterface extends JFrame{
 		}
 		else
 		{
-			ZoneTextLog.append("Impossible de trouver le log : "+CheminFicherLog+"\n");
+			ZoneTextLog.append("Impossible de trouver le log : "+RequeteChemin.DemandeChemin("CheminFichierLog")+"\n");
 			ZoneTextLog.append("Création d'un nouveau fichier de log"+"\n");
 			LabelTestFichierLog.setBackground(new Color(178, 34, 34));
 			LabelTestFichierLog.setOpaque(true);
 			GestionLog MaLog = new GestionLog();
-			MaLog.EcrireDansFichierLog("Erreur lors du test présence du log config dans : "+CheminFicherMachine);
+			MaLog.EcrireDansFichierLog("Erreur lors du test présence du log config dans : "+RequeteChemin.DemandeChemin("CheminFichierMachine"));
 			
 		}
 		return 1;	
 	}
 	
-	
-	
-	
+		
 	protected ImageIcon createImageIcon(String path,String description) 
 	{
 	    java.net.URL imgURL = getClass().getResource(path);
@@ -1228,4 +1245,6 @@ public class UserInterface extends JFrame{
 	        return null;
 	    }
 	}
+
+	
 }
