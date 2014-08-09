@@ -39,6 +39,7 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 
+import org.apache.commons.io.FileUtils;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 public class UserInterface extends JFrame{
@@ -56,9 +57,10 @@ public class UserInterface extends JFrame{
 	private JLabel labelTestCouleurOk;
 	private JLabel labelTestCouleurNok;
 	private String UserNameStation = "Username non reconnu";
+	private Boolean SuccesCreation = false;
 	
-	String CheminQuick3270 = "D:\\AlphaPilote\\Quick3270\\Quick3270.exe";
-	String CheminPutty = "D:\\AlphaPilote\\Putty\\Putty.exe";
+	//String CheminQuick3270 = "D:\\AlphaPilote\\Quick3270\\Quick3270.exe";
+	//String CheminPutty = "D:\\AlphaPilote\\Putty\\Putty.exe";
 	/*
 	//String CheminFichierConfig ="D:\\AlphaPilote\\config.txt";
 	//String CheminFichierLog ="D:\\AlphaPilote\\log.txt";
@@ -94,8 +96,9 @@ public class UserInterface extends JFrame{
 	
 	public UserInterface() {
 		UserNameStation = System.getProperty("user.name");
+		//Boolean b = CreationProfileAlphaPilote(UserNameStation);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(UserInterface.class.getResource("/javax/swing/plaf/metal/icons/ocean/computer.gif")));
-		setTitle(" AlphaPilote v0.1 - Environnement chargé pour "+UserNameStation+"");
+		setTitle(" Demembrat0r v0.1 - Prêt à demembrer pour "+UserNameStation+"");
 		
 		
 		JMenuBar BarreMenuPrincipale = new JMenuBar();
@@ -121,8 +124,8 @@ public class UserInterface extends JFrame{
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
 			
-				int RetourTest = TestAccesFichier();
-				if (RetourTest == 1)
+				int ResultatToutFichiersPresents = TestAccesFichier();
+				if (ResultatToutFichiersPresents == 3)
 				{
 					ZoneTextLog.append("L'accès à tous les fichiers est valide"+"\n");
 					
@@ -484,6 +487,8 @@ public class UserInterface extends JFrame{
 		
 		
 		JMenuItem MenuOdip = new JMenuItem("ODIP");
+		MenuOdip.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/scene/web/skin/IncreaseIndent_16x16_JFX.png")));
+		MenuFavoris.add(MenuOdip);
 		MenuOdip.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
@@ -505,9 +510,6 @@ public class UserInterface extends JFrame{
 				
 			}
 		});
-		
-		MenuOdip.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/scene/web/skin/IncreaseIndent_16x16_JFX.png")));
-		MenuFavoris.add(MenuOdip);
 		
 		JMenu MenuConfiguration = new JMenu("Configuration");
 		BarreMenuPrincipale.add(MenuConfiguration);
@@ -764,6 +766,7 @@ public class UserInterface extends JFrame{
 					
 					GP.ModifierPasswordProfile("Sysa",MaConfig.DemandePassword("Sysa"));
 					GP.ModifierUserProfile("Sysa", MaConfig.DemandeUser("Sysa"));
+					ZoneTextLog.append("Users & passwords rechargés avec succés !"+"\n");
 					
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -777,8 +780,7 @@ public class UserInterface extends JFrame{
 				
 				if (CodeRetour == 0)
 				{
-					ZoneTextLog.append("Configuration rechargée avec succés");
-					ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
+					
 					BoutonRadioUserPerso.setText(UserUnix);
 					
 					
@@ -818,7 +820,7 @@ public class UserInterface extends JFrame{
 		LabelTestFichierMachine.setOpaque(true);
 		
 		LabelTestFichierLog = new JLabel(" Fichier log");
-		LabelTestFichierLog.setBounds(6, 80, 59, 14);
+		LabelTestFichierLog.setBounds(6, 80, 65, 14);
 		PanelZoneTestFichier.add(LabelTestFichierLog);
 		LabelTestFichierLog.setBackground(new Color(192, 192, 192));
 		LabelTestFichierLog.setOpaque(true);
@@ -1048,7 +1050,7 @@ public class UserInterface extends JFrame{
 		             if (LanceUneFois == true){
 		            	 	//Runtime.getRuntime().exec(String.format("cmd.exe /c start D:\\AlphaPilote\\Putty.exe -telnet " + TextZoneIp ));
 		            	 	
-		            	 	Runtime.getRuntime().exec(String.format(RequeteChemin.DemandeChemin("CheminPutty")+" " + Resultatdemande ));
+		            	 	Runtime.getRuntime().exec(String.format(RequeteChemin.DemandeChemin("CheminPutty")+" " + Resultatdemande +" -telnet" ));
 		            	 	ZoneTextLog.append("Lancement putty telnet vers " + Resultatdemande);
 		            	 	ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 		            	 	LanceUneFois = false;
@@ -1164,22 +1166,25 @@ public class UserInterface extends JFrame{
 				         ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
 				         GestionLog MaLog = new GestionLog();
 						 MaLog.EcrireDansFichierLog("Erreur au lancement du ping : " +e1);
-						 
-						 
+					 
 					}
 			    }	
-			
-			
-			//LANCE AU CHARGEMENT DE LA FENETRE PRINCIPALE
-					
-					int RetourTest = TestAccesFichier();
-					
-					
-					
-					
-			
+
 		});
 
+		
+		//LANCE AU CHARGEMENT DE LA FENETRE PRINCIPALE
+		
+		UserNameStation = System.getProperty("user.name");
+		Boolean bol = CreationProfileAlphaPilote(UserNameStation);
+		int RetourTest = TestAccesFichier();
+		
+		if (SuccesCreation == true)
+		{
+			ZoneTextLog.append("Le profile pour "+UserNameStation+" n'existait pas, il vient d'être créé avec tous les fichiers nécessaires."+"\n");
+		}
+		
+		
 	}
 	
 	
@@ -1188,10 +1193,12 @@ public class UserInterface extends JFrame{
 	{
 		GestionChemin RequeteChemin = new GestionChemin();
 		File FichierMachine = new File(RequeteChemin.DemandeChemin("CheminFichierMachine"));
+		int ResultatToutFichiersPresents = 0;
 		if (FichierMachine.exists())
 		{
 			LabelTestFichierMachine.setBackground(new Color(60, 179, 113));
-			LabelTestFichierMachine.setOpaque(true);		
+			LabelTestFichierMachine.setOpaque(true);	
+			ResultatToutFichiersPresents++;
 		}
 		else
 		{
@@ -1205,7 +1212,8 @@ public class UserInterface extends JFrame{
 		if (FichierConfig.exists())
 		{
 			LabelTestFichierConfig.setBackground(new Color(60, 179, 113));
-			LabelTestFichierConfig.setOpaque(true);		
+			LabelTestFichierConfig.setOpaque(true);
+			ResultatToutFichiersPresents++;
 		}
 		else
 		{
@@ -1219,19 +1227,53 @@ public class UserInterface extends JFrame{
 		if (FichierLog.exists())
 		{
 			LabelTestFichierLog.setBackground(new Color(60, 179, 113));
-			LabelTestFichierLog.setOpaque(true);		
+			LabelTestFichierLog.setOpaque(true);
+			ResultatToutFichiersPresents++;
 		}
 		else
 		{
 			ZoneTextLog.append("Impossible de trouver le log : "+RequeteChemin.DemandeChemin("CheminFichierLog")+"\n");
 			ZoneTextLog.append("Création d'un nouveau fichier de log"+"\n");
-			LabelTestFichierLog.setBackground(new Color(178, 34, 34));
+			//ZoneTextLog.append("Consulter la log dans le menu aide pour avoir plus d'informations"+"\n");
+			LabelTestFichierLog.setBackground(new Color(60, 179, 113));
 			LabelTestFichierLog.setOpaque(true);
 			GestionLog MaLog = new GestionLog();
 			MaLog.EcrireDansFichierLog("Erreur lors du test présence du log config dans : "+RequeteChemin.DemandeChemin("CheminFichierMachine"));
+			ResultatToutFichiersPresents++;
 			
 		}
-		return 1;	
+		return ResultatToutFichiersPresents;	
+	}
+	
+	
+	public Boolean CreationProfileAlphaPilote (String UserNameStation)
+	{
+		GestionChemin GC = new GestionChemin();
+		File DossierProfileStation = new File(GC.DemandeChemin("CheminProfileStationGeneral"));
+		
+		if (DossierProfileStation.exists())
+		{
+			
+		}
+		else
+		{
+			SuccesCreation = DossierProfileStation.mkdir();
+			File Source = new File(GC.DemandeChemin("CheminProfileStationVierge"));
+			
+			if (SuccesCreation == true)
+			{
+				try {
+					FileUtils.copyDirectory(Source, DossierProfileStation);
+				} catch (IOException e) {
+					
+					e.printStackTrace();
+				}
+			}
+			
+		}
+
+		return false;
+		
 	}
 	
 		

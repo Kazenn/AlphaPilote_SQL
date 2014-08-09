@@ -332,7 +332,7 @@ public class UserInterfaceConfig extends JFrame{
 				MaConfig.EcrireAutoConnect("autoconnect", "Zmvs", "false");
 				
 				
-				System.out.println(EcritureValideOuErreur);
+				//System.out.println(EcritureValideOuErreur);
 				LabelConfigValide.setText("Config sauvegard\u00E9e!");
 				LabelConfigValide.setForeground(new Color(60, 179, 113));
 				
@@ -343,18 +343,23 @@ public class UserInterfaceConfig extends JFrame{
 					try {
 						GP.ModifierPasswordProfile("Gmvs",MaConfig.DemandePassword("Gmvs"));
 						GP.ModifierUserProfile("Gmvs", MaConfig.DemandeUser("Gmvs"));
+						GP.ModifierUserNameStationProfile("GMVS");
 						
 						GP.ModifierPasswordProfile("Sysg",MaConfig.DemandePassword("Sysg"));
 						GP.ModifierUserProfile("Sysg", MaConfig.DemandeUser("Sysg"));
+						GP.ModifierUserNameStationProfile("Sysg");
 						
 						GP.ModifierPasswordProfile("Zmvs",MaConfig.DemandePassword("Zmvs"));
 						GP.ModifierUserProfile("Zmvs", MaConfig.DemandeUser("Zmvs"));
+						GP.ModifierUserNameStationProfile("ZMVS");
 						
 						GP.ModifierPasswordProfile("Kmvs",MaConfig.DemandePassword("Kmvs"));
 						GP.ModifierUserProfile("Kmvs", MaConfig.DemandeUser("Kmvs"));
+						GP.ModifierUserNameStationProfile("KMVS");
 						
 						GP.ModifierPasswordProfile("Sysa",MaConfig.DemandePassword("Sysa"));
 						GP.ModifierUserProfile("Sysa", MaConfig.DemandeUser("Sysa"));
+						GP.ModifierUserNameStationProfile("Sysa");
 					
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block

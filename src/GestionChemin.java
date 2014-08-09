@@ -1,3 +1,7 @@
+import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URLDecoder;
+
 
 public class GestionChemin {
 	
@@ -9,13 +13,15 @@ public class GestionChemin {
 			
 			String UserNameStation = "Username non reconnu";
 			UserNameStation = System.getProperty("user.name");
-			String CheminQuick3270 = "D:\\AlphaPilote\\Outils\\Quick3270\\Quick3270.exe";
-			 String CheminPutty = "D:\\AlphaPilote\\Outils\\Putty\\Putty.exe";
+			
+			 String CheminQuick3270 = "C:\\Program Files (x86)\\Quick3270 Secure\\Quick3270.exe";
+			 String CheminPutty = "C:\\APPLI_OPT\\Putty\\Putty.exe";
 			
 			 String CheminFichierConfig ="D:\\AlphaPilote\\Profiles\\"+UserNameStation+"\\config.txt";
 			 String CheminFichierLog ="D:\\AlphaPilote\\Profiles\\"+UserNameStation+"\\log.txt";
-			 String CheminFichierMachine ="D:\\AlphaPilote\\Data\\machine.txt";
-			
+			 String CheminFichierMachine = "\\\\fsitceti\\entites\\ITC PPR-EDC-PIL-724 ETI\\Pilotage Mutualise\\Sauvegarde Olive&Pascal\\Outils de pilotage\\Alphapilote\\Data\\machine.txt";
+			 //String CheminFichierMachine = "D:\\AlphaPilote\\Data\\machine.txt";
+			 
 			 String CheminQuick3270ProfileGmvs = "D:\\AlphaPilote\\Profiles\\"+UserNameStation+"\\GMVS.ecf";
 			 String CheminQuick3270MacroGmvs = "D:\\AlphaPilote\\Profiles\\"+UserNameStation+"\\GMVS.qmc";
 			 String CheminQuick3270ProfileGmvs_no_auto_login = "D:\\AlphaPilote\\Profiles\\"+UserNameStation+"\\GMVS_no_auto_login.ecf";
@@ -37,6 +43,8 @@ public class GestionChemin {
 			 String CheminQuick3270ProfileSysg_no_auto_login = "D:\\AlphaPilote\\Profiles\\"+UserNameStation+"\\Sysg_no_auto_login.ecf";
 			
 			 String CheminQuick3270ProfileGeneral = "D:\\AlphaPilote\\Profiles\\"+UserNameStation+"\\";
+			 String CheminProfileStationGeneral= "D:\\AlphaPilote\\Profiles\\"+UserNameStation+"\\";
+			 String CheminProfileStationVierge = "D:\\AlphaPilote\\Profiles\\Config_New_Profile";
 	
 			String ResultatChemin = "Impossible de trouver le chemin";
 			
@@ -57,7 +65,7 @@ public class GestionChemin {
 				ResultatChemin = CheminFichierLog;
 				break;
 			case "CheminFichierMachine":
-				ResultatChemin = CheminFichierMachine;
+				ResultatChemin = CheminFichierMachine ;
 			    break;
 			    
 			case "CheminQuick3270ProfileGmvs":
@@ -111,6 +119,17 @@ public class GestionChemin {
 			case "CheminQuick3270ProfileGeneral":
 				ResultatChemin = CheminQuick3270ProfileGeneral;
 				break;
+			//case "CheminQuick3270ProfileGeneralEcf":
+			//	ResultatChemin = CheminQuick3270ProfileGeneralEcf;
+			//	break;
+			case "CheminProfileStationGeneral":
+				ResultatChemin = CheminProfileStationGeneral;
+				break;
+			case "CheminProfileStationVierge":
+				ResultatChemin = CheminProfileStationVierge;
+				break;
+				
+			
 			
 			}
 	

@@ -3,6 +3,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -14,7 +15,7 @@ public class GestionMachine {
 	String CheminFichierMachine="D:\\AlphaPilote\\machine.txt";
 	GestionChemin RequeteChemin = new GestionChemin();
 	
-	public int LireFichierMachine() 
+	public int LireFichierMachine() throws URISyntaxException 
 	{
 		 int CodeRetour = 0;
 		 Properties properties=new Properties();
