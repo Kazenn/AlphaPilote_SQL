@@ -106,4 +106,44 @@ public class GestionProfile {
 		Files.write(path, content.getBytes(charset));
 
 	}
+
+	public void ModifierDeviceName(String Machine, String DeviceName) throws IOException {
+
+		// String filePath = "c:\\BRCLY.ecf";
+		String LineReplace = "";
+		// String STP = "EPI10";
+		String DeviceMacro = "DeviceNameTN5250=";
+
+		try {
+
+			BufferedReader input = new BufferedReader(new FileReader(RequeteChemin.DemandeChemin("CheminQuick3270ProfileGeneral") + Machine + ".ecf"));
+
+			try {
+				String line;
+
+				while ((line = input.readLine()) != null) {
+					// System.out.println(line);
+					if (line.startsWith("DeviceNameTN5250")) {
+						LineReplace = line;
+					}
+
+				}
+			} finally {
+
+				input.close();
+			}
+		}
+		catch (IOException ioe) {
+
+			System.out.println("Erreur --" + ioe.toString());
+		}
+
+		Path path = Paths.get((RequeteChemin.DemandeChemin("CheminQuick3270ProfileGeneral") + Machine + ".ecf"));
+		Charset charset = StandardCharsets.UTF_8;
+		String content = new String(Files.readAllBytes(path), charset);
+		content = content.replaceAll(LineReplace, DeviceMacro + DeviceName);
+		Files.write(path, content.getBytes(charset));
+
+	}
+
 }

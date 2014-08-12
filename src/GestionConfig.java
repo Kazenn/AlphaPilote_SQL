@@ -60,6 +60,28 @@ public class GestionConfig {
 
 	}
 
+	public String DemandeDevice(String Machine) {
+		// UserInterface UI = new UserInterface();
+		// CheminFichierConfig = UI.DemandeCheminConfig();
+
+		String Device = "";
+		// String CheminFichierConfig="D:\\AlphaPilote\\config.txt";
+		Properties properties = new Properties();
+		try {
+			FileInputStream in = new FileInputStream(RequeteChemin.DemandeChemin("CheminFichierConfig"));
+			properties.load(in);
+			in.close();
+			Device = properties.getProperty("DeviceName" + Machine);
+
+		}
+		catch (IOException e) {
+
+		}
+
+		return Device;
+
+	}
+
 	public String DemandePassword(String Machine) {
 		// UserInterface UI = new UserInterface();
 		// CheminFichierConfig = UI.DemandeCheminConfig();
@@ -98,7 +120,7 @@ public class GestionConfig {
 			properties.load(stream);
 			properties.setProperty(User + Machine, UserAEcrire);
 			FileOutputStream oStream = new FileOutputStream(RequeteChemin.DemandeChemin("CheminFichierConfig"));
-			properties.store(oStream, "Fichier de configuration des users et password");
+			properties.store(oStream, "Fichier de configuration User/Pass/Paramètres est correctement enregistré");
 			ValidationEcriture = "User pour " + Machine + " est correctement enregistré";
 		}
 		catch (FileNotFoundException e) {
@@ -131,7 +153,7 @@ public class GestionConfig {
 			properties.load(stream);
 			properties.setProperty(Password + Machine, PasswordAEcrire);
 			FileOutputStream oStream = new FileOutputStream(RequeteChemin.DemandeChemin("CheminFichierConfig"));
-			properties.store(oStream, "Fichier de configuration des users et password");
+			properties.store(oStream, "Fichier de configuration User/Pass/Paramètres est correctement enregistré");
 			ValidationEcriture = "Fichier correctement enregistré";
 		}
 		catch (FileNotFoundException e) {
@@ -183,7 +205,7 @@ public class GestionConfig {
 			properties.load(stream);
 			properties.setProperty(autoconnect + Machine, AutoConnectAEcrire);
 			FileOutputStream oStream = new FileOutputStream(RequeteChemin.DemandeChemin("CheminFichierConfig"));
-			properties.store(oStream, "Fichier de configuration des users et password");
+			properties.store(oStream, "Fichier de configuration User/Pass/Paramètres est correctement enregistré");
 			ValidationEcriture = "Fichier correctement enregistré";
 		}
 		catch (FileNotFoundException e) {
@@ -198,6 +220,55 @@ public class GestionConfig {
 		}
 
 		return ValidationEcriture;
+
+	}
+
+	public String EcrireDefaultBrower(String Navigateur) {
+
+		String ValidationEcriture = "";
+		Properties properties = new Properties();
+		new File(CheminFichierConfig);
+		FileInputStream stream;
+		try {
+
+			stream = new FileInputStream(RequeteChemin.DemandeChemin("CheminFichierConfig"));
+			properties.load(stream);
+			properties.setProperty("DefaultBrowser", Navigateur);
+			FileOutputStream oStream = new FileOutputStream(RequeteChemin.DemandeChemin("CheminFichierConfig"));
+			properties.store(oStream, "Fichier de configuration User/Pass/Paramètres est correctement enregistré");
+			ValidationEcriture = "Le navigateur par défault " + Navigateur + " est correctement enregistré";
+		}
+		catch (FileNotFoundException e) {
+
+			e.printStackTrace();
+			ValidationEcriture = "Impossible de trouver le fichier : " + e;
+		}
+		catch (IOException e) {
+
+			e.printStackTrace();
+			ValidationEcriture = "Erreur lors de l'écriture du fichier : " + e;
+		}
+
+		return ValidationEcriture;
+
+	}
+
+	public String DemandeDefaultBrowser() {
+
+		String ResultatDemande = "";
+		Properties properties = new Properties();
+		try {
+			FileInputStream in = new FileInputStream(RequeteChemin.DemandeChemin("CheminFichierConfig"));
+			properties.load(in);
+			in.close();
+			ResultatDemande = properties.getProperty("DefaultBrowser");
+
+		}
+		catch (IOException e) {
+
+		}
+
+		return ResultatDemande;
 
 	}
 

@@ -50,8 +50,9 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 public class UserInterface extends JFrame {
 	/**
-	 * 
+	 * @category Variables
 	 */
+
 	Component LastEntered;
 	private static final long serialVersionUID = 1L;
 	private JComboBox<?> MaComboBox;
@@ -85,11 +86,20 @@ public class UserInterface extends JFrame {
 	private JMenu MenuFichier;
 	private JLabel ResultatPing;
 	private JLabel LabelUtilisationMemoire;
+	private JMenuItem MenuAS400Br;
+	private JMenuItem MenuAS400Bdi;
+	private JMenuItem MenuAS400Bdaf;
+	private JMenuItem MenuAS400Socly;
+	private JMenuItem MenuSocmcsd;
+	private JMenuItem MenuPfbcly;
+	private JButton BoutonChargerConfig;
+	private JMenuItem MenuOdip;
 
 	public UserInterface() {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
+		// setAlwaysOnTop(true);
 
 		setSize(784, 565);
 		setLocationRelativeTo(null);
@@ -276,6 +286,18 @@ public class UserInterface extends JFrame {
 
 			}
 		});
+
+		JMenuItem MenuPuttyCm = new JMenuItem("Putty CM");
+		final ImageIcon IconPuttyCm = new ImageIcon(getClass().getResource("/puttycm-icon.png"));
+		MenuPuttyCm.setIcon(IconPuttyCm);
+		MenuPuttyCm.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+
+				LancePuttyCm();
+			}
+		});
+		MenuOutils.add(MenuPuttyCm);
 		MenuOutils.add(MenuQuick3270);
 
 		JMenu MenuConnexionMvs = new JMenu("Connexion");
@@ -346,6 +368,86 @@ public class UserInterface extends JFrame {
 
 		MenuGmvs.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/webkit/prism/resources/mediaVolumeThumb.png")));
 
+		JMenu MenuAS400 = new JMenu("AS400");
+		MenuAS400.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/webkit/prism/resources/mediaPlayDisabled.png")));
+		MenuConnexionMvs.add(MenuAS400);
+
+		MenuAS400Br = new JMenuItem("BRCLY");
+		final ImageIcon IconAS400Br = new ImageIcon(getClass().getResource("/as400-icon.png"));
+		MenuAS400Br.setIcon(IconAS400Br);
+		MenuAS400Br.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+
+				LanceAs400Br();
+			}
+		});
+		MenuAS400.add(MenuAS400Br);
+
+		MenuAS400Bdi = new JMenuItem("BDICLY");
+		final ImageIcon IconAS400Bdi = new ImageIcon(getClass().getResource("/as400-icon.png"));
+		MenuAS400Bdi.setIcon(IconAS400Bdi);
+		MenuAS400Bdi.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+
+				LanceAs400Bdi();
+			}
+		});
+		MenuAS400.add(MenuAS400Bdi);
+
+		MenuAS400Bdaf = new JMenuItem("BDAFCLY");
+		final ImageIcon IconAS400Bdaf = new ImageIcon(getClass().getResource("/as400-icon.png"));
+		MenuAS400Bdaf.setIcon(IconAS400Bdaf);
+		MenuAS400Bdaf.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+
+				LanceAs400Bdaf();
+			}
+		});
+		MenuAS400.add(MenuAS400Bdaf);
+
+		JSeparator separator = new JSeparator();
+		MenuAS400.add(separator);
+
+		MenuAS400Socly = new JMenuItem("SOCLY");
+		final ImageIcon IconAS400Socly = new ImageIcon(getClass().getResource("/as400-icon.png"));
+		MenuAS400Socly.setIcon(IconAS400Socly);
+		MenuAS400Socly.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+
+				LanceAs400Socly();
+			}
+		});
+		MenuAS400.add(MenuAS400Socly);
+
+		MenuSocmcsd = new JMenuItem("SOCMCSD");
+		final ImageIcon IconAS400Socmscd = new ImageIcon(getClass().getResource("/as400-icon.png"));
+		MenuSocmcsd.setIcon(IconAS400Socmscd);
+		MenuSocmcsd.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				LanceAs400Socmcsd();
+			}
+		});
+		MenuAS400.add(MenuSocmcsd);
+
+		JSeparator separator_1 = new JSeparator();
+		MenuAS400.add(separator_1);
+
+		MenuPfbcly = new JMenuItem("PFBCLY");
+		final ImageIcon IconAS400Pfb = new ImageIcon(getClass().getResource("/as400-icon.png"));
+		MenuPfbcly.setIcon(IconAS400Pfb);
+		MenuPfbcly.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				LanceAs400Pfb();
+			}
+		});
+		MenuAS400.add(MenuPfbcly);
+
 		MenuGmvs.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
@@ -368,37 +470,25 @@ public class UserInterface extends JFrame {
 		PaneZoneConnexion.add(BoutonValideIp);
 
 		BoutonValideTelnet = new JButton("Telnet");
+		BoutonValideTelnet.setVisible(false);
 		BoutonValideTelnet.setMargin(new Insets(0, 0, 0, 0));
 		BoutonValideTelnet.setBounds(198, 121, 50, 23);
 		PaneZoneConnexion.add(BoutonValideTelnet);
 
 		BoutonValideSsh = new JButton("SSH");
+		BoutonValideSsh.setVisible(false);
 		BoutonValideSsh.setMargin(new Insets(0, 0, 0, 0));
 		BoutonValideSsh.setBounds(258, 121, 37, 23);
 		PaneZoneConnexion.add(BoutonValideSsh);
 
-		JMenuItem MenuOdip = new JMenuItem("ODIP");
+		MenuOdip = new JMenuItem("ODIP");
 		MenuOdip.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/scene/web/skin/IncreaseIndent_16x16_JFX.png")));
 		MenuFavoris.add(MenuOdip);
 		MenuOdip.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
 
-				URI uri = URI.create("http://pilotage-upfc.supragrp.caisse-epargne.fr/pilotage/showChecklistAction.action");
-				try {
-					Desktop.getDesktop().browse(uri);
-
-					ZoneTextLog.append("Ouverture de la page " + MenuOdip.getText());
-					ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
-
-				}
-				catch (IOException e) {
-					GestionLog MaLog = new GestionLog();
-					MaLog.EcrireDansFichierLog("Erreur au lancement d'ODIP : " + e);
-					ZoneTextLog.append("Erreur au lancement : Consulter la log.");
-					ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
-					e.printStackTrace();
-				}
+				LanceFavorisOdip();
 
 			}
 		});
@@ -406,7 +496,7 @@ public class UserInterface extends JFrame {
 		JMenu MenuConfiguration = new JMenu("Configuration");
 		BarreMenuPrincipale.add(MenuConfiguration);
 
-		JMenuItem MenuModifierFichierConfig = new JMenuItem("Editer configuration MVS/UNIX");
+		JMenuItem MenuModifierFichierConfig = new JMenuItem("Editer login et password (UNIX/WIN/MVS/AS400)");
 		MenuModifierFichierConfig.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
@@ -414,13 +504,28 @@ public class UserInterface extends JFrame {
 				UserInterfaceConfig PageConfig = new UserInterfaceConfig();
 
 				PageConfig.setVisible(true);
-				PageConfig.setSize(640, 480);
+				PageConfig.setSize(800, 580);
 				PageConfig.setLocation(PositionFenetrePrincipale);
 
 			}
 		});
 		MenuModifierFichierConfig.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/scene/web/skin/Copy_16x16_JFX.png")));
 		MenuConfiguration.add(MenuModifierFichierConfig);
+
+		JMenuItem mntmPar = new JMenuItem("Param\u00EAtres G\u00E9n\u00E9raux");
+		mntmPar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+
+				UserInterfaceParametres PageParametres = new UserInterfaceParametres();
+
+				PageParametres.setVisible(true);
+				PageParametres.setSize(640, 480);
+				PageParametres.setLocation(PositionFenetrePrincipale);
+			}
+		});
+		mntmPar.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/scene/web/skin/AlignJustified_16x16_JFX.png")));
+		MenuConfiguration.add(mntmPar);
 
 		JMenu MenuAPropos = new JMenu("Aide");
 		BarreMenuPrincipale.add(MenuAPropos);
@@ -555,7 +660,7 @@ public class UserInterface extends JFrame {
 		AutoCompleteDecorator.decorate(MaComboBox);
 		PaneZoneConnexion.add(MaComboBox);
 
-		BoutonConnexionTelnetOuSsh = new JButton("Telnet/SSH (auto)");
+		BoutonConnexionTelnetOuSsh = new JButton("Telnet/SSH");
 		BoutonConnexionTelnetOuSsh.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
@@ -569,17 +674,19 @@ public class UserInterface extends JFrame {
 			}
 		});
 		BoutonConnexionTelnetOuSsh.setMargin(new Insets(1, 1, 1, 1));
-		BoutonConnexionTelnetOuSsh.setBounds(198, 50, 112, 32);
+		BoutonConnexionTelnetOuSsh.setBounds(224, 50, 91, 23);
 		PaneZoneConnexion.add(BoutonConnexionTelnetOuSsh);
 
 		MaComboBox.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent ie) {
 				MachineDansMaComboBox = (String) MaComboBox.getSelectedItem();
+
 				// ZoneTextLog.append(MachineDansMaComboBox);
 				// ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 
 			}
+
 		});
 
 		JProgressBar MaBarreProgression = new JProgressBar();
@@ -598,7 +705,7 @@ public class UserInterface extends JFrame {
 		getContentPane().add(ZoneConfig);
 		ZoneConfig.setLayout(null);
 
-		JButton BoutonChargerConfig = new JButton("Recharger configuration");
+		BoutonChargerConfig = new JButton("Recharger configuration");
 		final ImageIcon IconBoutonRecharger = new ImageIcon(getClass().getResource("/reload-icon.png"));
 		BoutonChargerConfig.setIcon(IconBoutonRecharger);
 		BoutonChargerConfig.addMouseListener(new MouseAdapter() {
@@ -727,6 +834,9 @@ public class UserInterface extends JFrame {
 
 		});
 
+		/**
+		 * @category Démarrage
+		 */
 		// ---------------------------------------------
 		//
 		//
@@ -741,6 +851,8 @@ public class UserInterface extends JFrame {
 		new Thread(new ThreadEtatSysteme()).start();
 		new Thread(new ThreadRechargementConfigInterface()).start();
 
+		// LISTENNER KEYBOARD
+
 		if (SuccesCreation == true) {
 			ZoneTextLog.append("Le profile pour " + UserNameStation + " n'existait pas, il vient d'être créé avec tous les fichiers nécessaires." + "\n");
 			ZoneTextLog.append("Veuillez vous rendre dans la page de configuration des users UNIX/MVS pour saisir les données." + "\n");
@@ -748,6 +860,9 @@ public class UserInterface extends JFrame {
 
 	}
 
+	/**
+	 * @category SystemInit
+	 */
 	public int TestAccesFichier() {
 		GestionChemin RequeteChemin = new GestionChemin();
 		File FichierMachine = new File(RequeteChemin.DemandeChemin("CheminFichierMachine"));
@@ -758,7 +873,7 @@ public class UserInterface extends JFrame {
 			ResultatToutFichiersPresents++;
 		}
 		else {
-			ZoneTextLog.append("Impossible de trouver le fichier : " + RequeteChemin.DemandeChemin("CheminFichierMachine") + "\n");
+			ZoneTextLog.append("Impossible de trouver le fichier machine : " + RequeteChemin.DemandeChemin("CheminFichierMachine") + "\n");
 			LabelTestFichierMachine.setBackground(new Color(178, 34, 34));
 			LabelTestFichierConfig.setOpaque(true);
 			GestionLog MaLog = new GestionLog();
@@ -771,7 +886,7 @@ public class UserInterface extends JFrame {
 			ResultatToutFichiersPresents++;
 		}
 		else {
-			ZoneTextLog.append("Impossible de trouver le config : " + RequeteChemin.DemandeChemin("CheminFichierConfig") + "\n");
+			ZoneTextLog.append("Impossible de trouver le fichier de config : " + RequeteChemin.DemandeChemin("CheminFichierConfig") + "\n");
 			LabelTestFichierConfig.setBackground(new Color(178, 34, 34));
 			LabelTestFichierConfig.setOpaque(true);
 			GestionLog MaLog = new GestionLog();
@@ -784,13 +899,13 @@ public class UserInterface extends JFrame {
 			ResultatToutFichiersPresents++;
 		}
 		else {
-			ZoneTextLog.append("Impossible de trouver le log : " + RequeteChemin.DemandeChemin("CheminFichierLog") + "\n");
+			ZoneTextLog.append("Impossible de trouver le fichier de log : " + RequeteChemin.DemandeChemin("CheminFichierLog") + "\n");
 			ZoneTextLog.append("Création d'un nouveau fichier de log" + "\n");
 			// ZoneTextLog.append("Consulter la log dans le menu aide pour avoir plus d'informations"+"\n");
 			LabelTestFichierLog.setBackground(new Color(60, 179, 113));
 			LabelTestFichierLog.setOpaque(true);
 			GestionLog MaLog = new GestionLog();
-			MaLog.EcrireDansFichierLog("Erreur lors du test présence du log config dans : " + RequeteChemin.DemandeChemin("CheminFichierMachine"));
+			MaLog.EcrireDansFichierLog("Erreur lors du test présence du fichier log dans : " + RequeteChemin.DemandeChemin("CheminFichierMachine"));
 			ResultatToutFichiersPresents++;
 
 		}
@@ -828,6 +943,9 @@ public class UserInterface extends JFrame {
 
 	}
 
+	/**
+	 * @category Lancement des Outils
+	 */
 	public void LancePutty() {
 		GestionLog MaLog = new GestionLog();
 		GestionChemin Chemin = new GestionChemin();
@@ -913,8 +1031,66 @@ public class UserInterface extends JFrame {
 
 	}
 
+	public void LancePuttyCm() {
+		GestionChemin Chemin = new GestionChemin();
+		try {
+			Runtime.getRuntime().exec(String.format(Chemin.DemandeChemin("CheminPuttyCm")));
+			ZoneTextLog.append("Ouverture de Putty Connection Manager." + "\n");
+		}
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			GestionLog MaLog = new GestionLog();
+			MaLog.EcrireDansFichierLog("Erreur au lancement de Putty Connection Manager : " + e);
+			ZoneTextLog.append("Erreur au lancement de Putty Connection Manager: Consulter la log.");
+			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+		}
+
+	}
+
+	public void LanceFavorisOdip() {
+
+		GestionConfig AccesConfig = new GestionConfig();
+		String Navigateur = "";
+		Navigateur = AccesConfig.DemandeDefaultBrowser();
+		switch (Navigateur) {
+			case "Google Chrome":
+				Navigateur = "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe";
+				break;
+			case "Mozilla Firefox":
+				Navigateur = "C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe";
+				break;
+			case "Internet Explorer":
+				Navigateur = "C:\\Program Files\\Internet Explorer\\iexplore.exe";
+				break;
+
+		}
+
+		try {
+			Runtime.getRuntime().exec(String.format(Navigateur + " " + "http://pilotage-upfc.supragrp.caisse-epargne.fr/pilotage/showChecklistAction.action"));
+			// URI uri =
+			// URI.create("http://pilotage-upfc.supragrp.caisse-epargne.fr/pilotage/showChecklistAction.action");
+			// Desktop.getDesktop().browse(uri);
+
+			ZoneTextLog.append("Ouverture de la page " + MenuOdip.getText());
+			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+
+		}
+		catch (IOException e) {
+			GestionLog MaLog = new GestionLog();
+			MaLog.EcrireDansFichierLog("Erreur au lancement d'ODIP : " + e);
+			ZoneTextLog.append("Erreur au lancement : Consulter la log.");
+			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+			e.printStackTrace();
+		}
+
+	}
+
 	// PRODUIT MVS ET AS400
 
+	/**
+	 * @category Lance MVS
+	 */
 	public void LanceSysa() {
 
 		GestionLog MaLog = new GestionLog();
@@ -1104,8 +1280,140 @@ public class UserInterface extends JFrame {
 
 	}
 
+	/**
+	 * @category Lance AS400
+	 */
+	public void LanceAs400Br() {
+		GestionLog MaLog = new GestionLog();
+		new UserInterfaceConfig();
+		GestionChemin RequeteChemin = new GestionChemin();
+
+		try {
+			ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileBr") });
+			builder.start();
+
+			ZoneTextLog.append("Ouverture connexion 5250 vers " + MenuAS400Br.getText() + " AUTOLOGIN + dspmsg qsysopr");
+			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+
+		}
+		catch (IOException e1) {
+			e1.printStackTrace();
+			MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour BRCLY : " + e1);
+			ZoneTextLog.append("Erreur au lancement de quick3270 pour BRCLY : Consulter la log.");
+			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+		}
+	}
+
+	public void LanceAs400Bdi() {
+		GestionLog MaLog = new GestionLog();
+		new UserInterfaceConfig();
+		GestionChemin RequeteChemin = new GestionChemin();
+
+		try {
+			ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileBdi") });
+			builder.start();
+
+			ZoneTextLog.append("Ouverture connexion 5250 vers " + MenuAS400Bdi.getText() + " AUTOLOGIN + dspmsg qsysopr");
+			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+
+		}
+		catch (IOException e1) {
+			e1.printStackTrace();
+			MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour BDICLY : " + e1);
+			ZoneTextLog.append("Erreur au lancement de quick3270 pour BDICLY : Consulter la log.");
+			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+		}
+	}
+
+	public void LanceAs400Bdaf() {
+		GestionLog MaLog = new GestionLog();
+		new UserInterfaceConfig();
+		GestionChemin RequeteChemin = new GestionChemin();
+
+		try {
+			ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileBdaf") });
+			builder.start();
+
+			ZoneTextLog.append("Ouverture connexion 5250 vers " + MenuAS400Bdaf.getText() + " AUTOLOGIN + dspmsg qsysopr");
+			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+
+		}
+		catch (IOException e1) {
+			e1.printStackTrace();
+			MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour BDAFCLY : " + e1);
+			ZoneTextLog.append("Erreur au lancement de quick3270 pour BDAFCLY : Consulter la log.");
+			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+		}
+	}
+
+	public void LanceAs400Pfb() {
+		GestionLog MaLog = new GestionLog();
+		new UserInterfaceConfig();
+		GestionChemin RequeteChemin = new GestionChemin();
+
+		try {
+			ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfilePfb") });
+			builder.start();
+
+			ZoneTextLog.append("Ouverture connexion 5250 vers " + MenuPfbcly.getText() + " AUTOLOGIN + dspmsg qsysopr");
+			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+
+		}
+		catch (IOException e1) {
+			e1.printStackTrace();
+			MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour PFBCLY : " + e1);
+			ZoneTextLog.append("Erreur au lancement de quick3270 pour PFBCLY : Consulter la log.");
+			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+		}
+	}
+
+	public void LanceAs400Socly() {
+		GestionLog MaLog = new GestionLog();
+		new UserInterfaceConfig();
+		GestionChemin RequeteChemin = new GestionChemin();
+
+		try {
+			ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileSocly") });
+			builder.start();
+
+			ZoneTextLog.append("Ouverture connexion 5250 vers " + MenuAS400Socly.getText() + " AUTOLOGIN + dspmsg qsysopr");
+			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+
+		}
+		catch (IOException e1) {
+			e1.printStackTrace();
+			MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour SOCLY : " + e1);
+			ZoneTextLog.append("Erreur au lancement de quick3270 pour SOCLY : Consulter la log.");
+			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+		}
+	}
+
+	public void LanceAs400Socmcsd() {
+		GestionLog MaLog = new GestionLog();
+		new UserInterfaceConfig();
+		GestionChemin RequeteChemin = new GestionChemin();
+
+		try {
+			ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileSocmcsd") });
+			builder.start();
+
+			ZoneTextLog.append("Ouverture connexion 5250 vers " + MenuSocmcsd.getText() + " AUTOLOGIN + dspmsg qsysopr");
+			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+
+		}
+		catch (IOException e1) {
+			e1.printStackTrace();
+			MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour SOCMCSD : " + e1);
+			ZoneTextLog.append("Erreur au lancement de quick3270 pour SOCMCSD : Consulter la log.");
+			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+		}
+	}
+
 	// LANCEMENT PUTTY
 
+	/**
+	 * @category Lance Outils
+	 */
 	public void LancePuttyConnexionTelnet()
 
 	{
@@ -1232,7 +1540,9 @@ public class UserInterface extends JFrame {
 
 			if (BoutonRadioRoot.isSelected() == true && LanceUneFois == true) {
 
-				Runtime.getRuntime().exec(String.format(RequeteChemin.DemandeChemin("CheminPutty") + " -ssh" + " -l root" + "@" + "Resultatdemande"));
+				// Runtime.getRuntime().exec(String.format(RequeteChemin.DemandeChemin("CheminPutty")
+				// + " -ssh" + " -l root" + "@" + Resultatdemande));
+				Runtime.getRuntime().exec(String.format(RequeteChemin.DemandeChemin("CheminPutty") + " " + Resultatdemande + " -ssh -l root"));
 				ZoneTextLog.append("Lancement putty ssh vers " + Resultatdemande + " avec le user root");
 				ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
 				LanceUneFois = false;
@@ -1333,6 +1643,10 @@ public class UserInterface extends JFrame {
 
 	}
 
+	/**
+	 * @category Lancement Auto Outils
+	 */
+
 	public void LanceAutoPostePilotage() {
 
 		// System.out.println("Je passe ici");
@@ -1356,7 +1670,7 @@ public class UserInterface extends JFrame {
 		@Override
 		public void run() {
 			ProgressBarExecutionGlobale.setVisible(true);
-			for (int i = 0; i <= 3500; i++) {
+			for (int i = 0; i <= 6500; i++) {
 				ProgressBarExecutionGlobale.setValue(i);
 				// ProgressBarExecutionGlobale.repaint();
 				try {
@@ -1386,6 +1700,18 @@ public class UserInterface extends JFrame {
 				Thread.sleep(500);
 				LanceGmvs();
 				Thread.sleep(500);
+				LanceAs400Br();
+				Thread.sleep(500);
+				LanceAs400Bdi();
+				Thread.sleep(500);
+				LanceAs400Bdaf();
+				Thread.sleep(500);
+				LanceAs400Socly();
+				Thread.sleep(500);
+				LanceAs400Socmcsd();
+				Thread.sleep(500);
+				LanceAs400Pfb();
+				Thread.sleep(500);
 				LanceControlm();
 				Thread.sleep(500);
 				LanceOutlook();
@@ -1404,6 +1730,9 @@ public class UserInterface extends JFrame {
 
 	}
 
+	/**
+	 * @category Threads
+	 */
 	public class ThreadPing implements Runnable {
 
 		@Override
@@ -1516,6 +1845,9 @@ public class UserInterface extends JFrame {
 			GestionConfig MaConfig = new GestionConfig();
 			CodeRetour = MaConfig.LireConfig();
 
+			BoutonChargerConfig.setEnabled(false);
+			TestAccesFichier();
+
 			UserUnix = MaConfig.DemandeUser("Unix");
 			MaConfig.DemandePassword("Unix");
 
@@ -1600,7 +1932,7 @@ public class UserInterface extends JFrame {
 				BoutonRadioUserPerso.setText("#Erreur");
 
 			}
-
+			BoutonChargerConfig.setEnabled(true);
 		}
 	}
 
