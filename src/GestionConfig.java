@@ -5,8 +5,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-public class GestionConfig {
+public class GestionConfig extends Properties {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	String CheminFichierConfig = "CheminVide";
 	GestionChemin RequeteChemin = new GestionChemin();
 
@@ -262,6 +266,55 @@ public class GestionConfig {
 			properties.load(in);
 			in.close();
 			ResultatDemande = properties.getProperty("DefaultBrowser");
+
+		}
+		catch (IOException e) {
+
+		}
+
+		return ResultatDemande;
+
+	}
+
+	public String EcrireChoixBoutonPosteComplet(String Produit, String Choix) {
+
+		String ValidationEcriture = "";
+		Properties properties = new Properties();
+		new File(CheminFichierConfig);
+		FileInputStream stream;
+		try {
+
+			stream = new FileInputStream(RequeteChemin.DemandeChemin("CheminFichierConfig"));
+			properties.load(stream);
+			properties.setProperty("BoutonLancePoste" + Produit, Choix);
+			FileOutputStream oStream = new FileOutputStream(RequeteChemin.DemandeChemin("CheminFichierConfig"));
+			properties.store(oStream, "Fichier de configuration User/Pass/Paramètres est correctement enregistré");
+			ValidationEcriture = "Le choix = " + Choix + " est correctement enregistré";
+		}
+		catch (FileNotFoundException e) {
+
+			e.printStackTrace();
+			ValidationEcriture = "Impossible de trouver le fichier : " + e;
+		}
+		catch (IOException e) {
+
+			e.printStackTrace();
+			ValidationEcriture = "Erreur lors de l'écriture du fichier : " + e;
+		}
+
+		return ValidationEcriture;
+
+	}
+
+	public String DemandeChoixBoutonPosteComplet(String Produit) {
+
+		String ResultatDemande = "";
+		Properties properties = new Properties();
+		try {
+			FileInputStream in = new FileInputStream(RequeteChemin.DemandeChemin("CheminFichierConfig"));
+			properties.load(in);
+			in.close();
+			ResultatDemande = properties.getProperty("BoutonLancePoste" + Produit);
 
 		}
 		catch (IOException e) {

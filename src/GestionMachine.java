@@ -2,9 +2,12 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Properties;
 
 public class GestionMachine {
@@ -75,4 +78,47 @@ public class GestionMachine {
 		return ListeMachinePourComboBox;
 
 	}
+
+	public Boolean ReorderFichierMachine() {
+
+		String inputFile = RequeteChemin.DemandeChemin("CheminFichierMachine");
+		String outputFile = RequeteChemin.DemandeChemin("CheminFichierMachine");
+		Boolean ValideOrder = false;
+
+		try {
+			FileReader fileReader;
+			fileReader = new FileReader(inputFile);
+			BufferedReader bufferedReader = new BufferedReader(fileReader);
+			String inputLine;
+			ArrayList<String> lineList = new ArrayList<String>();
+			while ((inputLine = bufferedReader.readLine()) != null) {
+				lineList.add(inputLine);
+			}
+			fileReader.close();
+
+			Collections.sort(lineList);
+
+			FileWriter fileWriter = new FileWriter(outputFile);
+			PrintWriter out = new PrintWriter(fileWriter);
+			for (String outputLine : lineList) {
+				out.println(outputLine);
+			}
+			out.flush();
+			out.close();
+			fileWriter.close();
+			ValideOrder = true;
+		}
+		catch (FileNotFoundException e) {
+			ValideOrder = false;
+			e.printStackTrace();
+		}
+		catch (IOException e) {
+			ValideOrder = false;
+			e.printStackTrace();
+		}
+
+		return ValideOrder;
+
+	}
+
 }

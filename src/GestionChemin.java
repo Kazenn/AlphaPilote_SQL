@@ -12,13 +12,18 @@ public class GestionChemin {
 		String CheminIprox = "C:\\Users\\" + UserNameStation + "\\Desktop\\Portail IPROX GCT.ica";
 		String CheminArsRemedy = "C:\\Program Files (x86)\\AR System\\User\\aruser.exe";
 		String CheminPuttyCm = "C:\\APPLI_OPT\\PuttyCM\\puttycm.exe";
+		String CheminVtom = "C:\\Program Files (x86)\\VTOM5\\VISUAL\\VtomXvision.exe";
+		String CheminExceed = "C:\\Program Files (x86)\\Hummingbird\\Connectivity\\9.00\\Exceed\\exceed.exe";
 
 		String CheminGeneralProjet = "\\\\fsitceti\\entites\\ITC PPR-EDC-PIL-724 ETI\\Pilotage Mutualise\\Sauvegarde Olive&Pascal\\Outils de pilotage\\Alphapilote\\Profiles\\";
 
 		String CheminFichierConfig = CheminGeneralProjet + UserNameStation + "\\config.txt";
 		String CheminFichierLog = CheminGeneralProjet + UserNameStation + "\\log.txt";
+		String CheminTinaMacro = CheminGeneralProjet + UserNameStation + "\\";
+		String CheminFichierFavoris = "\\\\fsitceti\\entites\\ITC PPR-EDC-PIL-724 ETI\\Pilotage Mutualise\\Sauvegarde Olive&Pascal\\Outils de pilotage\\Alphapilote\\Data\\favoris.txt";
+		String CheminFichierTemp = "\\\\fsitceti\\entites\\ITC PPR-EDC-PIL-724 ETI\\Pilotage Mutualise\\Sauvegarde Olive&Pascal\\Outils de pilotage\\Alphapilote\\Data\\temp.txt";
+
 		String CheminFichierMachine = "\\\\fsitceti\\entites\\ITC PPR-EDC-PIL-724 ETI\\Pilotage Mutualise\\Sauvegarde Olive&Pascal\\Outils de pilotage\\Alphapilote\\Data\\machine.txt";
-		// String CheminFichierMachine = "D:\\AlphaPilote\\Data\\machine.txt";
 
 		String CheminQuick3270ProfileGmvs = CheminGeneralProjet + UserNameStation + "\\GMVS.ecf";
 		String CheminQuick3270MacroGmvs = CheminGeneralProjet + UserNameStation + "\\GMVS.qmc";
@@ -39,6 +44,22 @@ public class GestionChemin {
 		String CheminQuick3270ProfileSysg = CheminGeneralProjet + UserNameStation + "\\Sysg.ecf";
 		String CheminQuick3270MacroSysg = CheminGeneralProjet + UserNameStation + "\\Sysg.qmc";
 		String CheminQuick3270ProfileSysg_no_auto_login = CheminGeneralProjet + UserNameStation + "\\Sysg_no_auto_login.ecf";
+
+		String CheminQuick3270ProfileBmvs = CheminGeneralProjet + UserNameStation + "\\BMVS.ecf";
+		String CheminQuick3270MacroBmvs = CheminGeneralProjet + UserNameStation + "\\BMVS.ecf";
+		String CheminQuick3270ProfileBmvs_no_auto_login = CheminGeneralProjet + UserNameStation + "\\Bmvs_no_auto_login.ecf";
+
+		String CheminQuick3270ProfileIp1 = CheminGeneralProjet + UserNameStation + "\\IP1.ecf";
+		String CheminQuick3270MacroIp1 = CheminGeneralProjet + UserNameStation + "\\IP1.qmc";
+		String CheminQuick3270ProfileIp1_no_auto_login = CheminGeneralProjet + UserNameStation + "\\Ip1_no_auto_login.ecf";
+
+		String CheminQuick3270ProfileIp2 = CheminGeneralProjet + UserNameStation + "\\IP2.ecf";
+		String CheminQuick3270MacroIp2 = CheminGeneralProjet + UserNameStation + "\\IP2.qmc";
+		String CheminQuick3270ProfileIp2_no_auto_login = CheminGeneralProjet + UserNameStation + "\\Ip2_no_auto_login.ecf";
+
+		String CheminQuick3270ProfileIp3 = CheminGeneralProjet + UserNameStation + "\\IP3.ecf";
+		String CheminQuick3270MacroIp3 = CheminGeneralProjet + UserNameStation + "\\IP3.qmc";
+		String CheminQuick3270ProfileIp3_no_auto_login = CheminGeneralProjet + UserNameStation + "\\Ip3_no_auto_login.ecf";
 
 		// AS400
 
@@ -86,6 +107,12 @@ public class GestionChemin {
 				break;
 			case "CheminFichierMachine":
 				ResultatChemin = CheminFichierMachine;
+				break;
+			case "CheminFichierFavoris":
+				ResultatChemin = CheminFichierFavoris;
+				break;
+			case "CheminFichierTemp":
+				ResultatChemin = CheminFichierTemp;
 				break;
 
 			case "CheminQuick3270ProfileGmvs":
@@ -136,6 +163,47 @@ public class GestionChemin {
 			case "CheminQuick3270ProfileSysg_no_auto_login":
 				ResultatChemin = CheminQuick3270ProfileSysg_no_auto_login;
 				break;
+
+			case "CheminQuick3270ProfileBmvs":
+				ResultatChemin = CheminQuick3270ProfileBmvs;
+				break;
+			case "CheminQuick3270MacroBmvs":
+				ResultatChemin = CheminQuick3270MacroBmvs;
+				break;
+			case "CheminQuick3270ProfileBmvs_no_auto_login":
+				ResultatChemin = CheminQuick3270ProfileBmvs_no_auto_login;
+				break;
+
+			case "CheminQuick3270ProfileIp1":
+				ResultatChemin = CheminQuick3270ProfileIp1;
+				break;
+			case "CheminQuick3270MacroIp1":
+				ResultatChemin = CheminQuick3270MacroIp1;
+				break;
+			case "CheminQuick3270ProfileIp1_no_auto_login":
+				ResultatChemin = CheminQuick3270ProfileIp1_no_auto_login;
+				break;
+
+			case "CheminQuick3270ProfileIp2":
+				ResultatChemin = CheminQuick3270ProfileIp2;
+				break;
+			case "CheminQuick3270MacroIp2":
+				ResultatChemin = CheminQuick3270MacroIp2;
+				break;
+			case "CheminQuick3270ProfileIp2_no_auto_login":
+				ResultatChemin = CheminQuick3270ProfileIp2_no_auto_login;
+				break;
+
+			case "CheminQuick3270ProfileIp3":
+				ResultatChemin = CheminQuick3270ProfileIp3;
+				break;
+			case "CheminQuick3270MacroIp3":
+				ResultatChemin = CheminQuick3270MacroIp3;
+				break;
+			case "CheminQuick3270ProfileIp3_no_auto_login":
+				ResultatChemin = CheminQuick3270ProfileIp3_no_auto_login;
+				break;
+
 			case "CheminQuick3270ProfileGeneral":
 				ResultatChemin = CheminQuick3270ProfileGeneral;
 				break;
@@ -159,6 +227,9 @@ public class GestionChemin {
 				break;
 			case "CheminPuttyCm":
 				ResultatChemin = CheminPuttyCm;
+				break;
+			case "CheminVtom":
+				ResultatChemin = CheminVtom;
 				break;
 
 			case "CheminQuick3270ProfileBr":
@@ -196,6 +267,12 @@ public class GestionChemin {
 				break;
 			case "CheminQuick3270MacroSocmsd":
 				ResultatChemin = CheminQuick3270MacroSocmcsd;
+				break;
+			case "CheminExceed":
+				ResultatChemin = CheminExceed;
+				break;
+			case "CheminTinaMacro":
+				ResultatChemin = CheminTinaMacro;
 				break;
 
 		}

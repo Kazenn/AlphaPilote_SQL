@@ -9,18 +9,25 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
 import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
+import java.net.InetAddress;
 import java.net.URI;
+import java.net.UnknownHostException;
 import java.text.DecimalFormat;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -41,14 +48,18 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
+import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.text.DefaultCaret;
 
 import org.apache.commons.io.FileUtils;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
-public class UserInterface extends JFrame {
+public class UserInterface extends JFrame implements ActionListener {
 	/**
 	 * @category Variables
 	 */
@@ -94,17 +105,78 @@ public class UserInterface extends JFrame {
 	private JMenuItem MenuPfbcly;
 	private JButton BoutonChargerConfig;
 	private JMenuItem MenuOdip;
+	private JMenuItem MenuBbr;
+	private JMenuItem MenuIpLabel;
+	private JMenuItem MenuNewtest;
+	private JMenuItem MenuOseIp1;
+	private JMenuItem MenuOseIp2;
+	private JMenuItem MenuXguard;
+	private JMenuItem MenuIp1;
+	private JMenuItem MenuIp2;
+	private JMenuItem MenuIp3;
+	private JMenuItem MenuBmvs;
+	private JLabel LabelNombreThread;
+	private JMenuItem MenuHmc;
+	private JMenuItem MenuKvm;
+	private JMenuItem MenuTina5;
+	private JMenuItem MenuTina6;
+	private JMenuItem MenuVcenter;
+	private JMenuItem MenuSismoIp1;
+	private JMenuItem MenuSismoIp2;
+	private JMenuItem MenuSismoOceor;
+	private JMenuItem MenuSismoPalatine;
+	// private JMenuItem MenuFav1;
+	private JMenu MenuFavoris;
+	private JMenuItem MenuArsV8;
+	private JMenuItem MenuWebIas;
+	private JMenuItem MenuCfta;
+	private JMenuItem MenuCftacore;
+	private JMenuItem MenuArsCff;
+	private String MonIp = "";
+	private JLabel LabelAdresseIp;
+	private Boolean GainedFocus = false;
+	private JMenuItem MenuArsRemedy;
+	private JMenuItem MenuPuttyCm;
+	private JMenuItem MenuTinaIp1Siris;
+	private JMenuItem MenuTinaIp1Tinap203;
+	private JMenuItem mntmTina;
+	private JMenu MenuFavorisCommuns;
+	private JMenuItem mntmEditionDesFavoris;
+	private JButton BoutonChargerFavoris;
 
 	public UserInterface() {
+		addWindowFocusListener(new WindowFocusListener() {
+			@Override
+			public void windowGainedFocus(WindowEvent arg0) {
+				if (GainedFocus == true) {
+					new Thread(new ThreadRechargementConfigInterface()).start();
+					MenuFavorisCommuns.removeAll();
+					new Thread(new ThreadChargementFavoris()).start();
+
+				}
+
+			}
+
+			@Override
+			public void windowLostFocus(WindowEvent arg0) {
+			}
+		});
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
+
+		setIconImage(Toolkit.getDefaultToolkit().getImage(UserInterface.class.getResource("/javax/swing/plaf/metal/icons/ocean/computer.gif")));
+		UserNameStation = System.getProperty("user.name");
+		setTitle(" Projet AlphaPilote BETA_ - Prêt à demembrer pour " + UserNameStation + "");
 		// setAlwaysOnTop(true);
 
 		setSize(784, 565);
 		setLocationRelativeTo(null);
+
 		// PositionFenetrePrincipale = this.getLocation();
-		UserNameStation = System.getProperty("user.name");
+
+		// rootPane.setDefaultButton(BoutonValideIp);
+
 		this.addComponentListener(new ComponentAdapter() {
 
 			@Override
@@ -117,10 +189,8 @@ public class UserInterface extends JFrame {
 			}
 		});
 
-		new GestionLog();
+		// new GestionLog();
 		// Boolean b = CreationProfileAlphaPilote(UserNameStation);
-		setIconImage(Toolkit.getDefaultToolkit().getImage(UserInterface.class.getResource("/javax/swing/plaf/metal/icons/ocean/computer.gif")));
-		setTitle(" Demembrat0r v0.1 - Prêt à demembrer pour " + UserNameStation + "");
 
 		JMenuBar BarreMenuPrincipale = new JMenuBar();
 		setJMenuBar(BarreMenuPrincipale);
@@ -168,10 +238,11 @@ public class UserInterface extends JFrame {
 		SeparateurFichierFavoris.setOrientation(SwingConstants.VERTICAL);
 		BarreMenuPrincipale.add(SeparateurFichierFavoris);
 
-		JMenu MenuFavoris = new JMenu("Favoris web");
+		MenuFavoris = new JMenu("Favoris web");
 		BarreMenuPrincipale.add(MenuFavoris);
 
 		JScrollPane ScrollZoneTextLog = new JScrollPane();
+		ScrollZoneTextLog.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		ScrollZoneTextLog.setViewportBorder(new TitledBorder(null, "Log", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(255, 69, 0)));
 		ScrollZoneTextLog.setBounds(10, 288, 478, 201);
 		getContentPane().add(ScrollZoneTextLog);
@@ -183,6 +254,10 @@ public class UserInterface extends JFrame {
 		ZoneTextLog.setFont(new Font("Verdana", Font.PLAIN, 11));
 		ZoneTextLog.setBackground(Color.LIGHT_GRAY);
 		ZoneTextLog.setEditable(false);
+		// DefaultCaret caret = (DefaultCaret) ZoneTextLog.getCaret();
+		ZoneTextLog.setCaretPosition(ZoneTextLog.getDocument().getLength());
+		DefaultCaret caret = (DefaultCaret) ZoneTextLog.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
 		JMenu MenuOutils = new JMenu("Outils");
 		BarreMenuPrincipale.add(MenuOutils);
@@ -229,8 +304,8 @@ public class UserInterface extends JFrame {
 
 					GestionLog MaLog = new GestionLog();
 					MaLog.EcrireDansFichierLog("Erreur au lancement de control-m : " + e);
-					ZoneTextLog.append("Erreur au lancement de control-m: Consulter la log.");
-					ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+					ZoneTextLog.append("Erreur au lancement de control-m: Consulter la log." + "\n");
+
 				}
 
 			}
@@ -250,7 +325,7 @@ public class UserInterface extends JFrame {
 		});
 		MenuOutils.add(MenuIprox);
 
-		JMenuItem MenuArsRemedy = new JMenuItem("ARSv7 Remedy");
+		MenuArsRemedy = new JMenuItem("ARSv7 Remedy");
 		final ImageIcon IconArsRemedy = new ImageIcon(getClass().getResource("/ars-icon.png"));
 		MenuArsRemedy.setIcon(IconArsRemedy);
 		MenuArsRemedy.addMouseListener(new MouseAdapter() {
@@ -262,6 +337,28 @@ public class UserInterface extends JFrame {
 			}
 		});
 		MenuOutils.add(MenuArsRemedy);
+
+		MenuArsV8 = new JMenuItem("ARSv8 (client l\u00E9ger)");
+		MenuArsV8.setIcon(IconArsRemedy);
+		MenuArsV8.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+
+				LanceArsV8();
+			}
+		});
+		MenuOutils.add(MenuArsV8);
+
+		MenuArsCff = new JMenuItem("ARS Cff");
+		MenuArsCff.setIcon(IconArsRemedy);
+		MenuArsCff.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+
+				LanceArsCff();
+			}
+		});
+		MenuOutils.add(MenuArsCff);
 		MenuOutils.add(MenuPutty);
 
 		MenuQuick3270 = new JMenuItem("Quick3270");
@@ -280,14 +377,14 @@ public class UserInterface extends JFrame {
 
 					e1.printStackTrace();
 					MaLog.EcrireDansFichierLog("Erreur au lancement de putty : " + e1);
-					ZoneTextLog.append("Erreur au lancement de Quick3270 : Consulter la log." + "\n");
+					ZoneTextLog.append("Erreur au lancement de Putty : Consulter la log." + "\n");
 
 				}
 
 			}
 		});
 
-		JMenuItem MenuPuttyCm = new JMenuItem("Putty CM");
+		MenuPuttyCm = new JMenuItem("Putty CM");
 		final ImageIcon IconPuttyCm = new ImageIcon(getClass().getResource("/puttycm-icon.png"));
 		MenuPuttyCm.setIcon(IconPuttyCm);
 		MenuPuttyCm.addMouseListener(new MouseAdapter() {
@@ -300,7 +397,155 @@ public class UserInterface extends JFrame {
 		MenuOutils.add(MenuPuttyCm);
 		MenuOutils.add(MenuQuick3270);
 
-		JMenu MenuConnexionMvs = new JMenu("Connexion");
+		JMenu mnVtom = new JMenu("Vtom");
+		final ImageIcon IconVtomSelected = new ImageIcon(getClass().getResource("/arrow-down.gif"));
+		mnVtom.setSelectedIcon(IconVtomSelected);
+		mnVtom.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/webkit/prism/resources/mediaPlayDisabled.png")));
+		MenuOutils.add(mnVtom);
+
+		JMenuItem MenuVtomIp1q = new JMenuItem("IP1 UP2TO002");
+		final ImageIcon IconVtom = new ImageIcon(getClass().getResource("/vtom-icon.png"));
+		MenuVtomIp1q.setIcon(IconVtom);
+		MenuVtomIp1q.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+
+				LanceVtomIp1q();
+
+			}
+		});
+		mnVtom.add(MenuVtomIp1q);
+
+		JMenuItem MenuVtomIp1d = new JMenuItem("IP1 UP2TO003");
+		MenuVtomIp1d.setIcon(IconVtom);
+		MenuVtomIp1d.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				LanceVtomIp1d();
+			}
+		});
+		mnVtom.add(MenuVtomIp1d);
+
+		JSeparator separator_2 = new JSeparator();
+		mnVtom.add(separator_2);
+
+		JMenuItem MenuVtomIp2q = new JMenuItem("IP2 UP1TO002");
+		MenuVtomIp2q.setIcon(IconVtom);
+		MenuVtomIp2q.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				LanceVtomIp2q();
+			}
+		});
+		mnVtom.add(MenuVtomIp2q);
+
+		JMenuItem MenuVtomIp2d = new JMenuItem("IP2 UP1TO003");
+		MenuVtomIp2d.setIcon(IconVtom);
+		MenuVtomIp2d.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				LanceVtomIp2d();
+			}
+
+		});
+		mnVtom.add(MenuVtomIp2d);
+
+		JMenu MenuTinaExceed = new JMenu("Tina(+Exceed)");
+		MenuTinaExceed.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/webkit/prism/resources/mediaPlayDisabled.png")));
+		MenuOutils.add(MenuTinaExceed);
+
+		JMenuItem MenuExceed = new JMenuItem("Exceed");
+		// MenuExceed.setIcon(new
+		// ImageIcon(UserInterface.class.getResource("/javax/swing/plaf/basic/icons/JavaCup16.png")));
+		final ImageIcon IconExceed = new ImageIcon(getClass().getResource("/exceed-icon.PNG"));
+		MenuExceed.setIcon(IconExceed);
+		MenuExceed.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+
+				LanceExceed();
+			}
+		});
+		MenuTinaExceed.add(MenuExceed);
+
+		JMenuItem MenuCltec5 = new JMenuItem("Tina Cltec5");
+		final ImageIcon IconTina5 = new ImageIcon(getClass().getResource("/tina-icon.jpg"));
+		MenuCltec5.setIcon(IconTina5);
+		MenuCltec5.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+
+				LanceTinaCltec5();
+
+			}
+		});
+		MenuTinaExceed.add(MenuCltec5);
+
+		JMenuItem mntmTinaCltec = new JMenuItem("Tina Cltec6");
+		mntmTinaCltec.setIcon(IconTina5);
+		mntmTinaCltec.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				LanceTinaCltec6();
+			}
+		});
+		MenuTinaExceed.add(mntmTinaCltec);
+
+		MenuTinaIp1Siris = new JMenuItem("Tina UP2TS004 (IP1- Siris1)");
+		MenuTinaIp1Siris.setIcon(IconTina5);
+		MenuTinaIp1Siris.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				LanceTinaSiris1();
+			}
+		});
+		MenuTinaExceed.add(MenuTinaIp1Siris);
+
+		MenuTinaIp1Tinap203 = new JMenuItem("Tina UP2TS004 (IP1 - Tinap203)");
+		MenuTinaIp1Tinap203.setIcon(IconTina5);
+		MenuTinaIp1Tinap203.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+
+				LanceTinaTinap203();
+			}
+		});
+		MenuTinaExceed.add(MenuTinaIp1Tinap203);
+
+		mntmTina = new JMenuItem("Tina UP1TS004 (IP2 - Tinap105 & 103)");
+		mntmTina.setIcon(IconTina5);
+		mntmTina.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+
+				LanceTinaTinap105103();
+			}
+		});
+		MenuTinaExceed.add(mntmTina);
+
+		JMenu MenuCFT = new JMenu("CFT");
+		MenuCFT.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/webkit/prism/resources/mediaPlayDisabled.png")));
+		MenuOutils.add(MenuCFT);
+
+		MenuCfta = new JMenuItem("CFTA");
+		MenuCfta.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				LanceCfta();
+			}
+		});
+		MenuCFT.add(MenuCfta);
+
+		MenuCftacore = new JMenuItem("CFTACORE");
+		MenuCftacore.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				LanceCftacore();
+			}
+		});
+		MenuCFT.add(MenuCftacore);
+
+		JMenu MenuConnexionMvs = new JMenu("Consoles");
 		BarreMenuPrincipale.add(MenuConnexionMvs);
 
 		JMenu SousMenuConnexionMvs = new JMenu("MVS");
@@ -343,8 +588,6 @@ public class UserInterface extends JFrame {
 
 			}
 		});
-		SousMenuConnexionMvs.add(MenuKmvs);
-		SousMenuConnexionMvs.add(MenuZmvs);
 
 		MenuSysg = new JMenuItem("Sysg (XENOS)");
 		final ImageIcon IconSysg = new ImageIcon(getClass().getResource("/g-icon.png"));
@@ -359,14 +602,66 @@ public class UserInterface extends JFrame {
 
 		});
 		SousMenuConnexionMvs.add(MenuSysg);
+		SousMenuConnexionMvs.add(MenuKmvs);
+		SousMenuConnexionMvs.add(MenuZmvs);
 
 		JSeparator SeparateurMenuConnexionMvs = new JSeparator();
 		SousMenuConnexionMvs.add(SeparateurMenuConnexionMvs);
+
+		MenuIp1 = new JMenuItem("IP1");
+		final ImageIcon IconIp1 = new ImageIcon(getClass().getResource("/1-icon.png"));
+		MenuIp1.setIcon(IconIp1);
+		MenuIp1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+
+				LanceIp1();
+			}
+		});
+		SousMenuConnexionMvs.add(MenuIp1);
+
+		MenuIp2 = new JMenuItem("IP2");
+		final ImageIcon IconIp2 = new ImageIcon(getClass().getResource("/2-icon.png"));
+		MenuIp2.setIcon(IconIp2);
+		MenuIp2.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				LanceIp2();
+			}
+		});
+		SousMenuConnexionMvs.add(MenuIp2);
+
+		MenuIp3 = new JMenuItem("IP3");
+		final ImageIcon IconIp3 = new ImageIcon(getClass().getResource("/3_icon.png"));
+		MenuIp3.setIcon(IconIp3);
+		MenuIp3.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+
+				LanceIp3();
+			}
+		});
+		SousMenuConnexionMvs.add(MenuIp3);
+
+		JSeparator separator_3 = new JSeparator();
+		SousMenuConnexionMvs.add(separator_3);
 
 		MenuGmvs = new JMenuItem("TPX Gmvs");
 		SousMenuConnexionMvs.add(MenuGmvs);
 
 		MenuGmvs.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/webkit/prism/resources/mediaVolumeThumb.png")));
+
+		MenuBmvs = new JMenuItem("Bmvs (Recette IP0)");
+		final ImageIcon IconBmvs = new ImageIcon(getClass().getResource("/B_icon.png"));
+		MenuBmvs.setIcon(IconBmvs);
+		MenuBmvs.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+
+				LanceBmvs();
+			}
+		});
+		SousMenuConnexionMvs.add(MenuBmvs);
 
 		JMenu MenuAS400 = new JMenu("AS400");
 		MenuAS400.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/webkit/prism/resources/mediaPlayDisabled.png")));
@@ -461,7 +756,7 @@ public class UserInterface extends JFrame {
 		PaneZoneConnexion.setSize(new Dimension(10, 10));
 		PaneZoneConnexion.setOpaque(false);
 		PaneZoneConnexion.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Connexion", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(255, 99, 71)));
-		PaneZoneConnexion.setBounds(10, 2, 325, 180);
+		PaneZoneConnexion.setBounds(10, 2, 325, 201);
 		getContentPane().add(PaneZoneConnexion);
 		PaneZoneConnexion.setLayout(null);
 
@@ -472,23 +767,210 @@ public class UserInterface extends JFrame {
 		BoutonValideTelnet = new JButton("Telnet");
 		BoutonValideTelnet.setVisible(false);
 		BoutonValideTelnet.setMargin(new Insets(0, 0, 0, 0));
-		BoutonValideTelnet.setBounds(198, 121, 50, 23);
+		BoutonValideTelnet.setBounds(198, 145, 50, 23);
 		PaneZoneConnexion.add(BoutonValideTelnet);
 
 		BoutonValideSsh = new JButton("SSH");
 		BoutonValideSsh.setVisible(false);
 		BoutonValideSsh.setMargin(new Insets(0, 0, 0, 0));
-		BoutonValideSsh.setBounds(258, 121, 37, 23);
+		BoutonValideSsh.setBounds(258, 145, 37, 23);
 		PaneZoneConnexion.add(BoutonValideSsh);
 
 		MenuOdip = new JMenuItem("ODIP");
-		MenuOdip.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/scene/web/skin/IncreaseIndent_16x16_JFX.png")));
+
+		final ImageIcon IconOdip = new ImageIcon(getClass().getResource("/odip-icon.png"));
+
+		MenuFavorisCommuns = new JMenu("Favoris Communs");
+		final ImageIcon IconBoutonRechargerFavoris2 = new ImageIcon(getClass().getResource("/rsz_1legendary-marker_1.png"));
+		MenuFavorisCommuns.setIcon(IconBoutonRechargerFavoris2);
+		MenuFavoris.add(MenuFavorisCommuns);
+		MenuOdip.setIcon(IconOdip);
 		MenuFavoris.add(MenuOdip);
+
+		MenuBbr = new JMenuItem("BBR(Buisness Bridge)");
+		final ImageIcon IconBbr = new ImageIcon(getClass().getResource("/bbr-icon.png"));
+		MenuBbr.setIcon(IconBbr);
+		MenuBbr.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				LanceBbr();
+			}
+		});
+		MenuFavoris.add(MenuBbr);
+
+		MenuOseIp1 = new JMenuItem("OSE ip1");
+		final ImageIcon IconOseIp1 = new ImageIcon(getClass().getResource("/ose-icon.png"));
+		MenuOseIp1.setIcon(IconOseIp1);
+		MenuOseIp1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				LanceOseIp1();
+
+			}
+		});
+		MenuFavoris.add(MenuOseIp1);
+
+		MenuOseIp2 = new JMenuItem("OSE ip2");
+		final ImageIcon IconOseip2 = new ImageIcon(getClass().getResource("/ose-icon.png"));
+		MenuOseIp2.setIcon(IconOseip2);
+		MenuOseIp2.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				LanceOseIp2();
+			}
+		});
+		MenuFavoris.add(MenuOseIp2);
+
+		MenuIpLabel = new JMenuItem("ip-Label");
+		final ImageIcon IconIpLabel = new ImageIcon(getClass().getResource("/iplabel-icon.png"));
+		MenuIpLabel.setIcon(IconIpLabel);
+		MenuIpLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				LanceIpLabel();
+			}
+		});
+		MenuFavoris.add(MenuIpLabel);
+
+		MenuNewtest = new JMenuItem("Newtest");
+		final ImageIcon IconNewtest = new ImageIcon(getClass().getResource("/newtest-icon.png"));
+		MenuNewtest.setIcon(IconNewtest);
+		MenuNewtest.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				LanceNewtest();
+			}
+		});
+		MenuFavoris.add(MenuNewtest);
+
+		MenuXguard = new JMenuItem("Xguard");
+		final ImageIcon IconXguard = new ImageIcon(getClass().getResource("/xguard-icon.png"));
+		MenuXguard.setIcon(IconXguard);
+		MenuXguard.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				LanceXguard();
+			}
+		});
+		MenuFavoris.add(MenuXguard);
+
+		MenuHmc = new JMenuItem("HMC web1");
+		final ImageIcon IconHmc = new ImageIcon(getClass().getResource("/hmc-icon.PNG"));
+		MenuHmc.setIcon(IconHmc);
+		MenuHmc.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+
+				LanceHmc();
+			}
+		});
+		MenuFavoris.add(MenuHmc);
+
+		MenuKvm = new JMenuItem("KVM");
+		final ImageIcon IconKvm = new ImageIcon(getClass().getResource("/kvm-icon.PNG"));
+		MenuKvm.setIcon(IconKvm);
+		MenuKvm.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				LanceKvm();
+			}
+		});
+		MenuFavoris.add(MenuKvm);
+
+		MenuTina5 = new JMenuItem("Tina web Cltec5");
+		final ImageIcon IconTina = new ImageIcon(getClass().getResource("/tina-icon.jpg"));
+		MenuTina5.setIcon(IconTina);
+		MenuTina5.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				LanceTina5();
+			}
+		});
+		MenuFavoris.add(MenuTina5);
+
+		MenuTina6 = new JMenuItem("Tina web Cltec6");
+		MenuTina6.setIcon(IconTina);
+		MenuTina6.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				LanceTina6();
+			}
+		});
+		MenuFavoris.add(MenuTina6);
+
+		MenuVcenter = new JMenuItem("Vcenter (VMware)");
+		final ImageIcon IconVcenter = new ImageIcon(getClass().getResource("/vmware-icon.png"));
+		MenuVcenter.setIcon(IconVcenter);
+		MenuVcenter.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				LanceVcenter();
+			}
+		});
+		MenuFavoris.add(MenuVcenter);
+
+		MenuWebIas = new JMenuItem("Web IAS");
+		final ImageIcon IconIas = new ImageIcon(getClass().getResource("/ias-icon.png"));
+		MenuWebIas.setIcon(IconIas);
+		MenuWebIas.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+
+				LanceWebIas();
+			}
+		});
+		MenuFavoris.add(MenuWebIas);
+
+		JMenu mnSismo = new JMenu("Sismo");
+		mnSismo.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/webkit/prism/resources/mediaPlayDisabled.png")));
+		MenuFavoris.add(mnSismo);
+
+		MenuSismoIp1 = new JMenuItem("Sismo/cd IP1");
+		final ImageIcon IconSismo = new ImageIcon(getClass().getResource("/sismo-icon.jpg"));
+		MenuSismoIp1.setIcon(IconSismo);
+		MenuSismoIp1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				LanceSismoIp1();
+			}
+		});
+		mnSismo.add(MenuSismoIp1);
+
+		MenuSismoIp2 = new JMenuItem("Sismo/cd IP2");
+		MenuSismoIp2.setIcon(IconSismo);
+		MenuSismoIp2.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				LanceSismoIp2();
+			}
+		});
+		mnSismo.add(MenuSismoIp2);
+
+		MenuSismoOceor = new JMenuItem("Sismo/cd Oceor");
+		MenuSismoOceor.setIcon(IconSismo);
+		MenuSismoOceor.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				LanceSismoOceor();
+			}
+		});
+		mnSismo.add(MenuSismoOceor);
+
+		MenuSismoPalatine = new JMenuItem("Sismo/cd Palatine");
+		MenuSismoPalatine.setIcon(IconSismo);
+		MenuSismoPalatine.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				LanceSismoPalatine();
+
+			}
+		});
+		mnSismo.add(MenuSismoPalatine);
 		MenuOdip.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
 
-				LanceFavorisOdip();
+				LanceOdip();
 
 			}
 		});
@@ -500,7 +982,7 @@ public class UserInterface extends JFrame {
 		MenuModifierFichierConfig.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
-
+				GainedFocus = true;
 				UserInterfaceConfig PageConfig = new UserInterfaceConfig();
 
 				PageConfig.setVisible(true);
@@ -512,20 +994,59 @@ public class UserInterface extends JFrame {
 		MenuModifierFichierConfig.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/scene/web/skin/Copy_16x16_JFX.png")));
 		MenuConfiguration.add(MenuModifierFichierConfig);
 
-		JMenuItem mntmPar = new JMenuItem("Param\u00EAtres G\u00E9n\u00E9raux");
-		mntmPar.addMouseListener(new MouseAdapter() {
+		JMenuItem MenuParametres = new JMenuItem("Param\u00EAtres G\u00E9n\u00E9raux et bouton \"lancer poste complet\" ");
+		MenuParametres.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
-
+				GainedFocus = true;
 				UserInterfaceParametres PageParametres = new UserInterfaceParametres();
 
 				PageParametres.setVisible(true);
-				PageParametres.setSize(640, 480);
+				PageParametres.setSize(750, 480);
 				PageParametres.setLocation(PositionFenetrePrincipale);
 			}
 		});
-		mntmPar.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/scene/web/skin/AlignJustified_16x16_JFX.png")));
-		MenuConfiguration.add(mntmPar);
+		MenuParametres.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/scene/web/skin/AlignJustified_16x16_JFX.png")));
+		MenuConfiguration.add(MenuParametres);
+
+		JMenuItem mntmEditionDuFichier = new JMenuItem("Edition du fichier machine");
+		mntmEditionDuFichier.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+
+				GainedFocus = true;
+				UserInterfaceEditionMachine PageEditionMachine = new UserInterfaceEditionMachine();
+
+				PageEditionMachine.setVisible(true);
+				PageEditionMachine.setSize(750, 480);
+				PageEditionMachine.setLocation(PositionFenetrePrincipale);
+			}
+		});
+		MenuConfiguration.add(mntmEditionDuFichier);
+
+		mntmEditionDesFavoris = new JMenuItem("Edition des favoris");
+		mntmEditionDesFavoris.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/scene/web/skin/IncreaseIndent_16x16_JFX.png")));
+		mntmEditionDesFavoris.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+
+				GainedFocus = true;
+				UserInterfaceFavoris PageEditionFavoris = null;
+				try {
+					PageEditionFavoris = new UserInterfaceFavoris();
+				}
+				catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				PageEditionFavoris.setVisible(true);
+				PageEditionFavoris.setSize(800, 600);
+				PageEditionFavoris.setLocation(PositionFenetrePrincipale);
+
+			}
+		});
+		MenuConfiguration.add(mntmEditionDesFavoris);
 
 		JMenu MenuAPropos = new JMenu("Aide");
 		BarreMenuPrincipale.add(MenuAPropos);
@@ -545,8 +1066,8 @@ public class UserInterface extends JFrame {
 
 					GestionLog MaLog = new GestionLog();
 					MaLog.EcrireDansFichierLog("Erreur au lancement de la log : " + e);
-					ZoneTextLog.append("Erreur lors de l'affichage de la log : Consulter la log.  lol =)");
-					ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+					ZoneTextLog.append("Erreur lors de l'affichage de la log : Consulter la log.  lol =)" + "\n");
+
 					e.printStackTrace();
 				}
 
@@ -572,8 +1093,7 @@ public class UserInterface extends JFrame {
 					e1.printStackTrace();
 					GestionLog MaLog = new GestionLog();
 					MaLog.EcrireDansFichierLog("Erreur lors de la génération de l'email : " + e);
-					ZoneTextLog.append("Erreur lors de la génération du mail : Consulter la log.");
-					ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+					ZoneTextLog.append("Erreur lors de la génération du mail : Consulter la log." + "\n");
 
 				}
 			}
@@ -584,6 +1104,7 @@ public class UserInterface extends JFrame {
 		MenuAPropos.add(MenuInterrogation);
 
 		JButton BoutonValideMstsc = new JButton("TS (mstsc)");
+		BoutonValideMstsc.setMargin(new Insets(0, 0, 0, 0));
 		BoutonValideMstsc.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
@@ -597,21 +1118,21 @@ public class UserInterface extends JFrame {
 
 				try {
 					Runtime.getRuntime().exec(String.format("mstsc.exe /v:" + Resultatdemande));
-					ZoneTextLog.append("Lancement mstsc pour " + Resultatdemande);
-					ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+					ZoneTextLog.append("Lancement mstsc pour " + Resultatdemande + "\n");
+
 				}
 				catch (IOException e1) {
 
 					GestionLog MaLog = new GestionLog();
 					MaLog.EcrireDansFichierLog("Erreur au lancement de la connexion mstsc : " + e1);
-					ZoneTextLog.append("Erreur au lancement de la connexion mstsc : Consulter la log.");
-					ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+					ZoneTextLog.append("Erreur au lancement de la connexion mstsc : Consulter la log." + "\n");
+
 					e1.printStackTrace();
 				}
 
 			}
 		});
-		BoutonValideMstsc.setBounds(198, 145, 97, 23);
+		BoutonValideMstsc.setBounds(226, 84, 89, 23);
 		PaneZoneConnexion.add(BoutonValideMstsc);
 
 		ResultatPing = new JLabel("");
@@ -623,7 +1144,7 @@ public class UserInterface extends JFrame {
 		JPanel ZoneConnexionAutoLogin = new JPanel();
 		ZoneConnexionAutoLogin.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Auto login (SSH seulement)", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 102,
 				204)));
-		ZoneConnexionAutoLogin.setBounds(10, 54, 178, 114);
+		ZoneConnexionAutoLogin.setBounds(10, 54, 178, 136);
 		PaneZoneConnexion.add(ZoneConnexionAutoLogin);
 		ZoneConnexionAutoLogin.setLayout(null);
 
@@ -652,24 +1173,50 @@ public class UserInterface extends JFrame {
 		CheckBoxPassword.setBounds(82, 74, 63, 18);
 		ZoneConnexionAutoLogin.add(CheckBoxPassword);
 
+		JButton BoutonClearLogin = new JButton("x");
+		BoutonClearLogin.setBounds(6, 100, 18, 14);
+		ZoneConnexionAutoLogin.add(BoutonClearLogin);
+		BoutonClearLogin.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				MesBoutonsLogin.clearSelection();
+				CheckBoxPassword.setState(false);
+			}
+		});
+		BoutonClearLogin.setMargin(new Insets(0, 0, 0, 0));
+
 		MaComboBox = new JComboBox();
+
+		// -------------------LISTENER
+
+		// remplir le panneau, lui mettre un layout, etc
+
+		// ------------------------------FIN
+
+		MaComboBox.setBorder(new MatteBorder(1, 1, 1, 1, new Color(0, 0, 0)));
+		MaComboBox.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
 		MaComboBox.setAutoscrolls(true);
-		MaComboBox.setMaximumRowCount(10);
+		MaComboBox.setMaximumRowCount(20);
 		MaComboBox.setBounds(10, 17, 128, 20);
 		MaComboBox.setEditable(true);
 		AutoCompleteDecorator.decorate(MaComboBox);
 		PaneZoneConnexion.add(MaComboBox);
+		MaComboBox.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				int keyChar = e.getKeyChar();
+				if (keyChar == KeyEvent.VK_ENTER) {
+					new Thread(new LancePuttyConnexionAuto()).start();
 
+				}
+			}
+		});
 		BoutonConnexionTelnetOuSsh = new JButton("Telnet/SSH");
 		BoutonConnexionTelnetOuSsh.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				// INIT CONNEXION AUTO (LancePuttyConnexionAuto)
-				Boolean RetourValiditeConnexion = LancePuttyConnexionAuto();
-
-				if (RetourValiditeConnexion == false) {
-					ZoneTextLog.append("Impossible de trouver une connexion valide en telnet(port23) ou ssh(port22)" + "\n");
-				}
+				new Thread(new LancePuttyConnexionAuto()).start();
 
 			}
 		});
@@ -678,12 +1225,10 @@ public class UserInterface extends JFrame {
 		PaneZoneConnexion.add(BoutonConnexionTelnetOuSsh);
 
 		MaComboBox.addItemListener(new ItemListener() {
+
 			@Override
 			public void itemStateChanged(ItemEvent ie) {
 				MachineDansMaComboBox = (String) MaComboBox.getSelectedItem();
-
-				// ZoneTextLog.append(MachineDansMaComboBox);
-				// ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 
 			}
 
@@ -694,7 +1239,7 @@ public class UserInterface extends JFrame {
 		MaBarreProgression.setOpaque(true);
 		MaBarreProgression.setBackground(Color.BLACK);
 		MaBarreProgression.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-		MaBarreProgression.setBounds(10, 268, 169, 14);
+		MaBarreProgression.setBounds(10, 491, 169, 14);
 		getContentPane().add(MaBarreProgression);
 		MaBarreProgression.setIndeterminate(true);
 		MaBarreProgression.setForeground(new Color(178, 34, 34));
@@ -716,17 +1261,32 @@ public class UserInterface extends JFrame {
 				// THREADCHARGECONFIG
 				// --------------------------------------------------------
 				new Thread(new ThreadRechargementConfigInterface()).start();
+				ZoneTextLog.append("Users & passwords rechargés avec succés !" + "\n");
 
 			}
 		});
 		BoutonChargerConfig.setBounds(6, 16, 200, 23);
 		ZoneConfig.add(BoutonChargerConfig);
 
+		BoutonChargerFavoris = new JButton("Recharger les favoris");
+		final ImageIcon IconBoutonRechargerFavoris = new ImageIcon(getClass().getResource("/rsz_1legendary-marker_1.png"));
+		BoutonChargerFavoris.setIcon(IconBoutonRechargerFavoris);
+		BoutonChargerFavoris.setMargin(new Insets(1, 1, 1, 1));
+		BoutonChargerFavoris.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				MenuFavorisCommuns.removeAll();
+
+				new Thread(new ThreadChargementFavoris()).start();
+			}
+		});
+		BoutonChargerFavoris.setBounds(6, 50, 200, 23);
+		ZoneConfig.add(BoutonChargerFavoris);
+
 		JPanel PanelZoneTestFichier = new JPanel();
 		PanelZoneTestFichier.setForeground(new Color(255, 69, 0));
-		PanelZoneTestFichier.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Test d'acc\u00E8s aux fichiers", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(255, 99,
-				71)));
-		PanelZoneTestFichier.setBounds(511, 328, 164, 161);
+		PanelZoneTestFichier.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Acc\u00E8s aux fichiers", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(255, 99, 71)));
+		PanelZoneTestFichier.setBounds(604, 328, 164, 161);
 		getContentPane().add(PanelZoneTestFichier);
 		PanelZoneTestFichier.setLayout(null);
 
@@ -762,8 +1322,8 @@ public class UserInterface extends JFrame {
 		labelTestCouleurNok.setBackground(new Color(178, 34, 34));
 
 		JPanel PaneZonePreparationPostePilotage = new JPanel();
-		PaneZonePreparationPostePilotage.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Preparation poste pilotage", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(
-				65, 105, 225)));
+		PaneZonePreparationPostePilotage.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Pr\u00E9paration poste pilotage", TitledBorder.LEADING, TitledBorder.TOP, null,
+				new Color(65, 105, 225)));
 		PaneZonePreparationPostePilotage.setBounds(359, 2, 189, 180);
 		getContentPane().add(PaneZonePreparationPostePilotage);
 		PaneZonePreparationPostePilotage.setLayout(null);
@@ -784,17 +1344,117 @@ public class UserInterface extends JFrame {
 		PaneZonePreparationPostePilotage.add(BoutonLancePostePilotageComplet);
 		BoutonLancePostePilotageComplet.setMargin(new Insets(0, 0, 0, 0));
 
+		JPanel panel = new JPanel();
+		panel.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Lancer tout ->", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(165, 42, 42)));
+		panel.setBounds(6, 91, 173, 78);
+		PaneZonePreparationPostePilotage.add(panel);
+		panel.setLayout(null);
+
+		JButton BoutonToutVtom = new JButton("Vtom");
+		BoutonToutVtom.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+
+				try {
+
+					LanceVtomIp1q();
+					Thread.sleep(1000);
+					LanceVtomIp1d();
+					Thread.sleep(1000);
+					LanceVtomIp2q();
+					Thread.sleep(1000);
+					LanceVtomIp2d();
+				}
+				catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+			}
+		});
+		BoutonToutVtom.setBounds(6, 48, 71, 23);
+		panel.add(BoutonToutVtom);
+		BoutonToutVtom.setMargin(new Insets(0, 0, 0, 0));
+
+		JButton BoutonToutMvs = new JButton("MVS (Prod)");
+		BoutonToutMvs.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+
+				try {
+					LanceSysa();
+					Thread.sleep(500);
+					LanceKmvs();
+					Thread.sleep(500);
+					LanceSysg();
+					Thread.sleep(500);
+					LanceZmvs();
+					Thread.sleep(500);
+					LanceGmvs();
+					Thread.sleep(500);
+				}
+				catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+			}
+		});
+		BoutonToutMvs.setBounds(79, 16, 84, 23);
+		panel.add(BoutonToutMvs);
+		BoutonToutMvs.setMargin(new Insets(0, 0, 0, 0));
+
+		JButton BoutonToutAs400 = new JButton("As400");
+		BoutonToutAs400.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+
+				try {
+
+					LanceAs400Br();
+					Thread.sleep(500);
+					LanceAs400Bdi();
+					Thread.sleep(500);
+					LanceAs400Bdaf();
+					Thread.sleep(500);
+					LanceAs400Socly();
+					Thread.sleep(500);
+					LanceAs400Socmcsd();
+					Thread.sleep(500);
+					LanceAs400Pfb();
+				}
+				catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+
+			}
+		});
+		BoutonToutAs400.setBounds(6, 16, 71, 23);
+		panel.add(BoutonToutAs400);
+		BoutonToutAs400.setMargin(new Insets(0, 0, 0, 0));
+
 		ProgressBarExecutionGlobale = new JProgressBar();
 		ProgressBarExecutionGlobale.setVisible(false);
 		ProgressBarExecutionGlobale.setValue(0);
 		ProgressBarExecutionGlobale.setStringPainted(true);
-		ProgressBarExecutionGlobale.setMaximum(3500);
-		ProgressBarExecutionGlobale.setBounds(278, 219, 270, 23);
+		ProgressBarExecutionGlobale.setMaximum(15000);
+		ProgressBarExecutionGlobale.setBounds(236, 227, 270, 23);
 		getContentPane().add(ProgressBarExecutionGlobale);
 
 		LabelUtilisationMemoire = new JLabel("Utilisation m\u00E9moire : ");
-		LabelUtilisationMemoire.setBounds(189, 268, 164, 14);
+		LabelUtilisationMemoire.setForeground(new Color(95, 158, 160));
+		LabelUtilisationMemoire.setBounds(189, 491, 164, 14);
 		getContentPane().add(LabelUtilisationMemoire);
+
+		LabelNombreThread = new JLabel("Threads en cours :");
+		LabelNombreThread.setForeground(new Color(95, 158, 160));
+		LabelNombreThread.setBounds(359, 491, 117, 14);
+		getContentPane().add(LabelNombreThread);
+
+		LabelAdresseIp = new JLabel("Adresse IP :");
+		LabelAdresseIp.setForeground(new Color(100, 149, 237));
+		LabelAdresseIp.setBounds(492, 491, 164, 14);
+		getContentPane().add(LabelAdresseIp);
 
 		BoutonValideSsh.addMouseListener(new MouseAdapter() {
 			@Override
@@ -807,8 +1467,8 @@ public class UserInterface extends JFrame {
 					e1.printStackTrace();
 					GestionLog MaLog = new GestionLog();
 					MaLog.EcrireDansFichierLog("Erreur au lancement de putty : " + e1);
-					ZoneTextLog.append("Erreur au lancement de putty pour une connexion ssh : Consulter la log.");
-					ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+					ZoneTextLog.append("Erreur au lancement de putty pour une connexion ssh : Consulter la log." + "\n");
+
 				}
 
 			}
@@ -828,7 +1488,6 @@ public class UserInterface extends JFrame {
 			public void mouseReleased(MouseEvent e) {
 
 				new Thread(new ThreadPing()).start();
-				// THREADPING
 
 			}
 
@@ -849,7 +1508,9 @@ public class UserInterface extends JFrame {
 		CreationProfileAlphaPilote(UserNameStation);
 		TestAccesFichier();
 		new Thread(new ThreadEtatSysteme()).start();
-		new Thread(new ThreadRechargementConfigInterface()).start();
+		new Thread(new ThreadChargementFavoris()).start();
+
+		// new Thread(new ThreadRechargementConfigInterface()).start();
 
 		// LISTENNER KEYBOARD
 
@@ -857,7 +1518,7 @@ public class UserInterface extends JFrame {
 			ZoneTextLog.append("Le profile pour " + UserNameStation + " n'existait pas, il vient d'être créé avec tous les fichiers nécessaires." + "\n");
 			ZoneTextLog.append("Veuillez vous rendre dans la page de configuration des users UNIX/MVS pour saisir les données." + "\n");
 		}
-
+		new Thread(new ThreadRechargementConfigInterface()).start();
 	}
 
 	/**
@@ -932,8 +1593,8 @@ public class UserInterface extends JFrame {
 					e.printStackTrace();
 					GestionLog MaLog = new GestionLog();
 					MaLog.EcrireDansFichierLog("Erreur lors de la copie du profile de base vers le nouveau : " + e);
-					ZoneTextLog.append("Erreur lors de la copie du profile de base vers le nouveau : Consulter la log.");
-					ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+					ZoneTextLog.append("Erreur lors de la copie du profile de base vers le nouveau : Consulter la log." + "\n");
+
 				}
 			}
 
@@ -975,8 +1636,8 @@ public class UserInterface extends JFrame {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			MaLog.EcrireDansFichierLog("Erreur au lancement d'Outlook: " + e);
-			ZoneTextLog.append("Erreur au d'Outlook : Consulter la log.");
-			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+			ZoneTextLog.append("Erreur au d'Outlook : Consulter la log." + "\n");
+
 		}
 
 	}
@@ -1008,8 +1669,8 @@ public class UserInterface extends JFrame {
 			e.printStackTrace();
 			GestionLog MaLog = new GestionLog();
 			MaLog.EcrireDansFichierLog("Erreur au lancement d'Iprox : " + e);
-			ZoneTextLog.append("Erreur au lancement d'Iprox : Consulter la log.");
-			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+			ZoneTextLog.append("Erreur au lancement d'Iprox : Consulter la log." + "\n");
+
 		}
 
 	}
@@ -1025,8 +1686,8 @@ public class UserInterface extends JFrame {
 			e.printStackTrace();
 			GestionLog MaLog = new GestionLog();
 			MaLog.EcrireDansFichierLog("Erreur au lancement d'ARS-Remedy v7 : " + e);
-			ZoneTextLog.append("Erreur au lancement d'ARS-Remedy v7 : Consulter la log.");
-			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+			ZoneTextLog.append("Erreur au lancement d'ARS-Remedy v7 : Consulter la log." + "\n");
+
 		}
 
 	}
@@ -1042,13 +1703,131 @@ public class UserInterface extends JFrame {
 			e.printStackTrace();
 			GestionLog MaLog = new GestionLog();
 			MaLog.EcrireDansFichierLog("Erreur au lancement de Putty Connection Manager : " + e);
-			ZoneTextLog.append("Erreur au lancement de Putty Connection Manager: Consulter la log.");
-			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+			ZoneTextLog.append("Erreur au lancement de Putty Connection Manager: Consulter la log." + "\n");
+
 		}
 
 	}
 
-	public void LanceFavorisOdip() {
+	public void LanceExceed() {
+		GestionChemin Chemin = new GestionChemin();
+		try {
+			Runtime.getRuntime().exec(String.format(Chemin.DemandeChemin("CheminExceed")));
+			ZoneTextLog.append("Ouverture d'Exceed." + "\n");
+		}
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			GestionLog MaLog = new GestionLog();
+			MaLog.EcrireDansFichierLog("Erreur au lancement d'exceed : " + e);
+			ZoneTextLog.append("Erreur au lancement d'exceed Manager: Consulter la log." + "\n");
+
+		}
+
+	}
+
+	public void LanceTinaCltec5() {
+		GestionChemin RequeteChemin = new GestionChemin();
+		GestionProfile ModifProfileTina = new GestionProfile();
+		try {
+			ModifProfileTina.ModifierIpTina("tina.txt");
+			Runtime.getRuntime()
+					.exec(String.format(RequeteChemin.DemandeChemin("CheminPutty") + " -ssh root@126.40.230.16 -pw cpnonart -m " + "\"" + RequeteChemin.DemandeChemin("CheminTinaMacro") + "tina.txt"
+							+ "\""));
+			ZoneTextLog.append("Ouverture de Tina Cltec5. " + "\n");
+		}
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			GestionLog MaLog = new GestionLog();
+			MaLog.EcrireDansFichierLog("Erreur au lancement de Tina Cltec5: " + e);
+			ZoneTextLog.append("Erreur au lancement de Tina Cltec5: Consulter la log." + "\n");
+
+		}
+
+	}
+
+	public void LanceTinaCltec6() {
+		GestionChemin RequeteChemin = new GestionChemin();
+		GestionProfile ModifProfileTina = new GestionProfile();
+		try {
+			ModifProfileTina.ModifierIpTina("tina.txt");
+			Runtime.getRuntime()
+					.exec(String.format(RequeteChemin.DemandeChemin("CheminPutty") + " -ssh root@126.196.96.22 -pw bullbull -m " + "\"" + RequeteChemin.DemandeChemin("CheminTinaMacro") + "tina.txt"
+							+ "\""));
+			ZoneTextLog.append("Ouverture de Tina Cltec6." + "\n");
+		}
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			GestionLog MaLog = new GestionLog();
+			MaLog.EcrireDansFichierLog("Erreur au lancement de Tina Cltec6: " + e);
+			ZoneTextLog.append("Erreur au lancement de Tina Cltec6: Consulter la log." + "\n");
+
+		}
+	}
+
+	public void LanceTinaSiris1() {
+		GestionChemin RequeteChemin = new GestionChemin();
+		GestionProfile ModifProfileTina = new GestionProfile();
+		try {
+			ModifProfileTina.ModifierIpTina("tina_UP2TS004_SIRIS1.txt");
+			Runtime.getRuntime().exec(
+					String.format(RequeteChemin.DemandeChemin("CheminPutty") + " -ssh root@126.196.230.13 -pw bullbull -m " + "\"" + RequeteChemin.DemandeChemin("CheminTinaMacro")
+							+ "tina_UP2TS004_SIRIS1.txt" + "\""));
+			ZoneTextLog.append("Ouverture de Tina UP2TS004 catalogue Siris1." + "\n");
+		}
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			GestionLog MaLog = new GestionLog();
+			MaLog.EcrireDansFichierLog("Erreur au lancement de Tina UP2TS004 catalogue Siris1: " + e);
+			ZoneTextLog.append("Erreur au lancement de Tina UP2TS004 catalogue Siris1: Consulter la log." + "\n");
+
+		}
+	}
+
+	public void LanceTinaTinap203() {
+		GestionChemin RequeteChemin = new GestionChemin();
+		GestionProfile ModifProfileTina = new GestionProfile();
+		try {
+			ModifProfileTina.ModifierIpTina("tina_UP2TS004_TINAP203.txt");
+			Runtime.getRuntime().exec(
+					String.format(RequeteChemin.DemandeChemin("CheminPutty") + " -ssh root@126.196.230.13 -pw bullbull -m " + "\"" + RequeteChemin.DemandeChemin("CheminTinaMacro")
+							+ "tina_UP2TS004_TINAP203.txt" + "\""));
+			ZoneTextLog.append("Ouverture de Tina UP2TS004 catalogue TINAP203." + "\n");
+		}
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			GestionLog MaLog = new GestionLog();
+			MaLog.EcrireDansFichierLog("Erreur au lancement de Tina UP2TS004 catalogue TINAP203: " + e);
+			ZoneTextLog.append("Erreur au lancement de Tina UP2TS004 catalogue TINAP203: Consulter la log." + "\n");
+
+		}
+	}
+
+	public void LanceTinaTinap105103() {
+		GestionChemin RequeteChemin = new GestionChemin();
+		GestionProfile ModifProfileTina = new GestionProfile();
+		try {
+			ModifProfileTina.ModifierIpTina("tina_UP1TS004.txt");
+			Runtime.getRuntime().exec(
+					String.format(RequeteChemin.DemandeChemin("CheminPutty") + " -ssh root@126.40.230.119 -pw bullbull -m " + "\"" + RequeteChemin.DemandeChemin("CheminTinaMacro")
+							+ "tina_UP1TS004.txt" + "\""));
+			ZoneTextLog.append("Ouverture de Tina UP2TS004 catalogue TINAP105 et 103" + "\n");
+		}
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			GestionLog MaLog = new GestionLog();
+			MaLog.EcrireDansFichierLog("Erreur au lancement de Tina UP2TS004 catalogue TINAP105 et 103: " + e);
+			ZoneTextLog.append("Erreur au lancement de Tina UP2TS004 catalogue TINAP105 et 103: Consulter la log." + "\n");
+
+		}
+	}
+
+	public String SelectionneNavigateur() {
 
 		GestionConfig AccesConfig = new GestionConfig();
 		String Navigateur = "";
@@ -1058,32 +1837,567 @@ public class UserInterface extends JFrame {
 				Navigateur = "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe";
 				break;
 			case "Mozilla Firefox":
-				Navigateur = "C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe";
+				Navigateur = "C:\\Users\\" + UserNameStation + "\\AppData\\Local\\Mozilla Firefox\\firefox.exe";
 				break;
 			case "Internet Explorer":
 				Navigateur = "C:\\Program Files\\Internet Explorer\\iexplore.exe";
 				break;
 
 		}
+		return Navigateur;
+	}
+
+	public void LanceOdip() {
+
+		String Navigateur = SelectionneNavigateur();
 
 		try {
-			Runtime.getRuntime().exec(String.format(Navigateur + " " + "http://pilotage-upfc.supragrp.caisse-epargne.fr/pilotage/showChecklistAction.action"));
-			// URI uri =
-			// URI.create("http://pilotage-upfc.supragrp.caisse-epargne.fr/pilotage/showChecklistAction.action");
-			// Desktop.getDesktop().browse(uri);
+			// Runtime.getRuntime().exec(String.format(Navigateur + " " +
+			// "http://pilotage-upfc.supragrp.caisse-epargne.fr/pilotage/showChecklistAction.action"));
+			ProcessBuilder pb = new ProcessBuilder("cmd.exe", " start", "/C", Navigateur, "", "http://pilotage-upfc.supragrp.caisse-epargne.fr/pilotage/showChecklistAction.action");
+			pb.start();
 
-			ZoneTextLog.append("Ouverture de la page " + MenuOdip.getText());
-			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+			ZoneTextLog.append("Ouverture de la page " + MenuOdip.getText() + "\n");
 
 		}
 		catch (IOException e) {
 			GestionLog MaLog = new GestionLog();
 			MaLog.EcrireDansFichierLog("Erreur au lancement d'ODIP : " + e);
-			ZoneTextLog.append("Erreur au lancement : Consulter la log.");
-			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+			ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
+
 			e.printStackTrace();
 		}
 
+	}
+
+	public void LanceBbr() {
+		String Navigateur = SelectionneNavigateur();
+
+		try {
+			// Runtime.getRuntime().exec(String.format(Navigateur + " " +
+			// "http://pilotage-upfc.supragrp.caisse-epargne.fr/pilotage/showChecklistAction.action"));
+			ProcessBuilder pb = new ProcessBuilder("cmd.exe", " start", "/C", Navigateur, "",
+					"http://hypervision-presentation.sigce.caisse-epargne.fr:8080/MeteoServices/faces/custom/pages/moduleWVA/sd_macroView.jsp?wall=false");
+			pb.start();
+
+			ZoneTextLog.append("Ouverture de la page " + MenuBbr.getText() + "\n");
+
+		}
+		catch (IOException e) {
+			GestionLog MaLog = new GestionLog();
+			MaLog.EcrireDansFichierLog("Erreur au lancement de BBR : " + e);
+			ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
+
+			e.printStackTrace();
+		}
+	}
+
+	public void LanceIpLabel() {
+		String Navigateur = SelectionneNavigateur();
+
+		try {
+			// Runtime.getRuntime().exec(String.format(Navigateur + " " +
+			// "http://pilotage-upfc.supragrp.caisse-epargne.fr/pilotage/showChecklistAction.action"));
+			ProcessBuilder pb = new ProcessBuilder("cmd.exe", " start", "/C", Navigateur, "", "http://gx.ip-label.net/client/Section3_1/");
+			pb.start();
+
+			ZoneTextLog.append("Ouverture de la page " + MenuIpLabel.getText() + "\n");
+
+		}
+		catch (IOException e) {
+			GestionLog MaLog = new GestionLog();
+			MaLog.EcrireDansFichierLog("Erreur au lancement d'Ip-Label: " + e);
+			ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
+
+			e.printStackTrace();
+		}
+	}
+
+	public void LanceNewtest() {
+		String Navigateur = SelectionneNavigateur();
+
+		try {
+			// Runtime.getRuntime().exec(String.format(Navigateur + " " +
+			// "http://pilotage-upfc.supragrp.caisse-epargne.fr/pilotage/showChecklistAction.action"));
+			ProcessBuilder pb = new ProcessBuilder("cmd.exe", " start", "/C", Navigateur, "", "http://newtest_prod/NMC/Supervision/StatusMonitoring.aspx");
+			pb.start();
+
+			ZoneTextLog.append("Ouverture de la page " + MenuNewtest.getText() + "\n");
+
+		}
+		catch (IOException e) {
+			GestionLog MaLog = new GestionLog();
+			MaLog.EcrireDansFichierLog("Erreur au lancement de Newtest: " + e);
+			ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
+
+			e.printStackTrace();
+		}
+	}
+
+	public void LanceOseIp1() {
+		String Navigateur = SelectionneNavigateur();
+
+		try {
+			// Runtime.getRuntime().exec(String.format(Navigateur + " " +
+			// "http://pilotage-upfc.supragrp.caisse-epargne.fr/pilotage/showChecklistAction.action"));
+			ProcessBuilder pb = new ProcessBuilder("cmd.exe", " start", "/C", Navigateur, "", "http://oseserv.siris.caisse-epargne.fr:8080/cgi-bin/etatserv.exe?sit=MAIL&totm=oui&pag=MA_ALL11&rfh=oui");
+			pb.start();
+
+			ZoneTextLog.append("Ouverture de la page " + MenuOseIp1.getText() + "\n");
+
+		}
+		catch (IOException e) {
+			GestionLog MaLog = new GestionLog();
+			MaLog.EcrireDansFichierLog("Erreur au lancement d'OSE ip1: " + e);
+			ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
+
+			e.printStackTrace();
+		}
+	}
+
+	public void LanceOseIp2() {
+		String Navigateur = SelectionneNavigateur();
+
+		try {
+			// Runtime.getRuntime().exec(String.format(Navigateur + " " +
+			// "http://pilotage-upfc.supragrp.caisse-epargne.fr/pilotage/showChecklistAction.action"));
+			ProcessBuilder pb = new ProcessBuilder("cmd.exe", " start", "/C", Navigateur, "", "http://oseserv.sigce.caisse-epargne.fr:8080/cgi-bin/etatserv.exe?sit=MAIL&totm=oui&pag=MA_ALL11&rfh=oui");
+			pb.start();
+
+			ZoneTextLog.append("Ouverture de la page " + MenuOseIp2.getText() + "\n");
+
+		}
+		catch (IOException e) {
+			GestionLog MaLog = new GestionLog();
+			MaLog.EcrireDansFichierLog("Erreur au lancement d'OSE ip2: " + e);
+			ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
+
+			e.printStackTrace();
+		}
+	}
+
+	public void LanceXguard() {
+		String Navigateur = SelectionneNavigateur();
+
+		try {
+			// Runtime.getRuntime().exec(String.format(Navigateur + " " +
+			// "http://pilotage-upfc.supragrp.caisse-epargne.fr/pilotage/showChecklistAction.action"));
+			ProcessBuilder pb = new ProcessBuilder("cmd.exe", " start", "/C", Navigateur, "", "http://pilotage-xg.supragrp.caisse-epargne.fr/ihmxgd/web/app.php");
+			pb.start();
+
+			ZoneTextLog.append("Ouverture de la page " + MenuXguard.getText() + "\n");
+
+		}
+		catch (IOException e) {
+			GestionLog MaLog = new GestionLog();
+			MaLog.EcrireDansFichierLog("Erreur au lancement d'Xguard: " + e);
+			ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
+
+			e.printStackTrace();
+		}
+	}
+
+	public void LanceHmc() {
+
+		String Navigateur = SelectionneNavigateur();
+
+		try {
+			// Runtime.getRuntime().exec(String.format(Navigateur + " " +
+			// "http://pilotage-upfc.supragrp.caisse-epargne.fr/pilotage/showChecklistAction.action"));
+			ProcessBuilder pb = new ProcessBuilder("cmd.exe", " start", "/C", Navigateur, "", "https://126.199.169.23/preloginmonitor/index.jsp");
+			pb.start();
+
+			ZoneTextLog.append("Ouverture de la page " + MenuHmc.getText() + "\n");
+
+		}
+		catch (IOException e) {
+			GestionLog MaLog = new GestionLog();
+			MaLog.EcrireDansFichierLog("Erreur au lancement de la HMC : " + e);
+			ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
+
+			e.printStackTrace();
+		}
+
+	}
+
+	public void LanceKvm() {
+
+		String Navigateur = SelectionneNavigateur();
+
+		try {
+			// Runtime.getRuntime().exec(String.format(Navigateur + " " +
+			// "http://pilotage-upfc.supragrp.caisse-epargne.fr/pilotage/showChecklistAction.action"));
+			ProcessBuilder pb = new ProcessBuilder("cmd.exe", " start", "/C", Navigateur, "", "https://dsview.gtm.caisse-epargne.fr/dsview/protected/login.do");
+			pb.start();
+
+			ZoneTextLog.append("Ouverture de la page " + MenuKvm.getText() + "\n");
+
+		}
+		catch (IOException e) {
+			GestionLog MaLog = new GestionLog();
+			MaLog.EcrireDansFichierLog("Erreur au lancement de la page KVM: " + e);
+			ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
+
+			e.printStackTrace();
+		}
+
+	}
+
+	public void LanceTina5() {
+
+		String Navigateur = SelectionneNavigateur();
+
+		try {
+			// Runtime.getRuntime().exec(String.format(Navigateur + " " +
+			// "http://pilotage-upfc.supragrp.caisse-epargne.fr/pilotage/showChecklistAction.action"));
+			ProcessBuilder pb = new ProcessBuilder("cmd.exe", " start", "/C", Navigateur, "", "http://126.40.230.16:25088/tina");
+			pb.start();
+
+			ZoneTextLog.append("Ouverture de la page " + MenuTina5.getText() + "\n");
+
+		}
+		catch (IOException e) {
+			GestionLog MaLog = new GestionLog();
+			MaLog.EcrireDansFichierLog("Erreur au lancement de la page TINA Cltec5: " + e);
+			ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
+
+			e.printStackTrace();
+		}
+
+	}
+
+	public void LanceTina6() {
+
+		String Navigateur = SelectionneNavigateur();
+
+		try {
+			// Runtime.getRuntime().exec(String.format(Navigateur + " " +
+			// "http://pilotage-upfc.supragrp.caisse-epargne.fr/pilotage/showChecklistAction.action"));
+			ProcessBuilder pb = new ProcessBuilder("cmd.exe", " start", "/C", Navigateur, "", "http://126.196.96.22:25088/tina");
+			pb.start();
+
+			ZoneTextLog.append("Ouverture de la page " + MenuTina6.getText() + "\n");
+
+		}
+		catch (IOException e) {
+			GestionLog MaLog = new GestionLog();
+			MaLog.EcrireDansFichierLog("Erreur au lancement de la page TINA Cltec6: " + e);
+			ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
+
+			e.printStackTrace();
+		}
+
+	}
+
+	public void LanceVcenter() {
+
+		String Navigateur = SelectionneNavigateur();
+
+		try {
+			// Runtime.getRuntime().exec(String.format(Navigateur + " " +
+			// "http://pilotage-upfc.supragrp.caisse-epargne.fr/pilotage/showChecklistAction.action"));
+			ProcessBuilder pb = new ProcessBuilder("cmd.exe", " start", "/C", Navigateur, "", "https://vcenterweb.sigce.caisse-epargne.fr:9443/vsphere-client/?locale=en_US");
+			pb.start();
+
+			ZoneTextLog.append("Ouverture de la page " + MenuVcenter.getText() + "\n");
+
+		}
+		catch (IOException e) {
+			GestionLog MaLog = new GestionLog();
+			MaLog.EcrireDansFichierLog("Erreur au lancement de Vcenter (VM): " + e);
+			ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
+
+			e.printStackTrace();
+		}
+
+	}
+
+	public void LanceSismoIp1() {
+
+		String Navigateur = SelectionneNavigateur();
+
+		try {
+			// Runtime.getRuntime().exec(String.format(Navigateur + " " +
+			// "http://pilotage-upfc.supragrp.caisse-epargne.fr/pilotage/showChecklistAction.action"));
+			ProcessBuilder pb = new ProcessBuilder("cmd.exe", " start", "/C", Navigateur, "", "http://126.196.230.23/env1.etat.technique.php");
+			pb.start();
+
+			ZoneTextLog.append("Ouverture de la page " + MenuSismoIp1.getText() + "\n");
+
+		}
+		catch (IOException e) {
+			GestionLog MaLog = new GestionLog();
+			MaLog.EcrireDansFichierLog("Erreur au lancement de Sismo IP1: " + e);
+			ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
+
+			e.printStackTrace();
+		}
+
+	}
+
+	public void LanceSismoIp2() {
+
+		String Navigateur = SelectionneNavigateur();
+
+		try {
+			// Runtime.getRuntime().exec(String.format(Navigateur + " " +
+			// "http://pilotage-upfc.supragrp.caisse-epargne.fr/pilotage/showChecklistAction.action"));
+			ProcessBuilder pb = new ProcessBuilder("cmd.exe", " start", "/C", Navigateur, "", "http://126.196.224.12/env1.etat.technique.php");
+			pb.start();
+
+			ZoneTextLog.append("Ouverture de la page " + MenuSismoIp2.getText() + "\n");
+
+		}
+		catch (IOException e) {
+			GestionLog MaLog = new GestionLog();
+			MaLog.EcrireDansFichierLog("Erreur au lancement de Sismo IP2: " + e);
+			ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
+
+			e.printStackTrace();
+		}
+
+	}
+
+	public void LanceSismoOceor() {
+
+		String Navigateur = SelectionneNavigateur();
+
+		try {
+			// Runtime.getRuntime().exec(String.format(Navigateur + " " +
+			// "http://pilotage-upfc.supragrp.caisse-epargne.fr/pilotage/showChecklistAction.action"));
+			ProcessBuilder pb = new ProcessBuilder("cmd.exe", " start", "/C", Navigateur, "", "http://126.196.230.61/env1.etat.technique.php");
+			pb.start();
+
+			ZoneTextLog.append("Ouverture de la page " + MenuSismoOceor.getText() + "\n");
+
+		}
+		catch (IOException e) {
+			GestionLog MaLog = new GestionLog();
+			MaLog.EcrireDansFichierLog("Erreur au lancement de Sismo Oceor: " + e);
+			ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
+
+			e.printStackTrace();
+		}
+
+	}
+
+	public void LanceSismoPalatine() {
+
+		String Navigateur = SelectionneNavigateur();
+
+		try {
+			// Runtime.getRuntime().exec(String.format(Navigateur + " " +
+			// "http://pilotage-upfc.supragrp.caisse-epargne.fr/pilotage/showChecklistAction.action"));
+			ProcessBuilder pb = new ProcessBuilder("cmd.exe", " start", "/C", Navigateur, "", "http://up5bd010/sismocdFIL.php");
+			pb.start();
+
+			ZoneTextLog.append("Ouverture de la page " + MenuSismoPalatine.getText() + "\n");
+
+		}
+		catch (IOException e) {
+			GestionLog MaLog = new GestionLog();
+			MaLog.EcrireDansFichierLog("Erreur au lancement de Sismo Palatine: " + e);
+			ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
+
+			e.printStackTrace();
+		}
+
+	}
+
+	public void LanceArsV8() {
+
+		String Navigateur = SelectionneNavigateur();
+
+		try {
+			// Runtime.getRuntime().exec(String.format(Navigateur + " " +
+			// "http://pilotage-upfc.supragrp.caisse-epargne.fr/pilotage/showChecklistAction.action"));
+			ProcessBuilder pb = new ProcessBuilder("cmd.exe", " start", "/C", Navigateur, "",
+					"http://arsv8.sigce.caisse-epargne.fr/arsys/forms/arsv8-ppr/SHR%3ALandingConsole/Default+Administrator+View/?cacheid=28c87c35");
+			pb.start();
+
+			ZoneTextLog.append("Ouverture de la page " + MenuArsV8.getText() + "\n");
+
+		}
+		catch (IOException e) {
+			GestionLog MaLog = new GestionLog();
+			MaLog.EcrireDansFichierLog("Erreur au lancement d'ARS v8: " + e);
+			ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
+
+			e.printStackTrace();
+		}
+
+	}
+
+	public void LanceWebIas() {
+
+		String Navigateur = SelectionneNavigateur();
+
+		try {
+			// Runtime.getRuntime().exec(String.format(Navigateur + " " +
+			// "http://pilotage-upfc.supragrp.caisse-epargne.fr/pilotage/showChecklistAction.action"));
+			ProcessBuilder pb = new ProcessBuilder("cmd.exe", " start", "/C", Navigateur, "", "http://ias3.supragrp.caisse-epargne.fr");
+			pb.start();
+
+			ZoneTextLog.append("Ouverture de la page Web IAS" + "\n");
+
+		}
+		catch (IOException e) {
+			GestionLog MaLog = new GestionLog();
+			MaLog.EcrireDansFichierLog("Erreur au lancement de Web IAS: " + e);
+			ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
+
+			e.printStackTrace();
+		}
+
+	}
+
+	public void LanceCfta() {
+
+		String Navigateur = SelectionneNavigateur();
+
+		try {
+			// Runtime.getRuntime().exec(String.format(Navigateur + " " +
+			// "http://pilotage-upfc.supragrp.caisse-epargne.fr/pilotage/showChecklistAction.action"));
+			ProcessBuilder pb = new ProcessBuilder("cmd.exe", " start", "/C", Navigateur, "", "http://sysa:3578/");
+			pb.start();
+
+			ZoneTextLog.append("Ouverture de la page CFTA" + "\n");
+
+		}
+		catch (IOException e) {
+			GestionLog MaLog = new GestionLog();
+			MaLog.EcrireDansFichierLog("Erreur au lancement de CFTA: " + e);
+			ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
+
+			e.printStackTrace();
+		}
+
+	}
+
+	public void LanceCftacore() {
+
+		String Navigateur = SelectionneNavigateur();
+
+		try {
+			// Runtime.getRuntime().exec(String.format(Navigateur + " " +
+			// "http://pilotage-upfc.supragrp.caisse-epargne.fr/pilotage/showChecklistAction.action"));
+			ProcessBuilder pb = new ProcessBuilder("cmd.exe", " start", "/C", Navigateur, "", "http://sysa:3579/");
+			pb.start();
+
+			ZoneTextLog.append("Ouverture de la page CFTACORE" + "\n");
+
+		}
+		catch (IOException e) {
+			GestionLog MaLog = new GestionLog();
+			MaLog.EcrireDansFichierLog("Erreur au lancement de CFTACORE: " + e);
+			ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
+
+			e.printStackTrace();
+		}
+
+	}
+
+	public void LanceArsCff() {
+
+		String Navigateur = SelectionneNavigateur();
+
+		try {
+			// Runtime.getRuntime().exec(String.format(Navigateur + " " +
+			// "http://pilotage-upfc.supragrp.caisse-epargne.fr/pilotage/showChecklistAction.action"));
+			ProcessBuilder pb = new ProcessBuilder("cmd.exe", " start", "/C", Navigateur, "", "http://126.238.65.2:8080/arsys/shared/login.jsp?/arsys/");
+			pb.start();
+
+			ZoneTextLog.append("Ouverture de la page Ars CFF" + "\n");
+
+		}
+		catch (IOException e) {
+			GestionLog MaLog = new GestionLog();
+			MaLog.EcrireDansFichierLog("Erreur au lancement de l'ARS CFF: " + e);
+			ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
+
+			e.printStackTrace();
+		}
+
+	}
+
+	public void LanceVtomIp1q() {
+
+		GestionConfig FichierConfig = new GestionConfig();
+		GestionChemin RequeteChemin = new GestionChemin();
+		String UserWindows = "";
+		String PassWindows = "";
+		UserWindows = FichierConfig.DemandeUser("Windows");
+		PassWindows = FichierConfig.DemandePassword("Windows");
+
+		try {
+			Runtime.getRuntime().exec(String.format(RequeteChemin.DemandeChemin("CheminVtom") + " -u " + UserWindows + " -p " + PassWindows + " -s UP2TO002:30017 " + " -d Pilote"));
+			ZoneTextLog.append("Ouverture de VTOM IP1 journalier sur UP2TO002:30017" + "\n");
+
+		}
+		catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+
+	public void LanceVtomIp1d() {
+
+		GestionConfig FichierConfig = new GestionConfig();
+		GestionChemin RequeteChemin = new GestionChemin();
+		String UserWindows = "";
+		String PassWindows = "";
+		UserWindows = FichierConfig.DemandeUser("Windows");
+		PassWindows = FichierConfig.DemandePassword("Windows");
+
+		try {
+			Runtime.getRuntime().exec(String.format(RequeteChemin.DemandeChemin("CheminVtom") + " -u " + UserWindows + " -p " + PassWindows + " -s UP2TO003:30017 " + " -d Pilote"));
+			ZoneTextLog.append("Ouverture de VTOM IP1 décisionnel sur UP2TO003:30017" + "\n");
+
+		}
+		catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+
+	public void LanceVtomIp2q() {
+
+		GestionConfig FichierConfig = new GestionConfig();
+		GestionChemin RequeteChemin = new GestionChemin();
+		String UserWindows = "";
+		String PassWindows = "";
+		UserWindows = FichierConfig.DemandeUser("Windows");
+		PassWindows = FichierConfig.DemandePassword("Windows");
+
+		try {
+			Runtime.getRuntime().exec(String.format(RequeteChemin.DemandeChemin("CheminVtom") + " -u " + UserWindows + " -p " + PassWindows + " -s UP1TO002:30117 " + " -d Pilote"));
+			ZoneTextLog.append("Ouverture de VTOM IP2 quotidien sur UP2TO002:30117" + "\n");
+
+		}
+		catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+
+	public void LanceVtomIp2d() {
+
+		GestionConfig FichierConfig = new GestionConfig();
+		GestionChemin RequeteChemin = new GestionChemin();
+		String UserWindows = "";
+		String PassWindows = "";
+		UserWindows = FichierConfig.DemandeUser("Windows");
+		PassWindows = FichierConfig.DemandePassword("Windows");
+
+		try {
+			Runtime.getRuntime().exec(String.format(RequeteChemin.DemandeChemin("CheminVtom") + " -u " + UserWindows + " -p " + PassWindows + " -s UP1TO003:30117 " + " -d Pilote"));
+			ZoneTextLog.append("Ouverture de VTOM IP2 décisionnel sur UP2TO003:30117" + "\n");
+
+		}
+		catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 
 	// PRODUIT MVS ET AS400
@@ -1094,27 +2408,26 @@ public class UserInterface extends JFrame {
 	public void LanceSysa() {
 
 		GestionLog MaLog = new GestionLog();
-		UserInterfaceConfig UserInterfaceConfigPourDemande = new UserInterfaceConfig();
+		GestionConfig GC = new GestionConfig();
 		GestionChemin RequeteChemin = new GestionChemin();
 		try {
 
-			if (UserInterfaceConfigPourDemande.DemandeEtatAutoLoginSysa() == true) {
+			if (GC.DemandeAutoConnect("Sysa").equals("true") == true) {
 
 				ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileSysa") });
 				builder.start();
 
-				ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuSysa.getText() + " AUTOLOGIN");
-				ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+				ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuSysa.getText() + " AUTOLOGIN" + "\n");
 
 			}
 
-			if (UserInterfaceConfigPourDemande.DemandeEtatAutoLoginSysa() == false) {
+			if (GC.DemandeAutoConnect("Sysa").equals("true") == false) {
 
 				ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileSysa_no_auto_login") });
 				builder.start();
 
 				ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuSysa.getText());
-				ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+				ZoneTextLog.setText(ZoneTextLog.getText() + "\n" + "\n");
 
 			}
 
@@ -1122,8 +2435,7 @@ public class UserInterface extends JFrame {
 		catch (IOException e1) {
 			e1.printStackTrace();
 			MaLog.EcrireDansFichierLog("Erreur au lancement de Quick3270 pour Sysa : " + e1);
-			ZoneTextLog.append("Erreur au lancement : Consulter la log.");
-			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+			ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
 
 		}
 
@@ -1132,26 +2444,24 @@ public class UserInterface extends JFrame {
 	public void LanceKmvs() {
 
 		GestionLog MaLog = new GestionLog();
-		UserInterfaceConfig UserInterfaceConfigPourDemande = new UserInterfaceConfig();
+		GestionConfig GC = new GestionConfig();
 		GestionChemin RequeteChemin = new GestionChemin();
 		try {
 
-			if (UserInterfaceConfigPourDemande.DemandeEtatAutoLoginKmvs() == true) {
+			if (GC.DemandeAutoConnect("Kmvs").equals("true") == true) {
 
 				ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileKmvs") });
 				builder.start();
 
-				ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuKmvs.getText() + " AUTOLOGIN");
-				ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+				ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuKmvs.getText() + " AUTOLOGIN" + "\n");
 
 			}
 
-			if (UserInterfaceConfigPourDemande.DemandeEtatAutoLoginKmvs() == false) {
+			if (GC.DemandeAutoConnect("Kmvs").equals("true") == false) {
 
 				ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileKmvs_no_auto_login") });
 				builder.start();
-				ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuKmvs.getText());
-				ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+				ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuKmvs.getText() + "\n");
 
 			}
 
@@ -1159,8 +2469,7 @@ public class UserInterface extends JFrame {
 		catch (IOException e1) {
 			e1.printStackTrace();
 			MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour KMVS : " + e1);
-			ZoneTextLog.append("Erreur au lancement : Consulter la log.");
-			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+			ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
 
 		}
 
@@ -1169,28 +2478,26 @@ public class UserInterface extends JFrame {
 	public void LanceZmvs() {
 
 		GestionLog MaLog = new GestionLog();
-		UserInterfaceConfig UserInterfaceConfigPourDemande = new UserInterfaceConfig();
+		GestionConfig GC = new GestionConfig();
 		GestionChemin RequeteChemin = new GestionChemin();
 
 		try {
 
-			if (UserInterfaceConfigPourDemande.DemandeEtatAutoLoginZmvs() == true) {
+			if (GC.DemandeAutoConnect("Zmvs").equals("true") == true) {
 
 				ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileZmvs") });
 				builder.start();
 
-				ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuZmvs.getText() + " AUTOLOGIN");
-				ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+				ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuZmvs.getText() + " AUTOLOGIN" + "\n");
 
 			}
 
-			if (UserInterfaceConfigPourDemande.DemandeEtatAutoLoginZmvs() == false) {
+			if (GC.DemandeAutoConnect("Zmvs").equals("true") == false) {
 
 				ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileZmvs_no_auto_login") });
 				builder.start();
 
-				ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuZmvs.getText());
-				ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+				ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuZmvs.getText() + "\n");
 
 			}
 
@@ -1198,8 +2505,7 @@ public class UserInterface extends JFrame {
 		catch (IOException e1) {
 			e1.printStackTrace();
 			MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour ZMVS : " + e1);
-			ZoneTextLog.append("Erreur au lancement : Consulter la log.");
-			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+			ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
 
 		}
 
@@ -1209,26 +2515,24 @@ public class UserInterface extends JFrame {
 
 	{
 		GestionLog MaLog = new GestionLog();
-		UserInterfaceConfig UserInterfaceConfigPourDemande = new UserInterfaceConfig();
+		GestionConfig GC = new GestionConfig();
 		GestionChemin RequeteChemin = new GestionChemin();
 		try {
 
-			if (UserInterfaceConfigPourDemande.DemandeEtatAutoLoginSysg() == true) {
+			if (GC.DemandeAutoConnect("Sysa").equals("true") == true) {
 
 				ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileSysg") });
 				builder.start();
-				ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuSysg.getText() + " AUTOLOGIN");
-				ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+				ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuSysg.getText() + " AUTOLOGIN" + "\n");
 
 			}
 
-			if (UserInterfaceConfigPourDemande.DemandeEtatAutoLoginSysg() == false) {
+			if (GC.DemandeAutoConnect("Sysa").equals("true") == false) {
 
 				ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileSysg_no_auto_login") });
 				builder.start();
 
-				ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuSysg.getText());
-				ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+				ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuSysg.getText() + "\n");
 
 			}
 
@@ -1236,8 +2540,7 @@ public class UserInterface extends JFrame {
 		catch (IOException e1) {
 			e1.printStackTrace();
 			MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour Sysg : " + e1);
-			ZoneTextLog.append("Erreur au lancement : Consulter la log.");
-			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+			ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
 
 		}
 	}
@@ -1245,27 +2548,25 @@ public class UserInterface extends JFrame {
 	public void LanceGmvs() {
 
 		GestionLog MaLog = new GestionLog();
-		UserInterfaceConfig UserInterfaceConfigPourDemande = new UserInterfaceConfig();
+		GestionConfig GC = new GestionConfig();
 		GestionChemin RequeteChemin = new GestionChemin();
 
 		try {
 
-			if (UserInterfaceConfigPourDemande.DemandeEtatAutoLoginGmvs() == true) {
+			if (GC.DemandeAutoConnect("Gmvs").equals("true") == true) {
 
 				ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileGmvs") });
 				builder.start();
-				ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuGmvs.getText() + " AUTOLOGIN");
-				ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+				ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuGmvs.getText() + " AUTOLOGIN" + "\n");
 
 			}
 
-			if (UserInterfaceConfigPourDemande.DemandeEtatAutoLoginGmvs() == false) {
+			if (GC.DemandeAutoConnect("Gmvs").equals("true") == false) {
 
 				ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileGmvs_no_auto_login") });
 				builder.start();
 
-				ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuGmvs.getText());
-				ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+				ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuGmvs.getText() + "\n");
 
 			}
 
@@ -1273,8 +2574,145 @@ public class UserInterface extends JFrame {
 		catch (IOException e1) {
 			e1.printStackTrace();
 			MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour GMVS : " + e1);
-			ZoneTextLog.append("Erreur au lancement : Consulter la log.");
-			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+			ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
+
+		}
+
+	}
+
+	public void LanceBmvs() {
+
+		GestionLog MaLog = new GestionLog();
+		GestionConfig GC = new GestionConfig();
+		GestionChemin RequeteChemin = new GestionChemin();
+		try {
+
+			if (GC.DemandeAutoConnect("Bmvs").equals("true") == true) {
+
+				ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileBmvs") });
+				builder.start();
+
+				ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuBmvs.getText() + " AUTOLOGIN");
+				ZoneTextLog.setText(ZoneTextLog.getText() + "\n" + "\n");
+
+			}
+
+			if (GC.DemandeAutoConnect("Bmvs").equals("false") == true) {
+
+				ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileBmvs_no_auto_login") });
+				builder.start();
+				ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuBmvs.getText() + "\n");
+
+			}
+
+		}
+		catch (IOException e1) {
+			e1.printStackTrace();
+			MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour Bmvs : " + e1);
+			ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
+
+		}
+
+	}
+
+	public void LanceIp1() {
+
+		GestionLog MaLog = new GestionLog();
+		GestionConfig GC = new GestionConfig();
+
+		GestionChemin RequeteChemin = new GestionChemin();
+		try {
+
+			if (GC.DemandeAutoConnect("Ip1").equals("true") == true) {
+
+				ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileIp1") });
+				builder.start();
+
+				ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuIp1.getText() + " AUTOLOGIN" + "\n");
+
+			}
+
+			if (GC.DemandeAutoConnect("Ip1").equals("false") == true) {
+
+				ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileIp1_no_auto_login") });
+				builder.start();
+				ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuIp1.getText() + "\n");
+
+			}
+
+		}
+		catch (IOException e1) {
+			e1.printStackTrace();
+			MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour Ip1 : " + e1);
+			ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
+
+		}
+
+	}
+
+	public void LanceIp3() {
+
+		GestionLog MaLog = new GestionLog();
+		GestionConfig GC = new GestionConfig();
+		GestionChemin RequeteChemin = new GestionChemin();
+		try {
+
+			if (GC.DemandeAutoConnect("Ip3").equals("true") == true) {
+
+				ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileIp3") });
+				builder.start();
+
+				ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuIp3.getText() + " AUTOLOGIN" + "\n");
+
+			}
+
+			if (GC.DemandeAutoConnect("Ip3").equals("false") == true) {
+
+				ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileIp3_no_auto_login") });
+				builder.start();
+				ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuIp3.getText());
+
+			}
+
+		}
+		catch (IOException e1) {
+			e1.printStackTrace();
+			MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour Ip3 : " + e1);
+			ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
+
+		}
+
+	}
+
+	public void LanceIp2() {
+
+		GestionLog MaLog = new GestionLog();
+		GestionConfig GC = new GestionConfig();
+		GestionChemin RequeteChemin = new GestionChemin();
+		try {
+
+			if (GC.DemandeAutoConnect("Ip2").equals("true") == true) {
+
+				ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileIp2") });
+				builder.start();
+
+				ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuIp2.getText() + " AUTOLOGIN" + "\n");
+
+			}
+
+			if (GC.DemandeAutoConnect("Ip2").equals("false") == true) {
+
+				ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileIp2_no_auto_login") });
+				builder.start();
+				ZoneTextLog.append("Ouverture connexion 3270 vers " + MenuIp2.getText() + "\n");
+
+			}
+
+		}
+		catch (IOException e1) {
+			e1.printStackTrace();
+			MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour Ip2 : " + e1);
+			ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
 
 		}
 
@@ -1292,15 +2730,14 @@ public class UserInterface extends JFrame {
 			ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileBr") });
 			builder.start();
 
-			ZoneTextLog.append("Ouverture connexion 5250 vers " + MenuAS400Br.getText() + " AUTOLOGIN + dspmsg qsysopr");
-			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+			ZoneTextLog.append("Ouverture connexion 5250 vers " + MenuAS400Br.getText() + " AUTOLOGIN + dspmsg qsysopr" + "\n");
 
 		}
 		catch (IOException e1) {
 			e1.printStackTrace();
 			MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour BRCLY : " + e1);
-			ZoneTextLog.append("Erreur au lancement de quick3270 pour BRCLY : Consulter la log.");
-			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+			ZoneTextLog.append("Erreur au lancement de quick3270 pour BRCLY : Consulter la log." + "\n");
+
 		}
 	}
 
@@ -1313,15 +2750,14 @@ public class UserInterface extends JFrame {
 			ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileBdi") });
 			builder.start();
 
-			ZoneTextLog.append("Ouverture connexion 5250 vers " + MenuAS400Bdi.getText() + " AUTOLOGIN + dspmsg qsysopr");
-			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+			ZoneTextLog.append("Ouverture connexion 5250 vers " + MenuAS400Bdi.getText() + " AUTOLOGIN + dspmsg qsysopr" + "\n");
 
 		}
 		catch (IOException e1) {
 			e1.printStackTrace();
 			MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour BDICLY : " + e1);
-			ZoneTextLog.append("Erreur au lancement de quick3270 pour BDICLY : Consulter la log.");
-			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+			ZoneTextLog.append("Erreur au lancement de quick3270 pour BDICLY : Consulter la log." + "\n");
+
 		}
 	}
 
@@ -1334,15 +2770,14 @@ public class UserInterface extends JFrame {
 			ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileBdaf") });
 			builder.start();
 
-			ZoneTextLog.append("Ouverture connexion 5250 vers " + MenuAS400Bdaf.getText() + " AUTOLOGIN + dspmsg qsysopr");
-			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+			ZoneTextLog.append("Ouverture connexion 5250 vers " + MenuAS400Bdaf.getText() + " AUTOLOGIN + dspmsg qsysopr" + "\n");
 
 		}
 		catch (IOException e1) {
 			e1.printStackTrace();
 			MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour BDAFCLY : " + e1);
-			ZoneTextLog.append("Erreur au lancement de quick3270 pour BDAFCLY : Consulter la log.");
-			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+			ZoneTextLog.append("Erreur au lancement de quick3270 pour BDAFCLY : Consulter la log." + "\n");
+
 		}
 	}
 
@@ -1355,15 +2790,14 @@ public class UserInterface extends JFrame {
 			ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfilePfb") });
 			builder.start();
 
-			ZoneTextLog.append("Ouverture connexion 5250 vers " + MenuPfbcly.getText() + " AUTOLOGIN + dspmsg qsysopr");
-			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+			ZoneTextLog.append("Ouverture connexion 5250 vers " + MenuPfbcly.getText() + " AUTOLOGIN + dspmsg qsysopr" + "\n");
 
 		}
 		catch (IOException e1) {
 			e1.printStackTrace();
 			MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour PFBCLY : " + e1);
-			ZoneTextLog.append("Erreur au lancement de quick3270 pour PFBCLY : Consulter la log.");
-			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+			ZoneTextLog.append("Erreur au lancement de quick3270 pour PFBCLY : Consulter la log." + "\n");
+
 		}
 	}
 
@@ -1376,15 +2810,14 @@ public class UserInterface extends JFrame {
 			ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileSocly") });
 			builder.start();
 
-			ZoneTextLog.append("Ouverture connexion 5250 vers " + MenuAS400Socly.getText() + " AUTOLOGIN + dspmsg qsysopr");
-			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+			ZoneTextLog.append("Ouverture connexion 5250 vers " + MenuAS400Socly.getText() + " AUTOLOGIN + dspmsg qsysopr" + "\n");
 
 		}
 		catch (IOException e1) {
 			e1.printStackTrace();
 			MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour SOCLY : " + e1);
-			ZoneTextLog.append("Erreur au lancement de quick3270 pour SOCLY : Consulter la log.");
-			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+			ZoneTextLog.append("Erreur au lancement de quick3270 pour SOCLY : Consulter la log." + "\n");
+
 		}
 	}
 
@@ -1397,15 +2830,14 @@ public class UserInterface extends JFrame {
 			ProcessBuilder builder = new ProcessBuilder(new String[] { RequeteChemin.DemandeChemin("CheminQuick3270"), RequeteChemin.DemandeChemin("CheminQuick3270ProfileSocmcsd") });
 			builder.start();
 
-			ZoneTextLog.append("Ouverture connexion 5250 vers " + MenuSocmcsd.getText() + " AUTOLOGIN + dspmsg qsysopr");
-			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+			ZoneTextLog.append("Ouverture connexion 5250 vers " + MenuSocmcsd.getText() + " AUTOLOGIN + dspmsg qsysopr" + "\n");
 
 		}
 		catch (IOException e1) {
 			e1.printStackTrace();
 			MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour SOCMCSD : " + e1);
-			ZoneTextLog.append("Erreur au lancement de quick3270 pour SOCMCSD : Consulter la log.");
-			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+			ZoneTextLog.append("Erreur au lancement de quick3270 pour SOCMCSD : Consulter la log." + "\n");
+
 		}
 	}
 
@@ -1437,8 +2869,8 @@ public class UserInterface extends JFrame {
 			if (BoutonRadioRoot.isSelected() == true && LanceUneFois == true) {
 
 				Runtime.getRuntime().exec(String.format(RequeteChemin.DemandeChemin("CheminPutty") + " " + Resultatdemande + " -telnet -l root"));
-				ZoneTextLog.append("Lancement putty telnet vers " + Resultatdemande + " avec le user root");
-				ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+				ZoneTextLog.append("Lancement putty telnet vers " + Resultatdemande + " avec le user root" + "\n");
+
 				LanceUneFois = false;
 				MesBoutonsLogin.clearSelection();
 
@@ -1447,8 +2879,8 @@ public class UserInterface extends JFrame {
 			if (BoutonRadioSalle.isSelected() == true && LanceUneFois == true) {
 
 				Runtime.getRuntime().exec(String.format(RequeteChemin.DemandeChemin("CheminPutty") + " " + Resultatdemande + " -telnet -l salle"));
-				ZoneTextLog.append("Lancement putty telnet vers " + Resultatdemande + " avec le user salle");
-				ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+				ZoneTextLog.append("Lancement putty telnet vers " + Resultatdemande + " avec le user salle" + "\n");
+
 				LanceUneFois = false;
 				MesBoutonsLogin.clearSelection();
 
@@ -1458,8 +2890,8 @@ public class UserInterface extends JFrame {
 
 				String EtatBouton = BoutonRadioUserPerso.getText();
 				Runtime.getRuntime().exec(String.format(RequeteChemin.DemandeChemin("CheminPutty") + " " + Resultatdemande + " -telnet -l " + EtatBouton));
-				ZoneTextLog.append("Lancement putty telnet vers " + Resultatdemande + " avec le user " + BoutonRadioUserPerso.getText());
-				ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+				ZoneTextLog.append("Lancement putty telnet vers " + Resultatdemande + " avec le user " + BoutonRadioUserPerso.getText() + "\n");
+
 				LanceUneFois = false;
 				MesBoutonsLogin.clearSelection();
 
@@ -1469,8 +2901,8 @@ public class UserInterface extends JFrame {
 
 				String EtatBouton = BoutonRadioUserPerso.getText();
 				Runtime.getRuntime().exec(String.format(RequeteChemin.DemandeChemin("CheminPutty") + " " + Resultatdemande + " -telnet -l " + EtatBouton));
-				ZoneTextLog.append("Lancement putty telnet vers " + Resultatdemande + " avec le user " + EtatBouton + " et le mot de passe");
-				ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+				ZoneTextLog.append("Lancement putty telnet vers " + Resultatdemande + " avec le user " + EtatBouton + " et le mot de passe" + "\n");
+
 				LanceUneFois = false;
 				MesBoutonsLogin.clearSelection();
 
@@ -1489,8 +2921,7 @@ public class UserInterface extends JFrame {
 				}
 				else {
 					CheckBoxPassword.setState(false);
-					ZoneTextLog.append("Problème lors de la demande du mot de pass");
-					ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+					ZoneTextLog.append("Problème lors de la demande du mot de passe" + "\n");
 
 				}
 
@@ -1498,8 +2929,8 @@ public class UserInterface extends JFrame {
 
 			if (LanceUneFois == true) {
 				Runtime.getRuntime().exec(String.format(RequeteChemin.DemandeChemin("CheminPutty") + " " + Resultatdemande + " -telnet"));
-				ZoneTextLog.append("Lancement putty telnet vers " + Resultatdemande);
-				ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+				ZoneTextLog.append("Lancement putty telnet vers " + Resultatdemande + "\n");
+
 				LanceUneFois = false;
 				MesBoutonsLogin.clearSelection();
 			}
@@ -1509,16 +2940,14 @@ public class UserInterface extends JFrame {
 			e.printStackTrace();
 			GestionLog MaLog = new GestionLog();
 			MaLog.EcrireDansFichierLog("Erreur au lancement de putty : " + e);
-			ZoneTextLog.append("Erreur au lancement : Consulter la log.");
-			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+			ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
 
 		}
 		catch (AWTException e) {
 			e.printStackTrace();
 			GestionLog MaLog = new GestionLog();
 			MaLog.EcrireDansFichierLog("Erreur au lancement de putty : " + e);
-			ZoneTextLog.append("Erreur au lancement : Consulter la log.");
-			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+			ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
 
 		}
 
@@ -1543,8 +2972,8 @@ public class UserInterface extends JFrame {
 				// Runtime.getRuntime().exec(String.format(RequeteChemin.DemandeChemin("CheminPutty")
 				// + " -ssh" + " -l root" + "@" + Resultatdemande));
 				Runtime.getRuntime().exec(String.format(RequeteChemin.DemandeChemin("CheminPutty") + " " + Resultatdemande + " -ssh -l root"));
-				ZoneTextLog.append("Lancement putty ssh vers " + Resultatdemande + " avec le user root");
-				ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+				ZoneTextLog.append("Lancement putty ssh vers " + Resultatdemande + " avec le user root" + "\n");
+
 				LanceUneFois = false;
 				MesBoutonsLogin.clearSelection();
 
@@ -1553,8 +2982,8 @@ public class UserInterface extends JFrame {
 			if (BoutonRadioSalle.isSelected() == true && LanceUneFois == true) {
 
 				Runtime.getRuntime().exec(String.format(RequeteChemin.DemandeChemin("CheminPutty") + " " + Resultatdemande + " -ssh -l salle"));
-				ZoneTextLog.append("Lancement putty ssh vers " + Resultatdemande + " avec le user salle");
-				ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+				ZoneTextLog.append("Lancement putty ssh vers " + Resultatdemande + " avec le user salle" + "\n");
+
 				LanceUneFois = false;
 				MesBoutonsLogin.clearSelection();
 			}
@@ -1563,8 +2992,8 @@ public class UserInterface extends JFrame {
 
 				String EtatBouton = BoutonRadioUserPerso.getText();
 				Runtime.getRuntime().exec(String.format(RequeteChemin.DemandeChemin("CheminPutty") + " " + Resultatdemande + " -ssh -l " + EtatBouton));
-				ZoneTextLog.append("Lancement putty ssh vers " + Resultatdemande + " avec le user " + BoutonRadioUserPerso.getText());
-				ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+				ZoneTextLog.append("Lancement putty ssh vers " + Resultatdemande + " avec le user " + BoutonRadioUserPerso.getText() + "\n");
+
 				LanceUneFois = false;
 				MesBoutonsLogin.clearSelection();
 
@@ -1577,8 +3006,8 @@ public class UserInterface extends JFrame {
 				PasswordUnix = MaConfig.DemandePassword("Unix");
 				String EtatBouton = BoutonRadioUserPerso.getText();
 				Runtime.getRuntime().exec(String.format(RequeteChemin.DemandeChemin("CheminPutty") + " -ssh " + EtatBouton + "@" + Resultatdemande + " -pw " + PasswordUnix));
-				ZoneTextLog.append("Lancement putty ssh vers " + Resultatdemande + " avec le user " + EtatBouton + " et le mot de passe");
-				ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+				ZoneTextLog.append("Lancement putty ssh vers " + Resultatdemande + " avec le user " + EtatBouton + " et le mot de passe" + "\n");
+
 				LanceUneFois = false;
 				MesBoutonsLogin.clearSelection();
 
@@ -1586,8 +3015,8 @@ public class UserInterface extends JFrame {
 
 			if (LanceUneFois == true) {
 				Runtime.getRuntime().exec(String.format(RequeteChemin.DemandeChemin("CheminPutty") + " " + Resultatdemande + " -ssh"));
-				ZoneTextLog.append("Lancement putty ssh vers " + Resultatdemande);
-				ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+				ZoneTextLog.append("Lancement putty ssh vers " + Resultatdemande + "\n");
+
 				LanceUneFois = false;
 				MesBoutonsLogin.clearSelection();
 
@@ -1599,48 +3028,54 @@ public class UserInterface extends JFrame {
 
 			GestionLog MaLog = new GestionLog();
 			MaLog.EcrireDansFichierLog("Erreur au lancement de putty : " + e1);
-			ZoneTextLog.append("Erreur au lancement : Consulter la log.");
-			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+			ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
+
 			e1.printStackTrace();
 		}
 
 	}
 
-	private Boolean LancePuttyConnexionAuto() {
+	public class LancePuttyConnexionAuto implements Runnable {
 
-		GestionSocket TestConnexionValideSurCible = new GestionSocket();
-		GestionMachine MaMachine = new GestionMachine();
-		String Resultatdemande = MaMachine.DemandeIp(MachineDansMaComboBox);
-		Boolean RetourTestConnexion = false;
-		if (Resultatdemande == null) {
-			Resultatdemande = MachineDansMaComboBox;
-		}
-
-		// Test le SSH en premier, puis le telnet si le retour SSH est à false
-
-		RetourTestConnexion = TestConnexionValideSurCible.InitSocket(Resultatdemande, 22);
-		if (RetourTestConnexion == true) {
-			try {
-				LancePuttyConnexionSsh();
+		@Override
+		public void run() {
+			GestionSocket TestConnexionValideSurCible = new GestionSocket();
+			GestionMachine MaMachine = new GestionMachine();
+			String Resultatdemande = MaMachine.DemandeIp(MachineDansMaComboBox);
+			Boolean RetourTestConnexion = false;
+			if (Resultatdemande == null) {
+				Resultatdemande = MachineDansMaComboBox;
 			}
-			catch (AWTException e) {
-				e.printStackTrace();
-				GestionLog MaLog = new GestionLog();
-				MaLog.EcrireDansFichierLog("Erreur au lancement de putty : " + e);
-				ZoneTextLog.append("Erreur au lancement : Consulter la log.");
-				ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
 
-			}
-		}
-		else {
-			RetourTestConnexion = TestConnexionValideSurCible.InitSocket(Resultatdemande, 23);
+			// Test le SSH en premier, puis le telnet si le retour SSH est à
+			// false
+
+			ZoneTextLog.append("En cours de connexion vers " + Resultatdemande + " en telnet(port23) ou ssh(port22)" + "\n");
+			RetourTestConnexion = TestConnexionValideSurCible.InitSocket(Resultatdemande, 22);
 			if (RetourTestConnexion == true) {
-				LancePuttyConnexionTelnet();
+				try {
+					LancePuttyConnexionSsh();
+				}
+				catch (AWTException e) {
+					e.printStackTrace();
+					GestionLog MaLog = new GestionLog();
+					MaLog.EcrireDansFichierLog("Erreur au lancement de putty : " + e);
+					ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
+
+				}
+			}
+			else {
+				RetourTestConnexion = TestConnexionValideSurCible.InitSocket(Resultatdemande, 23);
+				if (RetourTestConnexion == true) {
+					LancePuttyConnexionTelnet();
+				}
+
+			}
+
+			if (RetourTestConnexion == false) {
+				ZoneTextLog.append("Impossible de trouver une connexion valide en telnet(port23) ou ssh(port22)" + "\n");
 			}
 		}
-
-		return RetourTestConnexion;
-
 	}
 
 	/**
@@ -1670,7 +3105,7 @@ public class UserInterface extends JFrame {
 		@Override
 		public void run() {
 			ProgressBarExecutionGlobale.setVisible(true);
-			for (int i = 0; i <= 6500; i++) {
+			for (int i = 0; i <= 20000; i++) {
 				ProgressBarExecutionGlobale.setValue(i);
 				// ProgressBarExecutionGlobale.repaint();
 				try {
@@ -1688,34 +3123,176 @@ public class UserInterface extends JFrame {
 
 		@Override
 		public void run() {
+			GestionConfig FichierGestion = new GestionConfig();
 
 			try {
-				LanceSysa();
-				Thread.sleep(500);
-				LanceKmvs();
-				Thread.sleep(500);
-				LanceSysg();
-				Thread.sleep(500);
-				LanceZmvs();
-				Thread.sleep(500);
-				LanceGmvs();
-				Thread.sleep(500);
-				LanceAs400Br();
-				Thread.sleep(500);
-				LanceAs400Bdi();
-				Thread.sleep(500);
-				LanceAs400Bdaf();
-				Thread.sleep(500);
-				LanceAs400Socly();
-				Thread.sleep(500);
-				LanceAs400Socmcsd();
-				Thread.sleep(500);
-				LanceAs400Pfb();
-				Thread.sleep(500);
-				LanceControlm();
-				Thread.sleep(500);
-				LanceOutlook();
-				Thread.sleep(500);
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("Sysa").equals("true") == true) {
+					LanceSysa();
+					Thread.sleep(500);
+				}
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("Kmvs").equals("true") == true) {
+					LanceKmvs();
+					Thread.sleep(500);
+				}
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("Sysg").equals("true") == true) {
+					LanceSysg();
+					Thread.sleep(500);
+				}
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("Zmvs").equals("true") == true) {
+					LanceZmvs();
+					Thread.sleep(500);
+				}
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("Gmvs").equals("true") == true) {
+					LanceGmvs();
+					Thread.sleep(500);
+				}
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("Ip1").equals("true") == true) {
+					LanceIp1();
+					Thread.sleep(500);
+
+				}
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("Ip2").equals("true") == true) {
+					LanceIp2();
+					Thread.sleep(500);
+				}
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("Ip3").equals("true") == true) {
+					LanceIp3();
+					Thread.sleep(500);
+				}
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("Bmvs").equals("true") == true) {
+					LanceBmvs();
+					Thread.sleep(500);
+				}
+
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("Br").equals("true") == true) {
+					LanceAs400Br();
+					Thread.sleep(500);
+				}
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("Bdi").equals("true") == true) {
+					LanceAs400Bdi();
+					Thread.sleep(500);
+				}
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("Bdaf").equals("true") == true) {
+					LanceAs400Bdaf();
+					Thread.sleep(500);
+				}
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("Socly").equals("true") == true) {
+					LanceAs400Socly();
+					Thread.sleep(500);
+				}
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("Socmcsd").equals("true") == true) {
+					LanceAs400Socmcsd();
+					Thread.sleep(500);
+				}
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("Pfb").equals("true") == true) {
+					LanceAs400Pfb();
+					Thread.sleep(500);
+				}
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("Controlm").equals("true") == true) {
+					LanceControlm();
+					Thread.sleep(500);
+				}
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("Outlook").equals("true") == true) {
+					LanceOutlook();
+					Thread.sleep(500);
+				}
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("Arsv7").equals("true") == true) {
+					LanceArsRemedy();
+					Thread.sleep(500);
+				}
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("Iprox").equals("true") == true) {
+					LanceIprox();
+					Thread.sleep(500);
+				}
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("Puttycm").equals("true") == true) {
+					LancePuttyCm();
+					Thread.sleep(500);
+				}
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("Exceed").equals("true") == true) {
+					LanceExceed();
+					Thread.sleep(500);
+				}
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("VtomIp1Jour").equals("true") == true) {
+					LanceVtomIp1q();
+					Thread.sleep(500);
+				}
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("VtomIp1Desc").equals("true") == true) {
+					LanceVtomIp1d();
+					Thread.sleep(500);
+				}
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("VtomIp2Jour").equals("true") == true) {
+					LanceVtomIp2q();
+					Thread.sleep(500);
+				}
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("VtomIp1Desc").equals("true") == true) {
+					LanceVtomIp2d();
+					Thread.sleep(500);
+				}
+
+				String Navigateur = SelectionneNavigateur();
+
+				ProcessBuilder pb = new ProcessBuilder("cmd.exe", " start", "/C", Navigateur);
+				pb.start();
+				Thread.sleep(5000);
+
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("Odip").equals("true") == true) {
+					LanceOdip();
+					Thread.sleep(1500);
+				}
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("Bbr").equals("true") == true) {
+					LanceBbr();
+					Thread.sleep(1500);
+				}
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("OseIp12").equals("true") == true) {
+					LanceOseIp1();
+					Thread.sleep(1500);
+					LanceOseIp2();
+					Thread.sleep(1500);
+				}
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("Iplabel").equals("true") == true) {
+					LanceIpLabel();
+					Thread.sleep(1500);
+				}
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("Newtest").equals("true") == true) {
+					LanceNewtest();
+					Thread.sleep(1500);
+				}
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("Xguard").equals("true") == true) {
+					LanceXguard();
+					Thread.sleep(1500);
+				}
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("Hmc").equals("true") == true) {
+					LanceHmc();
+					Thread.sleep(1500);
+				}
+
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("Kvm").equals("true") == true) {
+					LanceKvm();
+					Thread.sleep(1500);
+				}
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("Tina5").equals("true") == true) {
+					LanceTina5();
+					Thread.sleep(1500);
+				}
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("Tina6").equals("true") == true) {
+					LanceTina6();
+					Thread.sleep(1500);
+				}
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("Vcenter").equals("true") == true) {
+					LanceVcenter();
+					Thread.sleep(1500);
+				}
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("SismoTous").equals("true") == true) {
+					LanceSismoIp1();
+					Thread.sleep(1500);
+					LanceSismoIp2();
+					Thread.sleep(1500);
+					LanceSismoOceor();
+					Thread.sleep(1500);
+					LanceSismoPalatine();
+					Thread.sleep(1500);
+				}
+
 			}
 			catch (InterruptedException e) {
 				// TODO Auto-generated catch block
@@ -1750,8 +3327,7 @@ public class UserInterface extends JFrame {
 
 			}
 
-			ZoneTextLog.append("Ping vers " + ResultatdemandeSave + " en cours ...");
-			ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+			ZoneTextLog.append("Ping vers " + ResultatdemandeSave + " en cours ..." + "\n");
 
 			try {
 
@@ -1800,16 +3376,16 @@ public class UserInterface extends JFrame {
 			}
 			catch (IOException e1) {
 				e1.printStackTrace();
-				ZoneTextLog.append("PING KO - Echec de la commande");
-				ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+				ZoneTextLog.append("PING KO - Echec de la commande" + "\n");
+
 				GestionLog MaLog = new GestionLog();
 				MaLog.EcrireDansFichierLog("Erreur au lancement du ping : " + e1);
 
 			}
 			catch (InterruptedException e1) {
 				e1.printStackTrace();
-				ZoneTextLog.append("PING KO - Echec de la commande");
-				ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+				ZoneTextLog.append("PING KO - Echec de la commande" + "\n");
+
 				GestionLog MaLog = new GestionLog();
 				MaLog.EcrireDansFichierLog("Erreur au lancement du ping : " + e1);
 
@@ -1818,12 +3394,14 @@ public class UserInterface extends JFrame {
 		}
 	}
 
-	public void MajEtatSyteme()
+	public void MajEtatSyteme() throws UnknownHostException
 
 	{
 
 		ManagementFactory.getThreadMXBean();
 		OperatingSystemMXBean LeSysteme = ManagementFactory.getOperatingSystemMXBean();
+		int NombreThread = Thread.activeCount();
+
 		LeSysteme.getAvailableProcessors();
 		LeSysteme.getSystemLoadAverage();
 
@@ -1831,8 +3409,12 @@ public class UserInterface extends JFrame {
 		DecimalFormat MemoryFormatDecimal = new DecimalFormat();
 		MemoryFormatDecimal.setMaximumFractionDigits(1);
 		MemoryFormatDecimal.format(MemoryUsage);
-		LabelUtilisationMemoire.setText("Utilisation mémoire: " + MemoryFormatDecimal.format(MemoryUsage) + "mo");
 
+		MonIp = InetAddress.getLocalHost().getHostAddress();
+
+		LabelUtilisationMemoire.setText("Utilisation mémoire: " + MemoryFormatDecimal.format(MemoryUsage) + "mo");
+		LabelNombreThread.setText("Threads en cours: " + NombreThread);
+		LabelAdresseIp.setText("Adresse Ip: " + MonIp);
 	}
 
 	public class ThreadRechargementConfigInterface implements Runnable {
@@ -1883,7 +3465,6 @@ public class UserInterface extends JFrame {
 				MaLog.EcrireDansFichierLog("Erreur dans la saisie machine(ip) : " + e);
 				ZoneTextLog.append("Erreur de l'alimentation de la zone saisie machine(ip) : Consulter la log." + "\n");
 				ZoneTextLog.append("Essayez de faire un rechargement de la config." + "\n");
-				ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
 
 			}
 			MaComboBox.removeAllItems();
@@ -1908,7 +3489,6 @@ public class UserInterface extends JFrame {
 
 				GP.ModifierPasswordProfile("Sysa", MaConfig.DemandePassword("Sysa"));
 				GP.ModifierUserProfile("Sysa", MaConfig.DemandeUser("Sysa"));
-				ZoneTextLog.append("Users & passwords rechargés avec succés !" + "\n");
 
 			}
 			catch (IOException e) {
@@ -1917,7 +3497,6 @@ public class UserInterface extends JFrame {
 				GestionLog MaLog = new GestionLog();
 				MaLog.EcrireDansFichierLog("Erreur lors du chargement des macros : " + e);
 				ZoneTextLog.append("Erreur lors du chargement des macros : Consulter la log." + "\n");
-				ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
 
 			}
 
@@ -1927,13 +3506,17 @@ public class UserInterface extends JFrame {
 
 			}
 			if (CodeRetour == 1) {
-				ZoneTextLog.append("Problème rechargement config");
-				ZoneTextLog.setText(ZoneTextLog.getText() + "\n");
+				ZoneTextLog.append("Problème rechargement config" + "\n");
+
 				BoutonRadioUserPerso.setText("#Erreur");
 
 			}
 			BoutonChargerConfig.setEnabled(true);
 		}
+	}
+
+	public void LanceRechargement() {
+		new Thread(new ThreadRechargementConfigInterface()).start();
 	}
 
 	public class ThreadEtatSysteme implements Runnable {
@@ -1942,7 +3525,13 @@ public class UserInterface extends JFrame {
 		public void run() {
 
 			while (true) {
-				MajEtatSyteme();
+				try {
+					MajEtatSyteme();
+				}
+				catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				try {
 					Thread.sleep(1000);
 				}
@@ -1954,8 +3543,81 @@ public class UserInterface extends JFrame {
 		}
 	}
 
+	public class ThreadChargementFavoris implements Runnable {
+
+		@Override
+		public void run() {
+
+			GestionFavoris GF = new GestionFavoris();
+			String Navigateur = SelectionneNavigateur();
+
+			int NombreLigne = 0;
+			String[] ListeFavoris = null;
+
+			try {
+				NombreLigne = GF.CompteLigneFichierFavoris();
+				ListeFavoris = GF.LireFichierFavoris();
+			}
+			catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
+			JMenuItem[] Favoris = new JMenuItem[NombreLigne];
+
+			for (int i = 0; i < NombreLigne; i++) {
+				String string = ListeFavoris[i];
+				String[] parts = string.split("\t");
+				String NomFavoris = parts[0]; // NomFavoris
+				String urlFavoris = parts[1]; // UrlFavoris
+				Favoris[i] = new JMenuItem(NomFavoris);
+				MenuFavorisCommuns.add(Favoris[i]);
+				Favoris[i].addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseReleased(MouseEvent arg0) {
+
+						// System.out.println("je vais vers : " + urlFavoris);
+						ProcessBuilder pb = new ProcessBuilder("cmd.exe", " start", "/C", Navigateur, "", urlFavoris);
+						try {
+							pb.start();
+						}
+						catch (IOException e) {
+							e.printStackTrace();
+						}
+
+						ZoneTextLog.append("Ouverture de la page " + NomFavoris + "\n");
+
+					}
+				});
+
+			}
+
+		}
+	}
+
 	public void MiseAjoutPositionFenetre() {
 		PositionFenetrePrincipale = this.getLocation();
+
+	}
+
+	public void keyPressed(KeyEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void keyReleased(KeyEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void keyTyped(KeyEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		// TODO Auto-generated method stub
 
 	}
 }

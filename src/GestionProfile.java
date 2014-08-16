@@ -5,6 +5,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -125,6 +127,7 @@ public class GestionProfile {
 					// System.out.println(line);
 					if (line.startsWith("DeviceNameTN5250")) {
 						LineReplace = line;
+
 					}
 
 				}
@@ -142,6 +145,87 @@ public class GestionProfile {
 		Charset charset = StandardCharsets.UTF_8;
 		String content = new String(Files.readAllBytes(path), charset);
 		content = content.replaceAll(LineReplace, DeviceMacro + DeviceName);
+		Files.write(path, content.getBytes(charset));
+
+	}
+
+	public void ModifierTempsRefresh(String Machine, int Temps) throws IOException {
+
+		String LigneAvecTemps = "	WaitHostQuiet(" + Temps + ")";
+
+		ArrayList<String> TableauArray = new ArrayList<String>();
+		BufferedReader input = new BufferedReader(new FileReader(RequeteChemin.DemandeChemin("CheminQuick3270ProfileGeneral") + Machine + ".qmc"));
+		String[] TableauTempo;
+		String line = "vide class";
+
+		try {
+			while ((line = input.readLine()) != null) {
+
+				TableauArray.add(line);
+			}
+
+		}
+		catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		TableauTempo = TableauArray.toArray(new String[0]);
+		TableauTempo[27] = LigneAvecTemps;
+		File file = new File(RequeteChemin.DemandeChemin("CheminQuick3270ProfileGeneral") + Machine + ".qmc");
+		PrintWriter out = new PrintWriter(new FileWriter(file));
+
+		for (String LaLigne : TableauTempo) {
+			out.println(LaLigne);
+		}
+
+		out.close();
+		input.close();
+
+	}
+
+	public void ModifierIpTina(String FichierTina) throws IOException {
+
+		String Ip = "vide";
+		try {
+			Ip = InetAddress.getLocalHost().getHostAddress();
+			// System.out.println("IP of my system is := " + Ip);
+		}
+		catch (UnknownHostException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		String LineReplace = "";
+		String NouvelleLigneUp = "tina_adm -display " + Ip + ":0.0 &";
+
+		try {
+
+			BufferedReader input = new BufferedReader(new FileReader(RequeteChemin.DemandeChemin("CheminTinaMacro") + FichierTina));
+
+			try {
+				String line;
+
+				while ((line = input.readLine()) != null) {
+					// System.out.println(line);
+					if (line.startsWith("tina_adm")) {
+						LineReplace = line;
+
+					}
+
+				}
+			} finally {
+
+				input.close();
+			}
+		}
+		catch (IOException ioe) {
+
+		}
+
+		Path path = Paths.get((RequeteChemin.DemandeChemin("CheminTinaMacro") + FichierTina));
+		Charset charset = StandardCharsets.UTF_8;
+		String content = new String(Files.readAllBytes(path), charset);
+		content = content.replaceAll(LineReplace, NouvelleLigneUp);
 		Files.write(path, content.getBytes(charset));
 
 	}
