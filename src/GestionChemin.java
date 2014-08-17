@@ -22,7 +22,7 @@ public class GestionChemin {
 		String CheminTinaMacro = CheminGeneralProjet + UserNameStation + "\\";
 		String CheminFichierFavoris = "\\\\fsitceti\\entites\\ITC PPR-EDC-PIL-724 ETI\\Pilotage Mutualise\\Sauvegarde Olive&Pascal\\Outils de pilotage\\Alphapilote\\Data\\favoris.txt";
 		String CheminFichierTemp = "\\\\fsitceti\\entites\\ITC PPR-EDC-PIL-724 ETI\\Pilotage Mutualise\\Sauvegarde Olive&Pascal\\Outils de pilotage\\Alphapilote\\Data\\temp.txt";
-
+		String CheminFichierTemp2 = "\\\\fsitceti\\entites\\ITC PPR-EDC-PIL-724 ETI\\Pilotage Mutualise\\Sauvegarde Olive&Pascal\\Outils de pilotage\\Alphapilote\\Data\\temp2.txt";
 		String CheminFichierMachine = "\\\\fsitceti\\entites\\ITC PPR-EDC-PIL-724 ETI\\Pilotage Mutualise\\Sauvegarde Olive&Pascal\\Outils de pilotage\\Alphapilote\\Data\\machine.txt";
 
 		String CheminQuick3270ProfileGmvs = CheminGeneralProjet + UserNameStation + "\\GMVS.ecf";
@@ -113,6 +113,9 @@ public class GestionChemin {
 				break;
 			case "CheminFichierTemp":
 				ResultatChemin = CheminFichierTemp;
+				break;
+			case "CheminFichierTemp2":
+				ResultatChemin = CheminFichierTemp2;
 				break;
 
 			case "CheminQuick3270ProfileGmvs":

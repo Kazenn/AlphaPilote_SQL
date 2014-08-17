@@ -29,6 +29,7 @@ import java.net.InetAddress;
 import java.net.URI;
 import java.net.UnknownHostException;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -141,8 +142,11 @@ public class UserInterface extends JFrame implements ActionListener {
 	private JMenuItem MenuTinaIp1Tinap203;
 	private JMenuItem mntmTina;
 	private JMenu MenuFavorisCommuns;
-	private JMenuItem mntmEditionDesFavoris;
+	private JMenuItem MenuEditionFavoris;
 	private JButton BoutonChargerFavoris;
+	private JMenu MenuParametresHaut;
+	private JLabel LabelTestFichierFavoris;
+	private JLabel LabelDateHeure;
 
 	public UserInterface() {
 		addWindowFocusListener(new WindowFocusListener() {
@@ -975,10 +979,13 @@ public class UserInterface extends JFrame implements ActionListener {
 			}
 		});
 
-		JMenu MenuConfiguration = new JMenu("Configuration");
-		BarreMenuPrincipale.add(MenuConfiguration);
+		JMenu MenuGestion = new JMenu("Gestion");
 
-		JMenuItem MenuModifierFichierConfig = new JMenuItem("Editer login et password (UNIX/WIN/MVS/AS400)");
+		BarreMenuPrincipale.add(MenuGestion);
+
+		JMenuItem MenuModifierFichierConfig = new JMenuItem("Gestion des acc\u00E8s (UNIX/WIN/MVS/AS400)");
+		final ImageIcon IconEditionConfig = new ImageIcon(getClass().getResource("/password-icon.png"));
+		MenuModifierFichierConfig.setIcon(IconEditionConfig);
 		MenuModifierFichierConfig.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
@@ -991,42 +998,41 @@ public class UserInterface extends JFrame implements ActionListener {
 
 			}
 		});
-		MenuModifierFichierConfig.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/scene/web/skin/Copy_16x16_JFX.png")));
-		MenuConfiguration.add(MenuModifierFichierConfig);
+		// MenuModifierFichierConfig.setIcon(new
+		// ImageIcon(UserInterface.class.getResource("/com/sun/javafx/scene/web/skin/Copy_16x16_JFX.png")));
+		MenuGestion.add(MenuModifierFichierConfig);
 
-		JMenuItem MenuParametres = new JMenuItem("Param\u00EAtres G\u00E9n\u00E9raux et bouton \"lancer poste complet\" ");
-		MenuParametres.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent arg0) {
-				GainedFocus = true;
-				UserInterfaceParametres PageParametres = new UserInterfaceParametres();
-
-				PageParametres.setVisible(true);
-				PageParametres.setSize(750, 480);
-				PageParametres.setLocation(PositionFenetrePrincipale);
-			}
-		});
-		MenuParametres.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/scene/web/skin/AlignJustified_16x16_JFX.png")));
-		MenuConfiguration.add(MenuParametres);
-
-		JMenuItem mntmEditionDuFichier = new JMenuItem("Edition du fichier machine");
-		mntmEditionDuFichier.addMouseListener(new MouseAdapter() {
+		JMenuItem MenuEditionMachines = new JMenuItem("Gestion des machines");
+		final ImageIcon IconEditionMachine = new ImageIcon(getClass().getResource("/server-icon.png"));
+		MenuEditionMachines.setIcon(IconEditionMachine);
+		MenuEditionMachines.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
 
 				GainedFocus = true;
-				UserInterfaceEditionMachine PageEditionMachine = new UserInterfaceEditionMachine();
+
+				UserInterfaceEditionMachine PageEditionMachine = null;
+				try {
+					PageEditionMachine = new UserInterfaceEditionMachine();
+				}
+				catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
 				PageEditionMachine.setVisible(true);
-				PageEditionMachine.setSize(750, 480);
+				PageEditionMachine.setSize(800, 600);
 				PageEditionMachine.setLocation(PositionFenetrePrincipale);
 			}
 		});
-		MenuConfiguration.add(mntmEditionDuFichier);
+		MenuGestion.add(MenuEditionMachines);
 
-		mntmEditionDesFavoris = new JMenuItem("Edition des favoris");
-		mntmEditionDesFavoris.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/scene/web/skin/IncreaseIndent_16x16_JFX.png")));
-		mntmEditionDesFavoris.addMouseListener(new MouseAdapter() {
+		MenuEditionFavoris = new JMenuItem("Gestion des favoris");
+		final ImageIcon IconEditionFavoris = new ImageIcon(getClass().getResource("/folder-fav-icon.png"));
+		MenuEditionFavoris.setIcon(IconEditionFavoris);
+		// mntmEditionDesFavoris.setIcon(new
+		// ImageIcon(UserInterface.class.getResource("/com/sun/javafx/scene/web/skin/IncreaseIndent_16x16_JFX.png")));
+		MenuEditionFavoris.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
 
@@ -1041,12 +1047,30 @@ public class UserInterface extends JFrame implements ActionListener {
 				}
 
 				PageEditionFavoris.setVisible(true);
-				PageEditionFavoris.setSize(800, 600);
+				PageEditionFavoris.setSize(800, 550);
 				PageEditionFavoris.setLocation(PositionFenetrePrincipale);
 
 			}
 		});
-		MenuConfiguration.add(mntmEditionDesFavoris);
+		MenuGestion.add(MenuEditionFavoris);
+
+		MenuParametresHaut = new JMenu("Param\u00E8tres");
+		BarreMenuPrincipale.add(MenuParametresHaut);
+
+		JMenuItem MenuParametres = new JMenuItem("Param\u00EAtres G\u00E9n\u00E9raux et bouton \"lancer poste complet\" ");
+		MenuParametresHaut.add(MenuParametres);
+		MenuParametres.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				GainedFocus = true;
+				UserInterfaceParametres PageParametres = new UserInterfaceParametres();
+
+				PageParametres.setVisible(true);
+				PageParametres.setSize(750, 480);
+				PageParametres.setLocation(PositionFenetrePrincipale);
+			}
+		});
+		MenuParametres.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/scene/web/skin/AlignJustified_16x16_JFX.png")));
 
 		JMenu MenuAPropos = new JMenu("Aide");
 		BarreMenuPrincipale.add(MenuAPropos);
@@ -1261,7 +1285,7 @@ public class UserInterface extends JFrame implements ActionListener {
 				// THREADCHARGECONFIG
 				// --------------------------------------------------------
 				new Thread(new ThreadRechargementConfigInterface()).start();
-				ZoneTextLog.append("Users & passwords rechargés avec succés !" + "\n");
+				ZoneTextLog.append("Profile rechargé correctement." + "\n");
 
 			}
 		});
@@ -1278,6 +1302,7 @@ public class UserInterface extends JFrame implements ActionListener {
 				MenuFavorisCommuns.removeAll();
 
 				new Thread(new ThreadChargementFavoris()).start();
+				ZoneTextLog.append("Favoris communs rechargés." + "\n");
 			}
 		});
 		BoutonChargerFavoris.setBounds(6, 50, 200, 23);
@@ -1286,7 +1311,7 @@ public class UserInterface extends JFrame implements ActionListener {
 		JPanel PanelZoneTestFichier = new JPanel();
 		PanelZoneTestFichier.setForeground(new Color(255, 69, 0));
 		PanelZoneTestFichier.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Acc\u00E8s aux fichiers", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(255, 99, 71)));
-		PanelZoneTestFichier.setBounds(604, 328, 164, 161);
+		PanelZoneTestFichier.setBounds(604, 314, 164, 175);
 		getContentPane().add(PanelZoneTestFichier);
 		PanelZoneTestFichier.setLayout(null);
 
@@ -1298,25 +1323,31 @@ public class UserInterface extends JFrame implements ActionListener {
 		LabelTestFichierConfig.setToolTipText("");
 
 		LabelTestFichierMachine = new JLabel(" Fichier machine");
-		LabelTestFichierMachine.setBounds(6, 55, 95, 14);
+		LabelTestFichierMachine.setBounds(6, 80, 98, 14);
 		PanelZoneTestFichier.add(LabelTestFichierMachine);
 		LabelTestFichierMachine.setBackground(new Color(192, 192, 192));
 		LabelTestFichierMachine.setOpaque(true);
 
 		LabelTestFichierLog = new JLabel(" Fichier log");
-		LabelTestFichierLog.setBounds(6, 80, 65, 14);
+		LabelTestFichierLog.setBounds(6, 105, 65, 14);
 		PanelZoneTestFichier.add(LabelTestFichierLog);
 		LabelTestFichierLog.setBackground(new Color(192, 192, 192));
 		LabelTestFichierLog.setOpaque(true);
 
+		LabelTestFichierFavoris = new JLabel(" Fichier favoris");
+		LabelTestFichierFavoris.setBounds(6, 55, 90, 14);
+		LabelTestFichierFavoris.setOpaque(true);
+		LabelTestFichierFavoris.setBackground(new Color(192, 192, 192));
+		PanelZoneTestFichier.add(LabelTestFichierFavoris);
+
 		labelTestCouleurOk = new JLabel(" Acc\u00E8s OK");
-		labelTestCouleurOk.setBounds(6, 136, 59, 14);
+		labelTestCouleurOk.setBounds(6, 150, 59, 14);
 		PanelZoneTestFichier.add(labelTestCouleurOk);
 		labelTestCouleurOk.setOpaque(true);
 		labelTestCouleurOk.setBackground(new Color(60, 179, 113));
 
 		labelTestCouleurNok = new JLabel(" Acc\u00E8s NOK");
-		labelTestCouleurNok.setBounds(75, 136, 73, 14);
+		labelTestCouleurNok.setBounds(81, 150, 73, 14);
 		PanelZoneTestFichier.add(labelTestCouleurNok);
 		labelTestCouleurNok.setOpaque(true);
 		labelTestCouleurNok.setBackground(new Color(178, 34, 34));
@@ -1442,19 +1473,23 @@ public class UserInterface extends JFrame implements ActionListener {
 		getContentPane().add(ProgressBarExecutionGlobale);
 
 		LabelUtilisationMemoire = new JLabel("Utilisation m\u00E9moire : ");
-		LabelUtilisationMemoire.setForeground(new Color(95, 158, 160));
+		LabelUtilisationMemoire.setForeground(new Color(205, 92, 92));
 		LabelUtilisationMemoire.setBounds(189, 491, 164, 14);
 		getContentPane().add(LabelUtilisationMemoire);
 
 		LabelNombreThread = new JLabel("Threads en cours :");
 		LabelNombreThread.setForeground(new Color(95, 158, 160));
-		LabelNombreThread.setBounds(359, 491, 117, 14);
+		LabelNombreThread.setBounds(355, 491, 117, 14);
 		getContentPane().add(LabelNombreThread);
 
 		LabelAdresseIp = new JLabel("Adresse IP :");
 		LabelAdresseIp.setForeground(new Color(100, 149, 237));
-		LabelAdresseIp.setBounds(492, 491, 164, 14);
+		LabelAdresseIp.setBounds(482, 491, 156, 14);
 		getContentPane().add(LabelAdresseIp);
+
+		LabelDateHeure = new JLabel("Date/heure :");
+		LabelDateHeure.setBounds(648, 491, 120, 14);
+		getContentPane().add(LabelDateHeure);
 
 		BoutonValideSsh.addMouseListener(new MouseAdapter() {
 			@Override
@@ -1496,6 +1531,8 @@ public class UserInterface extends JFrame implements ActionListener {
 		/**
 		 * @category Démarrage
 		 */
+
+		// new Thread(new LanceWendyTelnet()).start();
 		// ---------------------------------------------
 		//
 		//
@@ -1516,8 +1553,10 @@ public class UserInterface extends JFrame implements ActionListener {
 
 		if (SuccesCreation == true) {
 			ZoneTextLog.append("Le profile pour " + UserNameStation + " n'existait pas, il vient d'être créé avec tous les fichiers nécessaires." + "\n");
-			ZoneTextLog.append("Veuillez vous rendre dans la page de configuration des users UNIX/MVS pour saisir les données." + "\n");
+			ZoneTextLog.append("Rendez-vous sur la page de saisie des accès UNIX/MVS/AS00 (se trouvant dans le menu Gestion), valider une première fois à vide pour initialiser la clef d'encryption."
+					+ "\n");
 		}
+
 		new Thread(new ThreadRechargementConfigInterface()).start();
 	}
 
@@ -1538,7 +1577,20 @@ public class UserInterface extends JFrame implements ActionListener {
 			LabelTestFichierMachine.setBackground(new Color(178, 34, 34));
 			LabelTestFichierConfig.setOpaque(true);
 			GestionLog MaLog = new GestionLog();
-			MaLog.EcrireDansFichierLog("Erreur lors du test présence du fichier machine dans : " + RequeteChemin.DemandeChemin("CheminFichierMachine"));
+			MaLog.EcrireDansFichierLog("Erreur lors du test présence du fichier machine dans : " + RequeteChemin.DemandeChemin("CheminFichierFavoris"));
+		}
+		File FichierFavoris = new File(RequeteChemin.DemandeChemin("CheminFichierFavoris"));
+		if (FichierFavoris.exists()) {
+			LabelTestFichierFavoris.setBackground(new Color(60, 179, 113));
+			LabelTestFichierFavoris.setOpaque(true);
+			ResultatToutFichiersPresents++;
+		}
+		else {
+			ZoneTextLog.append("Impossible de trouver le fichier favoris : " + RequeteChemin.DemandeChemin("CheminFichierFavoris") + "\n");
+			LabelTestFichierFavoris.setBackground(new Color(178, 34, 34));
+			LabelTestFichierFavoris.setOpaque(true);
+			GestionLog MaLog = new GestionLog();
+			MaLog.EcrireDansFichierLog("Erreur lors du test présence du fichier favoris dans : " + RequeteChemin.DemandeChemin("CheminFichierFavoris"));
 		}
 		File FichierConfig = new File(RequeteChemin.DemandeChemin("CheminFichierConfig"));
 		if (FichierConfig.exists()) {
@@ -3409,8 +3461,11 @@ public class UserInterface extends JFrame implements ActionListener {
 		DecimalFormat MemoryFormatDecimal = new DecimalFormat();
 		MemoryFormatDecimal.setMaximumFractionDigits(1);
 		MemoryFormatDecimal.format(MemoryUsage);
-
 		MonIp = InetAddress.getLocalHost().getHostAddress();
+
+		SimpleDateFormat SimpleDate = new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss");
+		String LaDateHeure = SimpleDate.format(new java.util.Date());
+		LabelDateHeure.setText(LaDateHeure);
 
 		LabelUtilisationMemoire.setText("Utilisation mémoire: " + MemoryFormatDecimal.format(MemoryUsage) + "mo");
 		LabelNombreThread.setText("Threads en cours: " + NombreThread);
@@ -3428,6 +3483,7 @@ public class UserInterface extends JFrame implements ActionListener {
 			CodeRetour = MaConfig.LireConfig();
 
 			BoutonChargerConfig.setEnabled(false);
+			BoutonChargerFavoris.setEnabled(false);
 			TestAccesFichier();
 
 			UserUnix = MaConfig.DemandeUser("Unix");
@@ -3512,6 +3568,8 @@ public class UserInterface extends JFrame implements ActionListener {
 
 			}
 			BoutonChargerConfig.setEnabled(true);
+			BoutonChargerFavoris.setEnabled(true);
+
 		}
 	}
 
@@ -3533,7 +3591,7 @@ public class UserInterface extends JFrame implements ActionListener {
 					e1.printStackTrace();
 				}
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(500);
 				}
 				catch (InterruptedException e) {
 					// TODO Auto-generated catch block

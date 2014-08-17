@@ -15,7 +15,7 @@ public class GestionLog {
 
 		SimpleDateFormat SimpleDate = new SimpleDateFormat("dd/MM/yyyy à HH:mm:ss");
 		String LaDateHeure = SimpleDate.format(new java.util.Date());
-		System.out.println(RequeteChemin.DemandeChemin("CheminFichierLog"));
+		// System.out.println(RequeteChemin.DemandeChemin("CheminFichierLog"));
 
 		try {
 			FichierSortie = new FileOutputStream(RequeteChemin.DemandeChemin("CheminFichierLog"), true);

@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -8,11 +9,13 @@ import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Properties;
+import java.util.Set;
 
 public class GestionMachine {
 
-	String CheminFichierMachine = "D:\\AlphaPilote\\machine.txt";
+	// String CheminFichierMachine = "D:\\AlphaPilote\\machine.txt";
 	GestionChemin RequeteChemin = new GestionChemin();
 
 	public int LireFichierMachine() throws URISyntaxException {
@@ -119,6 +122,25 @@ public class GestionMachine {
 
 		return ValideOrder;
 
+	}
+
+	public void EliminationDoublons() throws IOException {
+		String inputFile = RequeteChemin.DemandeChemin("CheminFichierMachine");
+		String outputFile = RequeteChemin.DemandeChemin("CheminFichierMachine");
+		BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+		Set<String> lines = new HashSet<String>(10000); // maybe should be
+														// bigger
+		String line;
+		while ((line = reader.readLine()) != null) {
+			lines.add(line);
+		}
+		reader.close();
+		BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
+		for (String unique : lines) {
+			writer.write(unique);
+			writer.newLine();
+		}
+		writer.close();
 	}
 
 }

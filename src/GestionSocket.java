@@ -7,9 +7,6 @@ public class GestionSocket {
 
 		Boolean ConnexionValide = false;
 
-		// NumeroPost = 44827;
-		// Hostname = "xx.xx.xx.xx";
-
 		try {
 			Socket sock = new Socket(Hostname, NumeroPort);
 			PrintWriter out = new PrintWriter(sock.getOutputStream(), true);
@@ -24,10 +21,10 @@ public class GestionSocket {
 		}
 		catch (Exception e) {
 			ConnexionValide = false;
+
 			e.printStackTrace();
 		}
 		return ConnexionValide;
 
 	}
-
 }

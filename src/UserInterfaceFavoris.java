@@ -63,7 +63,7 @@ public class UserInterfaceFavoris extends JFrame {
 		scrollPane.setViewportView(TableFavoris);
 		TableFavoris.setModel(ModeleTableFavoris);
 
-		JButton BoutonExtactEtValideTable = new JButton("Valider les favoris");
+		JButton BoutonExtactEtValideTable = new JButton("Valider et quitter");
 		final ImageIcon IconBoutonValiderFavoris = new ImageIcon(getClass().getResource("/Ok-icon.png"));
 		BoutonExtactEtValideTable.setIcon(IconBoutonValiderFavoris);
 		BoutonExtactEtValideTable.setMargin(new Insets(1, 1, 1, 1));
@@ -72,6 +72,7 @@ public class UserInterfaceFavoris extends JFrame {
 			public void mouseReleased(MouseEvent arg0) {
 
 				try {
+
 					ExtractTableFavorisVersFichier();
 				}
 				catch (IOException e) {
@@ -100,10 +101,10 @@ public class UserInterfaceFavoris extends JFrame {
 		btnRefresh.setBounds(588, 194, 125, 41);
 		getContentPane().add(btnRefresh);
 
-		JLabel lblAttentionLa = new JLabel("Attention : La gestion de ces favoris est commune.");
+		JLabel lblAttentionLa = new JLabel("Attention : Ces favoris sont communs");
 		lblAttentionLa.setForeground(new Color(165, 42, 42));
 		lblAttentionLa.setFont(new Font("Verdana", Font.BOLD, 14));
-		lblAttentionLa.setBounds(258, 456, 430, 41);
+		lblAttentionLa.setBounds(413, 470, 315, 41);
 		getContentPane().add(lblAttentionLa);
 		TableColumn tc = TableFavoris.getColumnModel().getColumn(2);
 		tc.setCellEditor(TableFavoris.getDefaultEditor(Boolean.class));
