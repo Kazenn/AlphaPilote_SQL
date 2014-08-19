@@ -1,8 +1,6 @@
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Insets;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -62,6 +60,8 @@ public class UserInterfaceParametres extends JFrame {
 	private JCheckBox BoxChoixAutoIplabel;
 	private JCheckBox BoxChoixAutoVcenter;
 	private JCheckBox BoxChoixAutoExceed;
+	private JCheckBox BoxChoixAutoNavigateur;
+	private JLabel LabelSaveEnCours;
 
 	public UserInterfaceParametres() {
 		setType(Type.UTILITY);
@@ -71,7 +71,7 @@ public class UserInterfaceParametres extends JFrame {
 		getContentPane().setLayout(null);
 
 		JPanel ZoneNavigateur = new JPanel();
-		ZoneNavigateur.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Navigateur", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		ZoneNavigateur.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Navigateur pour favoris web", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		ZoneNavigateur.setBounds(4, 10, 180, 50);
 		getContentPane().add(ZoneNavigateur);
 		ZoneNavigateur.setLayout(null);
@@ -79,14 +79,14 @@ public class UserInterfaceParametres extends JFrame {
 		ComboxNavigateur = new JComboBox();
 		ComboxNavigateur.setBounds(10, 21, 139, 20);
 		ZoneNavigateur.add(ComboxNavigateur);
-		ComboxNavigateur.addItemListener(new ItemListener() {
-			@Override
-			public void itemStateChanged(ItemEvent arg0) {
+		// ComboxNavigateur.addItemListener(new ItemListener() {
+		// @Override
+		// public void itemStateChanged(ItemEvent arg0) {
 
-				NavigateurDansCombox = (String) ComboxNavigateur.getSelectedItem();
-				SetNavigateurFichierConfig();
-			}
-		});
+		// NavigateurDansCombox = (String) ComboxNavigateur.getSelectedItem();
+		// SetNavigateurFichierConfig();
+		// }
+		// });
 		ComboxNavigateur.setModel(new DefaultComboBoxModel(new String[] { "Google Chrome", "Mozilla Firefox", "Internet Explorer" }));
 		ComboxNavigateur.setSelectedIndex(1);
 
@@ -97,10 +97,10 @@ public class UserInterfaceParametres extends JFrame {
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
 				new Thread(new ThreadLancementProduitAuto()).start();
-				dispose();
+				// dispose();
 			}
 		});
-		BoutonValiderParametres.setBounds(10, 402, 161, 39);
+		BoutonValiderParametres.setBounds(4, 476, 161, 39);
 		getContentPane().add(BoutonValiderParametres);
 
 		JPanel panel = new JPanel();
@@ -228,7 +228,7 @@ public class UserInterfaceParametres extends JFrame {
 
 		JPanel ZoneWeb = new JPanel();
 		ZoneWeb.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Favoris web", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		ZoneWeb.setBounds(574, 75, 160, 335);
+		ZoneWeb.setBounds(574, 148, 160, 335);
 		getContentPane().add(ZoneWeb);
 		ZoneWeb.setLayout(null);
 
@@ -281,6 +281,22 @@ public class UserInterfaceParametres extends JFrame {
 		BoxChoixAutoVcenter.setBounds(6, 301, 97, 23);
 		ZoneWeb.add(BoxChoixAutoVcenter);
 
+		JPanel ZoneNavigateurAuto = new JPanel();
+		ZoneNavigateurAuto.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Navigateur par d\u00E9faut", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		ZoneNavigateurAuto.setBounds(574, 75, 160, 46);
+		getContentPane().add(ZoneNavigateurAuto);
+		ZoneNavigateurAuto.setLayout(null);
+
+		BoxChoixAutoNavigateur = new JCheckBox("Navigateur");
+		BoxChoixAutoNavigateur.setBounds(6, 16, 97, 23);
+		ZoneNavigateurAuto.add(BoxChoixAutoNavigateur);
+
+		LabelSaveEnCours = new JLabel("Enregistrement des param\u00E8tres dans la configuration en cours ...");
+		LabelSaveEnCours.setVisible(false);
+		LabelSaveEnCours.setForeground(new Color(106, 90, 205));
+		LabelSaveEnCours.setBounds(10, 451, 361, 14);
+		getContentPane().add(LabelSaveEnCours);
+
 		// --------------------------------------------------
 		// -----------LANCER AU CHARGEMENT PAGE
 		// --------------------------------------------------
@@ -329,6 +345,8 @@ public class UserInterfaceParametres extends JFrame {
 		public void run() {
 			GestionConfig FichierGestion = new GestionConfig();
 			String Choix = "";
+
+			LabelSaveEnCours.setVisible(true);
 
 			if (BoxChoixAutoSysa.isSelected() == true) {
 				Choix = "true";
@@ -535,6 +553,22 @@ public class UserInterfaceParametres extends JFrame {
 			//
 			// --------------------------------------------------------------
 
+			NavigateurDansCombox = (String) ComboxNavigateur.getSelectedItem();
+			SetNavigateurFichierConfig();
+
+			// -----------------------------------------------------------------
+			//
+			//
+			// --------------------------------------------------------------
+
+			if (BoxChoixAutoNavigateur.isSelected() == true) {
+				Choix = "true";
+			}
+			else {
+				Choix = "false";
+			}
+			FichierGestion.EcrireChoixBoutonPosteComplet("Navigateur", Choix);
+
 			if (BoxChoixAutoOdip.isSelected() == true) {
 				Choix = "true";
 			}
@@ -632,6 +666,10 @@ public class UserInterfaceParametres extends JFrame {
 			}
 			FichierGestion.EcrireChoixBoutonPosteComplet("Vcenter", Choix);
 
+			// ----Attente fin d'enregistrement pour fermer la fenêtre des
+			// paramêtres.
+			dispose();
+
 		}
 	}
 
@@ -653,6 +691,7 @@ public class UserInterfaceParametres extends JFrame {
 				case "Internet Explorer":
 					ComboxNavigateur.setSelectedIndex(2);
 					break;
+
 			}
 
 			if (FichierGestion.DemandeChoixBoutonPosteComplet("Sysa").equals("true") == true) {
@@ -827,6 +866,12 @@ public class UserInterfaceParametres extends JFrame {
 			//
 			// ---------------------------------------
 
+			if (FichierGestion.DemandeChoixBoutonPosteComplet("Navigateur").equals("true") == true) {
+				BoxChoixAutoNavigateur.setSelected(true);
+			}
+			else {
+				BoxChoixAutoNavigateur.setSelected(false);
+			}
 			if (FichierGestion.DemandeChoixBoutonPosteComplet("Odip").equals("true") == true) {
 				BoxChoixAutoOdip.setSelected(true);
 			}

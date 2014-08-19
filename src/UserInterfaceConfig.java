@@ -2,6 +2,8 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Insets;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -17,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JProgressBar;
 import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
@@ -47,7 +50,6 @@ public class UserInterfaceConfig extends JFrame {
 		TextConfigUnixUser = new JTextField();
 
 		TextConfigUnixUser.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
-		TextConfigUnixUser.setText("User unix");
 		TextConfigUnixUser.setBounds(54, 16, 86, 20);
 		ZoneConfigUnix.add(TextConfigUnixUser);
 		TextConfigUnixUser.setColumns(10);
@@ -62,7 +64,6 @@ public class UserInterfaceConfig extends JFrame {
 
 		TextConfigUnixPassword = new JPasswordField();
 		TextConfigUnixPassword.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
-		TextConfigUnixPassword.setText("pass");
 		TextConfigUnixPassword.setBounds(54, 47, 86, 20);
 		ZoneConfigUnix.add(TextConfigUnixPassword);
 
@@ -74,7 +75,6 @@ public class UserInterfaceConfig extends JFrame {
 		getContentPane().add(ZoneConfigGmvs);
 
 		TextConfigGmvsUser = new JTextField();
-		TextConfigGmvsUser.setText("User gmvs");
 		TextConfigGmvsUser.setColumns(10);
 		TextConfigGmvsUser.setBounds(47, 16, 86, 20);
 		ZoneConfigGmvs.add(TextConfigGmvsUser);
@@ -94,7 +94,6 @@ public class UserInterfaceConfig extends JFrame {
 		ZoneConfigGmvs.add(CheckBoxAutoGmvs);
 
 		TextConfigGmvsPassword = new JPasswordField();
-		TextConfigGmvsPassword.setText("pass");
 		TextConfigGmvsPassword.setBounds(47, 47, 86, 20);
 		ZoneConfigGmvs.add(TextConfigGmvsPassword);
 
@@ -106,7 +105,6 @@ public class UserInterfaceConfig extends JFrame {
 		getContentPane().add(ZoneConfigSysa);
 
 		TextConfigSysaUser = new JTextField();
-		TextConfigSysaUser.setText("User sysa");
 		TextConfigSysaUser.setColumns(10);
 		TextConfigSysaUser.setBounds(54, 16, 86, 20);
 		ZoneConfigSysa.add(TextConfigSysaUser);
@@ -126,7 +124,6 @@ public class UserInterfaceConfig extends JFrame {
 		ZoneConfigSysa.add(CheckBoxAutoSysa);
 
 		TextConfigSysaPassword = new JPasswordField();
-		TextConfigSysaPassword.setText("pass");
 		TextConfigSysaPassword.setBounds(54, 47, 86, 20);
 		ZoneConfigSysa.add(TextConfigSysaPassword);
 
@@ -138,7 +135,6 @@ public class UserInterfaceConfig extends JFrame {
 		getContentPane().add(ZoneConfigZmvs);
 
 		TextConfigZmvsUser = new JTextField();
-		TextConfigZmvsUser.setText("User zmvs");
 		TextConfigZmvsUser.setColumns(10);
 		TextConfigZmvsUser.setBounds(54, 16, 86, 20);
 		ZoneConfigZmvs.add(TextConfigZmvsUser);
@@ -158,7 +154,6 @@ public class UserInterfaceConfig extends JFrame {
 		ZoneConfigZmvs.add(CheckBoxAutoZmvs);
 
 		TextConfigZmvsPassword = new JPasswordField();
-		TextConfigZmvsPassword.setText("pass");
 		TextConfigZmvsPassword.setBounds(54, 47, 86, 20);
 		ZoneConfigZmvs.add(TextConfigZmvsPassword);
 
@@ -170,7 +165,6 @@ public class UserInterfaceConfig extends JFrame {
 		getContentPane().add(ZoneConfigKmvs);
 
 		TextConfigKmvsUser = new JTextField();
-		TextConfigKmvsUser.setText("User kmvs");
 		TextConfigKmvsUser.setColumns(10);
 		TextConfigKmvsUser.setBounds(54, 16, 86, 20);
 		ZoneConfigKmvs.add(TextConfigKmvsUser);
@@ -190,7 +184,6 @@ public class UserInterfaceConfig extends JFrame {
 		ZoneConfigKmvs.add(CheckBoxAutoKmvs);
 
 		TextConfigKmvsPassword = new JPasswordField();
-		TextConfigKmvsPassword.setText("pass");
 		TextConfigKmvsPassword.setBounds(54, 47, 86, 20);
 		ZoneConfigKmvs.add(TextConfigKmvsPassword);
 
@@ -202,7 +195,6 @@ public class UserInterfaceConfig extends JFrame {
 		getContentPane().add(ZoneConfigXenos);
 
 		TextConfigSysgUser = new JTextField();
-		TextConfigSysgUser.setText("User sysg");
 		TextConfigSysgUser.setColumns(10);
 		TextConfigSysgUser.setBounds(47, 16, 86, 20);
 		ZoneConfigXenos.add(TextConfigSysgUser);
@@ -222,7 +214,6 @@ public class UserInterfaceConfig extends JFrame {
 		ZoneConfigXenos.add(CheckBoxAutoSysg);
 
 		TextConfigSysgPassword = new JPasswordField();
-		TextConfigSysgPassword.setText("pass");
 		TextConfigSysgPassword.setBounds(47, 47, 86, 20);
 		ZoneConfigXenos.add(TextConfigSysgPassword);
 
@@ -287,7 +278,6 @@ public class UserInterfaceConfig extends JFrame {
 		getContentPane().add(ZoneConfigWindows);
 
 		TextConfigWindowsUser = new JTextField();
-		TextConfigWindowsUser.setText("User Windows");
 		// TextConfigWindowsUser.setEnable(true);
 		TextConfigWindowsUser.setBounds(39, 16, 86, 20);
 		ZoneConfigWindows.add(TextConfigWindowsUser);
@@ -306,7 +296,6 @@ public class UserInterfaceConfig extends JFrame {
 		ZoneConfigWindows.add(TextConfigWindowsPass);
 
 		TextConfigWindowsPassword = new JPasswordField();
-		TextConfigWindowsPassword.setText("pass");
 		TextConfigWindowsPassword.setBounds(39, 47, 86, 20);
 		ZoneConfigWindows.add(TextConfigWindowsPassword);
 
@@ -326,7 +315,6 @@ public class UserInterfaceConfig extends JFrame {
 		ZoneConfigAs400.add(lblBr);
 
 		TextConfigAs400DeviceBr = new JTextField();
-		TextConfigAs400DeviceBr.setText(" A d\u00E9finir");
 		TextConfigAs400DeviceBr.setBounds(65, 16, 86, 20);
 		ZoneConfigAs400.add(TextConfigAs400DeviceBr);
 		TextConfigAs400DeviceBr.setColumns(10);
@@ -336,7 +324,6 @@ public class UserInterfaceConfig extends JFrame {
 		ZoneConfigAs400.add(lblBdi);
 
 		TextConfigAs400DeviceBdi = new JTextField();
-		TextConfigAs400DeviceBdi.setText(" A d\u00E9finir");
 		TextConfigAs400DeviceBdi.setBounds(65, 44, 86, 20);
 		ZoneConfigAs400.add(TextConfigAs400DeviceBdi);
 		TextConfigAs400DeviceBdi.setColumns(10);
@@ -346,7 +333,6 @@ public class UserInterfaceConfig extends JFrame {
 		ZoneConfigAs400.add(lblBdaf);
 
 		TextConfigAs400DeviceBdaf = new JTextField();
-		TextConfigAs400DeviceBdaf.setText(" A d\u00E9finir");
 		TextConfigAs400DeviceBdaf.setBounds(65, 75, 86, 20);
 		ZoneConfigAs400.add(TextConfigAs400DeviceBdaf);
 		TextConfigAs400DeviceBdaf.setColumns(10);
@@ -356,7 +342,6 @@ public class UserInterfaceConfig extends JFrame {
 		ZoneConfigAs400.add(lblSocly);
 
 		TextConfigAs400DeviceSocly = new JTextField();
-		TextConfigAs400DeviceSocly.setText(" A d\u00E9finir");
 		TextConfigAs400DeviceSocly.setBounds(65, 106, 86, 20);
 		ZoneConfigAs400.add(TextConfigAs400DeviceSocly);
 		TextConfigAs400DeviceSocly.setColumns(10);
@@ -366,7 +351,6 @@ public class UserInterfaceConfig extends JFrame {
 		ZoneConfigAs400.add(lblSocmcsd);
 
 		TextConfigAs400DeviceSocmcsd = new JTextField();
-		TextConfigAs400DeviceSocmcsd.setText(" A d\u00E9finir");
 		TextConfigAs400DeviceSocmcsd.setBounds(65, 134, 86, 20);
 		ZoneConfigAs400.add(TextConfigAs400DeviceSocmcsd);
 		TextConfigAs400DeviceSocmcsd.setColumns(10);
@@ -376,7 +360,6 @@ public class UserInterfaceConfig extends JFrame {
 		ZoneConfigAs400.add(lblPfbcly);
 
 		TextConfigAs400DevicePfb = new JTextField();
-		TextConfigAs400DevicePfb.setText(" A d\u00E9finir");
 		TextConfigAs400DevicePfb.setBounds(65, 162, 86, 20);
 		ZoneConfigAs400.add(TextConfigAs400DevicePfb);
 		TextConfigAs400DevicePfb.setColumns(10);
@@ -389,7 +372,6 @@ public class UserInterfaceConfig extends JFrame {
 		getContentPane().add(ZoneConfigBmvs);
 
 		TextConfigBmvsUser = new JTextField();
-		TextConfigBmvsUser.setText("User bmvs");
 		TextConfigBmvsUser.setColumns(10);
 		TextConfigBmvsUser.setBounds(54, 16, 86, 20);
 		ZoneConfigBmvs.add(TextConfigBmvsUser);
@@ -409,7 +391,6 @@ public class UserInterfaceConfig extends JFrame {
 		ZoneConfigBmvs.add(CheckBoxAutoBmvs);
 
 		TextConfigBmvsPassword = new JPasswordField();
-		TextConfigBmvsPassword.setText("pass");
 		TextConfigBmvsPassword.setBounds(54, 47, 86, 20);
 		ZoneConfigBmvs.add(TextConfigBmvsPassword);
 
@@ -421,7 +402,6 @@ public class UserInterfaceConfig extends JFrame {
 		getContentPane().add(ZoneConfigIp1);
 
 		TextConfigIp1User = new JTextField();
-		TextConfigIp1User.setText("User ip1");
 		TextConfigIp1User.setColumns(10);
 		TextConfigIp1User.setBounds(54, 16, 86, 20);
 		ZoneConfigIp1.add(TextConfigIp1User);
@@ -441,7 +421,6 @@ public class UserInterfaceConfig extends JFrame {
 		ZoneConfigIp1.add(CheckBoxAutoIp1);
 
 		TextConfigIp1Password = new JPasswordField();
-		TextConfigIp1Password.setText("pass");
 		TextConfigIp1Password.setBounds(54, 47, 86, 20);
 		ZoneConfigIp1.add(TextConfigIp1Password);
 
@@ -453,7 +432,6 @@ public class UserInterfaceConfig extends JFrame {
 		getContentPane().add(ZoneConfigIp2);
 
 		TextConfigIp2User = new JTextField();
-		TextConfigIp2User.setText("User ip2");
 		TextConfigIp2User.setColumns(10);
 		TextConfigIp2User.setBounds(54, 16, 86, 20);
 		ZoneConfigIp2.add(TextConfigIp2User);
@@ -473,7 +451,6 @@ public class UserInterfaceConfig extends JFrame {
 		ZoneConfigIp2.add(CheckBoxAutoIp2);
 
 		TextConfigIp2Password = new JPasswordField();
-		TextConfigIp2Password.setText("pass");
 		TextConfigIp2Password.setBounds(54, 47, 86, 20);
 		ZoneConfigIp2.add(TextConfigIp2Password);
 
@@ -485,7 +462,6 @@ public class UserInterfaceConfig extends JFrame {
 		getContentPane().add(ZoneConfigIp3);
 
 		TextConfigIp3User = new JTextField();
-		TextConfigIp3User.setText("User ip3");
 		TextConfigIp3User.setColumns(10);
 		TextConfigIp3User.setBounds(54, 16, 86, 20);
 		ZoneConfigIp3.add(TextConfigIp3User);
@@ -505,9 +481,53 @@ public class UserInterfaceConfig extends JFrame {
 		ZoneConfigIp3.add(CheckBoxAutoIp3);
 
 		TextConfigIp3Password = new JPasswordField();
-		TextConfigIp3Password.setText("pass");
 		TextConfigIp3Password.setBounds(54, 47, 86, 20);
 		ZoneConfigIp3.add(TextConfigIp3Password);
+
+		LabelEnregistrement = new JLabel("Enregistrement en cours :");
+		LabelEnregistrement.setBounds(575, 531, 211, 19);
+		getContentPane().add(LabelEnregistrement);
+
+		JToggleButton BoutonReveler = new JToggleButton("R\u00E9v\u00E9ler");
+		BoutonReveler.setForeground(Color.GREEN);
+		BoutonReveler.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent arg0) {
+
+				if (BoutonReveler.isSelected() == true) {
+					BoutonReveler.setForeground(Color.RED);
+					TextConfigUnixPassword.setEchoChar((char) 0);
+					TextConfigWindowsPassword.setEchoChar((char) 0);
+					TextConfigSysaPassword.setEchoChar((char) 0);
+					TextConfigSysgPassword.setEchoChar((char) 0);
+					TextConfigKmvsPassword.setEchoChar((char) 0);
+					TextConfigZmvsPassword.setEchoChar((char) 0);
+					TextConfigIp1Password.setEchoChar((char) 0);
+					TextConfigIp2Password.setEchoChar((char) 0);
+					TextConfigIp3Password.setEchoChar((char) 0);
+					TextConfigBmvsPassword.setEchoChar((char) 0);
+					TextConfigGmvsPassword.setEchoChar((char) 0);
+
+				}
+				else {
+					BoutonReveler.setForeground(Color.GREEN);
+					TextConfigUnixPassword.setEchoChar('\u2022');
+					TextConfigWindowsPassword.setEchoChar('\u2022');
+					TextConfigSysaPassword.setEchoChar('\u2022');
+					TextConfigSysgPassword.setEchoChar('\u2022');
+					TextConfigKmvsPassword.setEchoChar('\u2022');
+					TextConfigZmvsPassword.setEchoChar('\u2022');
+					TextConfigIp1Password.setEchoChar('\u2022');
+					TextConfigIp2Password.setEchoChar('\u2022');
+					TextConfigIp3Password.setEchoChar('\u2022');
+					TextConfigBmvsPassword.setEchoChar('\u2022');
+					TextConfigGmvsPassword.setEchoChar('\u2022');
+				}
+
+			}
+		});
+		BoutonReveler.setBounds(413, 527, 121, 23);
+		getContentPane().add(BoutonReveler);
 
 		// Fin
 
@@ -562,6 +582,7 @@ public class UserInterfaceConfig extends JFrame {
 			EnableDisableTouteZonesSaisies(false);
 			BoutonValiderConfig.setEnabled(false);
 			BoutonRechargerConfig.setEnabled(false);
+
 			String UserUnix = TextConfigUnixUser.getText().toLowerCase();
 			TextConfigUnixUser.setText(UserUnix);
 			@SuppressWarnings("deprecation")
@@ -598,7 +619,8 @@ public class UserInterfaceConfig extends JFrame {
 			Boolean EtatAutoConnectSysg = CheckBoxAutoSysg.isSelected();
 
 			String UserBmvs = TextConfigBmvsUser.getText();
-			TextConfigBmvsPassword.getText();
+			@SuppressWarnings("deprecation")
+			String PassBmvs = TextConfigBmvsPassword.getText();
 			Boolean EtatAutoConnectBmvs = CheckBoxAutoBmvs.isSelected();
 
 			String UserIp1 = TextConfigIp1User.getText();
@@ -635,52 +657,79 @@ public class UserInterfaceConfig extends JFrame {
 
 			MaConfig.EcrireUser("user", "Unix", UserUnix);
 			ProgressBarValideConfig.setValue(5);
+			LabelEnregistrement.setText("Enregistrement User Unix");
 			MaConfig.EcrireUser("user", "Windows", UserWindows);
 			ProgressBarValideConfig.setValue(10);
+			LabelEnregistrement.setText("Enregistrement User Windows");
 			MaConfig.EcrireUser("user", "Gmvs", UserGmvs);
 			ProgressBarValideConfig.setValue(15);
+			LabelEnregistrement.setText("Enregistrement User Gmvs");
 			MaConfig.EcrireUser("user", "Sysa", UserSysa);
 			ProgressBarValideConfig.setValue(20);
+			LabelEnregistrement.setText("Enregistrement User Sysa");
 			MaConfig.EcrireUser("user", "Kmvs", UserKmvs);
 			ProgressBarValideConfig.setValue(25);
+			LabelEnregistrement.setText("Enregistrement User Kmvs");
 			MaConfig.EcrireUser("user", "Zmvs", UserZmvs);
 			ProgressBarValideConfig.setValue(30);
+			LabelEnregistrement.setText("Enregistrement User Zmvs");
 			MaConfig.EcrireUser("user", "Sysg", UserSysg);
+			LabelEnregistrement.setText("Enregistrement User Sysg");
 			MaConfig.EcrireUser("user", "Bmvs", UserBmvs);
+			LabelEnregistrement.setText("Enregistrement User Bmvs");
 			MaConfig.EcrireUser("user", "Ip1", UserIp1);
+			LabelEnregistrement.setText("Enregistrement User IP1");
 			MaConfig.EcrireUser("user", "Ip2", UserIp2);
+			LabelEnregistrement.setText("Enregistrement User IP2");
 			MaConfig.EcrireUser("user", "Ip3", UserIp3);
+			LabelEnregistrement.setText("Enregistrement User IP3");
 
 			MaConfig.EcrirePassword("password", "Unix", PassUnix);
 			ProgressBarValideConfig.setValue(35);
+			LabelEnregistrement.setText("Enregistrement passwword Unix");
 			MaConfig.EcrirePassword("password", "Windows", PassWindows);
 			ProgressBarValideConfig.setValue(40);
+			LabelEnregistrement.setText("Enregistrement passwword Windows");
 			MaConfig.EcrirePassword("password", "Gmvs", PassGmvs);
 			ProgressBarValideConfig.setValue(45);
+			LabelEnregistrement.setText("Enregistrement passwword Gmvs");
 			MaConfig.EcrirePassword("password", "Sysa", PassSysa);
 			ProgressBarValideConfig.setValue(50);
+			LabelEnregistrement.setText("Enregistrement passwword Sysa");
 			MaConfig.EcrirePassword("password", "Kmvs", PassKmvs);
 			ProgressBarValideConfig.setValue(55);
+			LabelEnregistrement.setText("Enregistrement passwword Kmvs");
 			MaConfig.EcrirePassword("password", "Zmvs", PassZmvs);
 			ProgressBarValideConfig.setValue(60);
+			LabelEnregistrement.setText("Enregistrement passwword Zmvs");
 			MaConfig.EcrirePassword("password", "Sysg", PassSysg);
 			ProgressBarValideConfig.setValue(65);
-			MaConfig.EcrirePassword("password", "Bmvs", PassGmvs);
+			LabelEnregistrement.setText("Enregistrement passwword Sysg");
+			MaConfig.EcrirePassword("password", "Bmvs", PassBmvs);
+			LabelEnregistrement.setText("Enregistrement passwword Bmvs");
 			MaConfig.EcrirePassword("password", "Ip1", PassIp1);
+			LabelEnregistrement.setText("Enregistrement passwword Ip1");
 			MaConfig.EcrirePassword("password", "Ip2", PassIp2);
+			LabelEnregistrement.setText("Enregistrement passwword Ip2");
 			MaConfig.EcrirePassword("password", "Ip3", PassIp3);
+			LabelEnregistrement.setText("Enregistrement passwword Ip3");
 
 			MaConfig.EcrireUser("DeviceName", "Br", DeviceAs400Br);
 			ProgressBarValideConfig.setValue(70);
+			LabelEnregistrement.setText("Enregistrement macro BR");
 			MaConfig.EcrireUser("DeviceName", "Bdi", DeviceAs400Bdi);
 			ProgressBarValideConfig.setValue(75);
+			LabelEnregistrement.setText("Enregistrement macro BDI");
 			MaConfig.EcrireUser("DeviceName", "Bdaf", DeviceAs400Bdaf);
 			ProgressBarValideConfig.setValue(80);
+			LabelEnregistrement.setText("Enregistrement macro BDAF");
 			MaConfig.EcrireUser("DeviceName", "Socly", DeviceAs400Socly);
 			ProgressBarValideConfig.setValue(85);
+			LabelEnregistrement.setText("Enregistrement macro SOCLY");
 			MaConfig.EcrireUser("DeviceName", "Socmcsd", DeviceAs400Socmcsd);
-
+			LabelEnregistrement.setText("Enregistrement macro SOCMCSD");
 			MaConfig.EcrireUser("DeviceName", "Pfb", DeviceAs400Pfb);
+			LabelEnregistrement.setText("Enregistrement macro PFB");
 
 			if (EtatAutoConnectGmvs == true) {
 				MaConfig.EcrireAutoConnect("autoconnect", "Gmvs", "true");
@@ -753,44 +802,54 @@ public class UserInterfaceConfig extends JFrame {
 			GestionProfile GP = new GestionProfile();
 
 			try {
+				LabelEnregistrement.setText("Enregistrement macro GMVS");
 				GP.ModifierPasswordProfile("Gmvs", MaConfig.DemandePassword("Gmvs"));
 				GP.ModifierUserProfile("Gmvs", MaConfig.DemandeUser("Gmvs"));
 				GP.ModifierUserNameStationProfile("GMVS");
 
+				LabelEnregistrement.setText("Enregistrement macro SYSG");
 				GP.ModifierPasswordProfile("Sysg", MaConfig.DemandePassword("Sysg"));
 				GP.ModifierUserProfile("Sysg", MaConfig.DemandeUser("Sysg"));
 				GP.ModifierUserNameStationProfile("Sysg");
 
+				LabelEnregistrement.setText("Enregistrement macro ZMVS");
 				GP.ModifierPasswordProfile("Zmvs", MaConfig.DemandePassword("Zmvs"));
 				GP.ModifierUserProfile("Zmvs", MaConfig.DemandeUser("Zmvs"));
 				GP.ModifierUserNameStationProfile("ZMVS");
 
+				LabelEnregistrement.setText("Enregistrement macro KMVS");
 				GP.ModifierPasswordProfile("Kmvs", MaConfig.DemandePassword("Kmvs"));
 				GP.ModifierUserProfile("Kmvs", MaConfig.DemandeUser("Kmvs"));
 				GP.ModifierUserNameStationProfile("KMVS");
 
+				LabelEnregistrement.setText("Enregistrement macro SYSA");
 				GP.ModifierPasswordProfile("Sysa", MaConfig.DemandePassword("Sysa"));
 				GP.ModifierUserProfile("Sysa", MaConfig.DemandeUser("Sysa"));
 				GP.ModifierUserNameStationProfile("Sysa");
 
+				LabelEnregistrement.setText("Enregistrement macro BMVS");
 				GP.ModifierPasswordProfile("Bmvs", MaConfig.DemandePassword("Bmvs"));
 				GP.ModifierUserProfile("Bmvs", MaConfig.DemandeUser("Bmvs"));
 				GP.ModifierUserNameStationProfile("BMVS");
 
+				LabelEnregistrement.setText("Enregistrement macro IP1");
 				GP.ModifierPasswordProfile("Ip1", MaConfig.DemandePassword("Ip1"));
 				GP.ModifierUserProfile("Ip1", MaConfig.DemandeUser("Ip1"));
 				GP.ModifierUserNameStationProfile("IP1");
 
+				LabelEnregistrement.setText("Enregistrement macro IP2");
 				GP.ModifierPasswordProfile("Ip2", MaConfig.DemandePassword("Ip2"));
 				GP.ModifierUserProfile("Ip2", MaConfig.DemandeUser("Ip2"));
 				GP.ModifierUserNameStationProfile("IP2");
 
+				LabelEnregistrement.setText("Enregistrement macro IP3");
 				GP.ModifierPasswordProfile("Ip3", MaConfig.DemandePassword("Ip3"));
 				GP.ModifierUserProfile("Ip3", MaConfig.DemandeUser("Ip3"));
 				GP.ModifierUserNameStationProfile("IP3");
 
 				// AS400
 				ProgressBarValideConfig.setValue(95);
+				LabelEnregistrement.setText("Enregistrement Profile AS400");
 				GP.ModifierUserNameStationProfile("BRCLY");
 				GP.ModifierUserNameStationProfile("BDAFCLY");
 				GP.ModifierUserNameStationProfile("BDICLY");
@@ -1166,4 +1225,5 @@ public class UserInterfaceConfig extends JFrame {
 	private JLabel LabelConfigIp3Password;
 	private JCheckBox CheckBoxAutoIp3;
 	private JPasswordField TextConfigIp3Password;
+	private JLabel LabelEnregistrement;
 }

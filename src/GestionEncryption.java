@@ -33,7 +33,6 @@ public class GestionEncryption {
 		// System.out.println(StringApresDecryption);
 
 		return StringApresDecryption;
-
 	}
 
 	public void DemandeEncryptionFichier() throws IOException {

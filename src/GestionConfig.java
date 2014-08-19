@@ -103,6 +103,11 @@ public class GestionConfig extends Properties {
 
 		}
 		catch (IOException e) {
+			e.getMessage();
+			System.out.println("Erreur Encryption = " + e);
+			// UserInterfaceConfig UicThreadvalidation = new
+			// UserInterfaceConfig();
+			// UicThreadvalidation.new ThreadValidationConfig().run();
 
 		}
 
@@ -126,6 +131,7 @@ public class GestionConfig extends Properties {
 			FileOutputStream oStream = new FileOutputStream(RequeteChemin.DemandeChemin("CheminFichierConfig"));
 			properties.store(oStream, "Fichier de configuration User/Pass/Paramètres est correctement enregistré");
 			ValidationEcriture = "User pour " + Machine + " est correctement enregistré";
+			oStream.close();
 		}
 		catch (FileNotFoundException e) {
 
@@ -159,6 +165,7 @@ public class GestionConfig extends Properties {
 			FileOutputStream oStream = new FileOutputStream(RequeteChemin.DemandeChemin("CheminFichierConfig"));
 			properties.store(oStream, "Fichier de configuration User/Pass/Paramètres est correctement enregistré");
 			ValidationEcriture = "Fichier correctement enregistré";
+			oStream.close();
 		}
 		catch (FileNotFoundException e) {
 
@@ -211,6 +218,7 @@ public class GestionConfig extends Properties {
 			FileOutputStream oStream = new FileOutputStream(RequeteChemin.DemandeChemin("CheminFichierConfig"));
 			properties.store(oStream, "Fichier de configuration User/Pass/Paramètres est correctement enregistré");
 			ValidationEcriture = "Fichier correctement enregistré";
+			oStream.close();
 		}
 		catch (FileNotFoundException e) {
 
@@ -241,6 +249,7 @@ public class GestionConfig extends Properties {
 			FileOutputStream oStream = new FileOutputStream(RequeteChemin.DemandeChemin("CheminFichierConfig"));
 			properties.store(oStream, "Fichier de configuration User/Pass/Paramètres est correctement enregistré");
 			ValidationEcriture = "Le navigateur par défault " + Navigateur + " est correctement enregistré";
+			oStream.close();
 		}
 		catch (FileNotFoundException e) {
 
@@ -290,6 +299,7 @@ public class GestionConfig extends Properties {
 			FileOutputStream oStream = new FileOutputStream(RequeteChemin.DemandeChemin("CheminFichierConfig"));
 			properties.store(oStream, "Fichier de configuration User/Pass/Paramètres est correctement enregistré");
 			ValidationEcriture = "Le choix = " + Choix + " est correctement enregistré";
+			oStream.close();
 		}
 		catch (FileNotFoundException e) {
 
@@ -315,6 +325,25 @@ public class GestionConfig extends Properties {
 			properties.load(in);
 			in.close();
 			ResultatDemande = properties.getProperty("BoutonLancePoste" + Produit);
+
+		}
+		catch (IOException e) {
+
+		}
+
+		return ResultatDemande;
+
+	}
+
+	public String DemandePremierLancement() {
+
+		String ResultatDemande = "";
+		Properties properties = new Properties();
+		try {
+			FileInputStream in = new FileInputStream(RequeteChemin.DemandeChemin("CheminFichierConfig"));
+			properties.load(in);
+			in.close();
+			ResultatDemande = properties.getProperty("FirstLaunch");
 
 		}
 		catch (IOException e) {

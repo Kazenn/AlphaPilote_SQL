@@ -9,6 +9,7 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Toolkit;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -67,6 +68,7 @@ public class UserInterface extends JFrame implements ActionListener {
 
 	Component LastEntered;
 	private static final long serialVersionUID = 1L;
+
 	private JComboBox<?> MaComboBox;
 	private String MachineDansMaComboBox;
 	private JTextArea ZoneTextLog;
@@ -156,6 +158,7 @@ public class UserInterface extends JFrame implements ActionListener {
 					new Thread(new ThreadRechargementConfigInterface()).start();
 					MenuFavorisCommuns.removeAll();
 					new Thread(new ThreadChargementFavoris()).start();
+					GainedFocus = false;
 
 				}
 
@@ -166,6 +169,10 @@ public class UserInterface extends JFrame implements ActionListener {
 			}
 		});
 
+		// ------------HOOK
+
+		// ----------------
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
 
@@ -174,7 +181,7 @@ public class UserInterface extends JFrame implements ActionListener {
 		setTitle(" Projet AlphaPilote BETA_ - Prêt à demembrer pour " + UserNameStation + "");
 		// setAlwaysOnTop(true);
 
-		setSize(784, 565);
+		setSize(790, 650);
 		setLocationRelativeTo(null);
 
 		// PositionFenetrePrincipale = this.getLocation();
@@ -248,7 +255,7 @@ public class UserInterface extends JFrame implements ActionListener {
 		JScrollPane ScrollZoneTextLog = new JScrollPane();
 		ScrollZoneTextLog.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		ScrollZoneTextLog.setViewportBorder(new TitledBorder(null, "Log", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(255, 69, 0)));
-		ScrollZoneTextLog.setBounds(10, 288, 478, 201);
+		ScrollZoneTextLog.setBounds(10, 364, 478, 201);
 		getContentPane().add(ScrollZoneTextLog);
 
 		ZoneTextLog = new JTextArea();
@@ -500,7 +507,7 @@ public class UserInterface extends JFrame implements ActionListener {
 		MenuTinaIp1Siris.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				LanceTinaSiris1();
+				new Thread(new LanceTinaSiris1()).start();
 			}
 		});
 		MenuTinaExceed.add(MenuTinaIp1Siris);
@@ -510,19 +517,20 @@ public class UserInterface extends JFrame implements ActionListener {
 		MenuTinaIp1Tinap203.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
+				new Thread(new LanceTinaTinap203()).start();
 
-				LanceTinaTinap203();
 			}
 		});
 		MenuTinaExceed.add(MenuTinaIp1Tinap203);
 
-		mntmTina = new JMenuItem("Tina UP1TS004 (IP2 - Tinap105 & 103)");
+		mntmTina = new JMenuItem("Tina UP1TS004 (IP2 - Tinap105 & 102)");
 		mntmTina.setIcon(IconTina5);
 		mntmTina.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 
-				LanceTinaTinap105103();
+				new Thread(new LanceTinaTinap105103()).start();
+
 			}
 		});
 		MenuTinaExceed.add(mntmTina);
@@ -1066,7 +1074,7 @@ public class UserInterface extends JFrame implements ActionListener {
 				UserInterfaceParametres PageParametres = new UserInterfaceParametres();
 
 				PageParametres.setVisible(true);
-				PageParametres.setSize(750, 480);
+				PageParametres.setSize(750, 550);
 				PageParametres.setLocation(PositionFenetrePrincipale);
 			}
 		});
@@ -1124,7 +1132,8 @@ public class UserInterface extends JFrame implements ActionListener {
 		});
 		MenuAPropos.add(MenuSignalerUnBug);
 
-		JMenuItem MenuInterrogation = new JMenuItem("?");
+		JMenuItem MenuInterrogation = new JMenuItem("Version 1.1");
+		MenuInterrogation.setEnabled(false);
 		MenuAPropos.add(MenuInterrogation);
 
 		JButton BoutonValideMstsc = new JButton("TS (mstsc)");
@@ -1263,14 +1272,14 @@ public class UserInterface extends JFrame implements ActionListener {
 		MaBarreProgression.setOpaque(true);
 		MaBarreProgression.setBackground(Color.BLACK);
 		MaBarreProgression.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-		MaBarreProgression.setBounds(10, 491, 169, 14);
+		MaBarreProgression.setBounds(10, 576, 169, 14);
 		getContentPane().add(MaBarreProgression);
 		MaBarreProgression.setIndeterminate(true);
 		MaBarreProgression.setForeground(new Color(178, 34, 34));
 
 		JPanel ZoneConfig = new JPanel();
-		ZoneConfig.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Raccourcis", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(255, 99, 71)));
-		ZoneConfig.setBounds(558, 2, 216, 146);
+		ZoneConfig.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Rechargement", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(255, 99, 71)));
+		ZoneConfig.setBounds(558, 2, 216, 87);
 		getContentPane().add(ZoneConfig);
 		ZoneConfig.setLayout(null);
 
@@ -1311,7 +1320,7 @@ public class UserInterface extends JFrame implements ActionListener {
 		JPanel PanelZoneTestFichier = new JPanel();
 		PanelZoneTestFichier.setForeground(new Color(255, 69, 0));
 		PanelZoneTestFichier.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Acc\u00E8s aux fichiers", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(255, 99, 71)));
-		PanelZoneTestFichier.setBounds(604, 314, 164, 175);
+		PanelZoneTestFichier.setBounds(604, 390, 164, 175);
 		getContentPane().add(PanelZoneTestFichier);
 		PanelZoneTestFichier.setLayout(null);
 
@@ -1355,7 +1364,7 @@ public class UserInterface extends JFrame implements ActionListener {
 		JPanel PaneZonePreparationPostePilotage = new JPanel();
 		PaneZonePreparationPostePilotage.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Pr\u00E9paration poste pilotage", TitledBorder.LEADING, TitledBorder.TOP, null,
 				new Color(65, 105, 225)));
-		PaneZonePreparationPostePilotage.setBounds(359, 2, 189, 180);
+		PaneZonePreparationPostePilotage.setBounds(345, 2, 189, 180);
 		getContentPane().add(PaneZonePreparationPostePilotage);
 		PaneZonePreparationPostePilotage.setLayout(null);
 
@@ -1389,11 +1398,11 @@ public class UserInterface extends JFrame implements ActionListener {
 				try {
 
 					LanceVtomIp1q();
-					Thread.sleep(1000);
+					Thread.sleep(10000);
 					LanceVtomIp1d();
-					Thread.sleep(1000);
+					Thread.sleep(10000);
 					LanceVtomIp2q();
-					Thread.sleep(1000);
+					Thread.sleep(10000);
 					LanceVtomIp2d();
 				}
 				catch (InterruptedException e1) {
@@ -1469,27 +1478,45 @@ public class UserInterface extends JFrame implements ActionListener {
 		ProgressBarExecutionGlobale.setValue(0);
 		ProgressBarExecutionGlobale.setStringPainted(true);
 		ProgressBarExecutionGlobale.setMaximum(15000);
-		ProgressBarExecutionGlobale.setBounds(236, 227, 270, 23);
+		ProgressBarExecutionGlobale.setBounds(349, 262, 270, 23);
 		getContentPane().add(ProgressBarExecutionGlobale);
 
 		LabelUtilisationMemoire = new JLabel("Utilisation m\u00E9moire : ");
 		LabelUtilisationMemoire.setForeground(new Color(205, 92, 92));
-		LabelUtilisationMemoire.setBounds(189, 491, 164, 14);
+		LabelUtilisationMemoire.setBounds(188, 576, 164, 14);
 		getContentPane().add(LabelUtilisationMemoire);
 
 		LabelNombreThread = new JLabel("Threads en cours :");
 		LabelNombreThread.setForeground(new Color(95, 158, 160));
-		LabelNombreThread.setBounds(355, 491, 117, 14);
+		LabelNombreThread.setBounds(359, 576, 117, 14);
 		getContentPane().add(LabelNombreThread);
 
 		LabelAdresseIp = new JLabel("Adresse IP :");
 		LabelAdresseIp.setForeground(new Color(100, 149, 237));
-		LabelAdresseIp.setBounds(482, 491, 156, 14);
+		LabelAdresseIp.setBounds(485, 576, 156, 14);
 		getContentPane().add(LabelAdresseIp);
 
 		LabelDateHeure = new JLabel("Date/heure :");
-		LabelDateHeure.setBounds(648, 491, 120, 14);
+		LabelDateHeure.setBounds(651, 576, 120, 14);
 		getContentPane().add(LabelDateHeure);
+
+		JPanel panel_1 = new JPanel();
+		panel_1.setBorder(new TitledBorder(null, "Raccourcis", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 139, 139)));
+		panel_1.setBounds(10, 214, 298, 140);
+		getContentPane().add(panel_1);
+		panel_1.setLayout(null);
+
+		JLabel lblWindowsX = new JLabel("WINDOWS + X = Outil Capture");
+		lblWindowsX.setFont(new Font("Calibri", Font.PLAIN, 12));
+		lblWindowsX.setForeground(new Color(178, 34, 34));
+		lblWindowsX.setBounds(6, 27, 245, 14);
+		panel_1.add(lblWindowsX);
+
+		JLabel lblWindowsv = new JLabel("WINDOWS + V = Putty sur s\u00E9lection souris");
+		lblWindowsv.setFont(new Font("Calibri", Font.PLAIN, 12));
+		lblWindowsv.setForeground(new Color(178, 34, 34));
+		lblWindowsv.setBounds(6, 52, 279, 14);
+		panel_1.add(lblWindowsv);
 
 		BoutonValideSsh.addMouseListener(new MouseAdapter() {
 			@Override
@@ -1546,18 +1573,25 @@ public class UserInterface extends JFrame implements ActionListener {
 		TestAccesFichier();
 		new Thread(new ThreadEtatSysteme()).start();
 		new Thread(new ThreadChargementFavoris()).start();
+		new Thread(new ThreadGrabber()).start();
 
-		// new Thread(new ThreadRechargementConfigInterface()).start();
-
-		// LISTENNER KEYBOARD
+		// GestionConfig GC = new GestionConfig();
+		// String PremierLancement = GC.DemandePremierLancement();
+		// UserInterfaceConfig UicThreadvalidation = new UserInterfaceConfig();
+		// UicThreadvalidation.new ThreadValidationConfig().run();
 
 		if (SuccesCreation == true) {
 			ZoneTextLog.append("Le profile pour " + UserNameStation + " n'existait pas, il vient d'être créé avec tous les fichiers nécessaires." + "\n");
-			ZoneTextLog.append("Rendez-vous sur la page de saisie des accès UNIX/MVS/AS00 (se trouvant dans le menu Gestion), valider une première fois à vide pour initialiser la clef d'encryption."
-					+ "\n");
+			// GestionConfig GC = new GestionConfig();
+			// String PremierLancement = GC.DemandePremierLancement();
+			UserInterfaceConfig UicThreadvalidation = new UserInterfaceConfig();
+			UicThreadvalidation.new ThreadValidationConfig().run();
+			// new Thread(new ThreadRechargementConfigInterface()).start();
 		}
-
+		// UserInterfaceConfig UicThreadvalidation = new UserInterfaceConfig();
+		// UicThreadvalidation.new ThreadValidationConfig().run();
 		new Thread(new ThreadRechargementConfigInterface()).start();
+
 	}
 
 	/**
@@ -1659,6 +1693,29 @@ public class UserInterface extends JFrame implements ActionListener {
 	/**
 	 * @category Lancement des Outils
 	 */
+
+	// --------------OUTILS RACCOURCIS
+	// ---
+	// ---
+	public void LanceCapture() {
+		GestionLog MaLog = new GestionLog();
+		// GestionChemin Chemin = new GestionChemin();
+
+		ProcessBuilder builder = new ProcessBuilder(new String[] { "C:\\Windows\\system32\\SnippingTool.exe" });
+		try {
+			builder.start();
+		}
+		catch (IOException e) {
+
+			e.printStackTrace();
+			MaLog.EcrireDansFichierLog("Erreur au lancement de l'outil Capture : " + e);
+			ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
+
+		}
+
+	}
+
+	// --------------------------------
 	public void LancePutty() {
 		GestionLog MaLog = new GestionLog();
 		GestionChemin Chemin = new GestionChemin();
@@ -1819,63 +1876,133 @@ public class UserInterface extends JFrame implements ActionListener {
 		}
 	}
 
-	public void LanceTinaSiris1() {
-		GestionChemin RequeteChemin = new GestionChemin();
-		GestionProfile ModifProfileTina = new GestionProfile();
-		try {
-			ModifProfileTina.ModifierIpTina("tina_UP2TS004_SIRIS1.txt");
-			Runtime.getRuntime().exec(
-					String.format(RequeteChemin.DemandeChemin("CheminPutty") + " -ssh root@126.196.230.13 -pw bullbull -m " + "\"" + RequeteChemin.DemandeChemin("CheminTinaMacro")
-							+ "tina_UP2TS004_SIRIS1.txt" + "\""));
-			ZoneTextLog.append("Ouverture de Tina UP2TS004 catalogue Siris1." + "\n");
-		}
-		catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	public class LanceTinaSiris1 implements Runnable {
+
+		@Override
+		public void run() {
+
+			new GestionChemin();
+			new GestionProfile();
+			new GestionLog();
+			GestionConfig GC = new GestionConfig();
 			GestionLog MaLog = new GestionLog();
-			MaLog.EcrireDansFichierLog("Erreur au lancement de Tina UP2TS004 catalogue Siris1: " + e);
-			ZoneTextLog.append("Erreur au lancement de Tina UP2TS004 catalogue Siris1: Consulter la log." + "\n");
+			String UserUnix = "";
+			String PassUnix = "";
+			UserUnix = GC.DemandeUser("Unix");
+			PassUnix = GC.DemandePassword("Unix");
+			try {
+				MonIp = InetAddress.getLocalHost().getHostAddress();
+			}
+			catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			AutomatedTelnetClient telnet = new AutomatedTelnetClient("126.196.230.13", UserUnix, PassUnix);
+			try {
+				ZoneTextLog.append("Ouverture de Tina UP2TS004 catalogue Siris1 en cours (Délais de 10-15sec)." + "\n");
+				Thread.sleep(500);
+				telnet.sendCommand("cd ~tina ");
+				Thread.sleep(500);
+				telnet.sendCommand(". .tina.sh ");
+				Thread.sleep(500);
+				telnet.sendCommand("cd Bin ");
+				Thread.sleep(500);
+				telnet.sendCommand("tina_adm -display " + MonIp + ":0.0 &");
+				Thread.sleep(500);
+
+			}
+			catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				MaLog.EcrireDansFichierLog("Erreur au lancement de Tina UP2TS004 catalogue Siris1: " + e);
+				ZoneTextLog.append("Erreur au lancement de Tina UP2TS004 catalogue Siris1: Consulter la log." + "\n");
+			}
 
 		}
 	}
 
-	public void LanceTinaTinap203() {
-		GestionChemin RequeteChemin = new GestionChemin();
-		GestionProfile ModifProfileTina = new GestionProfile();
-		try {
-			ModifProfileTina.ModifierIpTina("tina_UP2TS004_TINAP203.txt");
-			Runtime.getRuntime().exec(
-					String.format(RequeteChemin.DemandeChemin("CheminPutty") + " -ssh root@126.196.230.13 -pw bullbull -m " + "\"" + RequeteChemin.DemandeChemin("CheminTinaMacro")
-							+ "tina_UP2TS004_TINAP203.txt" + "\""));
-			ZoneTextLog.append("Ouverture de Tina UP2TS004 catalogue TINAP203." + "\n");
-		}
-		catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			GestionLog MaLog = new GestionLog();
-			MaLog.EcrireDansFichierLog("Erreur au lancement de Tina UP2TS004 catalogue TINAP203: " + e);
-			ZoneTextLog.append("Erreur au lancement de Tina UP2TS004 catalogue TINAP203: Consulter la log." + "\n");
+	public class LanceTinaTinap203 implements Runnable {
 
+		@Override
+		public void run() {
+			new GestionChemin();
+			new GestionProfile();
+			new GestionLog();
+			GestionConfig GC = new GestionConfig();
+			GestionLog MaLog = new GestionLog();
+			String UserUnix = "";
+			String PassUnix = "";
+			UserUnix = GC.DemandeUser("Unix");
+			PassUnix = GC.DemandePassword("Unix");
+			try {
+				MonIp = InetAddress.getLocalHost().getHostAddress();
+			}
+			catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			AutomatedTelnetClient telnet = new AutomatedTelnetClient("126.196.230.13", UserUnix, PassUnix);
+			try {
+				ZoneTextLog.append("Ouverture de Tina UP2TS004 catalogue TINAP203 en cours (Délais de 10-15sec)." + "\n");
+				Thread.sleep(500);
+				telnet.sendCommand("cd /usr/tina_vecep/tina203 ");
+				Thread.sleep(500);
+				telnet.sendCommand(". .tina.sh ");
+				Thread.sleep(500);
+				telnet.sendCommand("cd Bin ");
+				Thread.sleep(500);
+				telnet.sendCommand("tina_adm -display " + MonIp + ":0.0 &");
+				Thread.sleep(500);
+
+			}
+			catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				MaLog.EcrireDansFichierLog("Erreur au lancement de Tina UP2TS004 catalogue TINAP203: " + e);
+				ZoneTextLog.append("Erreur au lancement de Tina UP2TS004 catalogue Siris1: Consulter la log." + "\n");
+			}
 		}
 	}
 
-	public void LanceTinaTinap105103() {
-		GestionChemin RequeteChemin = new GestionChemin();
-		GestionProfile ModifProfileTina = new GestionProfile();
-		try {
-			ModifProfileTina.ModifierIpTina("tina_UP1TS004.txt");
-			Runtime.getRuntime().exec(
-					String.format(RequeteChemin.DemandeChemin("CheminPutty") + " -ssh root@126.40.230.119 -pw bullbull -m " + "\"" + RequeteChemin.DemandeChemin("CheminTinaMacro")
-							+ "tina_UP1TS004.txt" + "\""));
-			ZoneTextLog.append("Ouverture de Tina UP2TS004 catalogue TINAP105 et 103" + "\n");
-		}
-		catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			GestionLog MaLog = new GestionLog();
-			MaLog.EcrireDansFichierLog("Erreur au lancement de Tina UP2TS004 catalogue TINAP105 et 103: " + e);
-			ZoneTextLog.append("Erreur au lancement de Tina UP2TS004 catalogue TINAP105 et 103: Consulter la log." + "\n");
+	public class LanceTinaTinap105103 implements Runnable {
 
+		@Override
+		public void run() {
+			new GestionChemin();
+			new GestionProfile();
+			new GestionLog();
+			GestionConfig GC = new GestionConfig();
+			new GestionLog();
+			String UserUnix = "";
+			String PassUnix = "";
+			UserUnix = GC.DemandeUser("Unix");
+			PassUnix = GC.DemandePassword("Unix");
+			try {
+				MonIp = InetAddress.getLocalHost().getHostAddress();
+				AutomatedTelnetClient telnet = new AutomatedTelnetClient("126.40.230.119 ", UserUnix, PassUnix);
+				ZoneTextLog.append("Ouverture de Tina UP1TS004 catalogue TINAP105 et 102 en cours (Délais de 10-15sec)." + "\n");
+				Thread.sleep(500);
+				telnet.sendCommand("cd ~tina ");
+				Thread.sleep(500);
+				telnet.sendCommand("cd tina104 ");
+				Thread.sleep(500);
+				telnet.sendCommand(". .tina.sh ");
+				Thread.sleep(500);
+				telnet.sendCommand("cd Bin ");
+				Thread.sleep(500);
+				telnet.sendCommand("tina_adm -display " + MonIp + ":0.0 &");
+				Thread.sleep(500);
+			}
+			catch (UnknownHostException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -1893,6 +2020,9 @@ public class UserInterface extends JFrame implements ActionListener {
 				break;
 			case "Internet Explorer":
 				Navigateur = "C:\\Program Files\\Internet Explorer\\iexplore.exe";
+				break;
+			default:
+				Navigateur = "C:\\Users\\" + UserNameStation + "\\AppData\\Local\\Mozilla Firefox\\firefox.exe";
 				break;
 
 		}
@@ -3130,6 +3260,66 @@ public class UserInterface extends JFrame implements ActionListener {
 		}
 	}
 
+	public class LancePuttyConnexionAutoRaccourci implements Runnable {
+
+		@Override
+		public void run() {
+			SmartRobot SuperRobot = null;
+			String IpDansLePressePapier = null;
+			GestionChemin RequeteChemin = new GestionChemin();
+
+			try {
+				SuperRobot = new SmartRobot();
+			}
+			catch (AWTException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			try {
+				IpDansLePressePapier = SuperRobot.GetClipboard();
+			}
+			catch (UnsupportedFlavorException | IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			GestionSocket TestConnexionValideSurCible = new GestionSocket();
+
+			Boolean RetourTestConnexion = false;
+			if (IpDansLePressePapier == null || IpDansLePressePapier.equals("") == true) {
+				ZoneTextLog.append("Aucune sélection pour la cible de connexion" + "\n");
+			}
+			else {
+
+				ZoneTextLog.append("Raccourci détecté : En cours de connexion vers " + IpDansLePressePapier + " en telnet (port23) ou ssh (port22)" + "\n");
+				RetourTestConnexion = TestConnexionValideSurCible.InitSocket(IpDansLePressePapier, 22);
+				if (RetourTestConnexion == true) {
+					try {
+						Runtime.getRuntime().exec(String.format(RequeteChemin.DemandeChemin("CheminPutty") + " " + IpDansLePressePapier + " -ssh"));
+					}
+					catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				else {
+					RetourTestConnexion = TestConnexionValideSurCible.InitSocket(IpDansLePressePapier, 23);
+					if (RetourTestConnexion == true) {
+						try {
+							Runtime.getRuntime().exec(String.format(RequeteChemin.DemandeChemin("CheminPutty") + " " + IpDansLePressePapier + " -telnet"));
+						}
+						catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+				if (RetourTestConnexion == false) {
+					ZoneTextLog.append("Impossible de trouver une connexion valide en telnet(port23) ou ssh(port22)" + "\n");
+				}
+			}
+		}
+	}
+
 	/**
 	 * @category Lancement Auto Outils
 	 */
@@ -3280,12 +3470,15 @@ public class UserInterface extends JFrame implements ActionListener {
 					LanceVtomIp2d();
 					Thread.sleep(500);
 				}
+				Thread.sleep(7500);
+				if (FichierGestion.DemandeChoixBoutonPosteComplet("Navigateur").equals("true") == true) {
+					String Navigateur = SelectionneNavigateur();
 
-				String Navigateur = SelectionneNavigateur();
+					ProcessBuilder pb = new ProcessBuilder("cmd.exe", " start", "/C", Navigateur);
+					pb.start();
+					Thread.sleep(10000);
 
-				ProcessBuilder pb = new ProcessBuilder("cmd.exe", " start", "/C", Navigateur);
-				pb.start();
-				Thread.sleep(5000);
+				}
 
 				if (FichierGestion.DemandeChoixBoutonPosteComplet("Odip").equals("true") == true) {
 					LanceOdip();
@@ -3652,6 +3845,54 @@ public class UserInterface extends JFrame implements ActionListener {
 
 		}
 	}
+
+	// --------------HOOK
+
+	public class ThreadGrabber implements Runnable {
+		SmartRobot SuperRobot;
+
+		@Override
+		public void run() {
+			try {
+				SuperRobot = new SmartRobot();
+			}
+			catch (AWTException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			CatchKeyboardEvent CK = new CatchKeyboardEvent();
+			CK.installKeyGrabber();
+			while (true) {
+				if (CK.RaccourciCapture.equals("Capture") == true) {
+					LanceCapture();
+					CK.RaccourciCapture = "Rien";
+					ZoneTextLog.append("Raccourci vers l'outil \"Capture\" détecté." + "\n");
+				}
+				if (CK.RaccourciCapture.equals("Putty") == true) {
+					CK.RaccourciCapture = "Rien";
+					ZoneTextLog.append("Raccourci vers Putty+IP détecté." + "\n");
+					SuperRobot.writeToClipboard("");
+					SuperRobot.EcrireDansClipboard();
+					// LancePuttyConnexionAutoRaccourci
+					new Thread(new LancePuttyConnexionAutoRaccourci()).start();
+
+				}
+
+				try {
+					Thread.sleep(200);
+				}
+				catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+		}
+
+	}
+
+	// ------------------
 
 	public void MiseAjoutPositionFenetre() {
 		PositionFenetrePrincipale = this.getLocation();

@@ -153,14 +153,13 @@ public class UserInterfaceEditionMachine extends JFrame {
 
 		panel_1 = new JPanel();
 		panel_1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Rechercher une machine", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panel_1.setBounds(493, 93, 156, 54);
+		panel_1.setBounds(493, 93, 210, 54);
 		getContentPane().add(panel_1);
 		panel_1.setLayout(null);
 
 		TextRechercheMachine = new JTextField();
-		TextRechercheMachine.setBounds(10, 24, 121, 20);
+		TextRechercheMachine.setBounds(10, 24, 190, 20);
 		panel_1.add(TextRechercheMachine);
-		TextRechercheMachine.setText("...");
 		TextRechercheMachine.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {

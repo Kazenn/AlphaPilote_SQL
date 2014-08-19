@@ -1,0 +1,502 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="EclipseModuleManager">
+    <libelement value="jar://$MODULE_DIR$/forms-1.3.0.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/SwingX/swingx-all-1.6.4.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/Jasypt/icu4j-3.4.4.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/Jasypt/jasypt-1.9.2-javadoc.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/Jasypt/jasypt-1.9.2-lite.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/Jasypt/jasypt-1.9.2-sources.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/Jasypt/jasypt-1.9.2.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/Jasypt/jasypt-acegisecurity-1.9.2-javadoc.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/Jasypt/jasypt-acegisecurity-1.9.2-sources.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/Jasypt/jasypt-acegisecurity-1.9.2.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/Jasypt/jasypt-hibernate3-1.9.2-javadoc.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/Jasypt/jasypt-hibernate3-1.9.2-sources.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/Jasypt/jasypt-hibernate3-1.9.2.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/Jasypt/jasypt-hibernate4-1.9.2-javadoc.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/Jasypt/jasypt-hibernate4-1.9.2-sources.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/Jasypt/jasypt-hibernate4-1.9.2.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/Jasypt/jasypt-spring2-1.9.2-javadoc.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/Jasypt/jasypt-spring2-1.9.2-sources.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/Jasypt/jasypt-spring2-1.9.2.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/Jasypt/jasypt-spring3-1.9.2-javadoc.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/Jasypt/jasypt-spring3-1.9.2-sources.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/Jasypt/jasypt-spring3-1.9.2.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/Jasypt/jasypt-spring31-1.9.2-javadoc.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/Jasypt/jasypt-spring31-1.9.2-sources.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/Jasypt/jasypt-spring31-1.9.2.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/Jasypt/jasypt-springsecurity2-1.9.2-javadoc.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/Jasypt/jasypt-springsecurity2-1.9.2-sources.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/Jasypt/jasypt-springsecurity2-1.9.2.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/Jasypt/jasypt-springsecurity3-1.9.2-javadoc.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/Jasypt/jasypt-springsecurity3-1.9.2-sources.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/Jasypt/jasypt-springsecurity3-1.9.2.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/Jasypt/jasypt-wicket13-1.9.2-javadoc.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/Jasypt/jasypt-wicket13-1.9.2-sources.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/Jasypt/jasypt-wicket13-1.9.2.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/Jasypt/jasypt-wicket15-1.9.2-javadoc.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/Jasypt/jasypt-wicket15-1.9.2-sources.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/Jasypt/jasypt-wicket15-1.9.2.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/commons-io-2.4/commons-io-2.4-javadoc.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/commons-io-2.4/commons-io-2.4-sources.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/commons-io-2.4/commons-io-2.4-test-sources.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/commons-io-2.4/commons-io-2.4-tests.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/commons-io-2.4/commons-io-2.4.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/SIGAR-hyperic-1-6-4/log4j.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/SIGAR-hyperic-1-6-4/sigar.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/jhook/JHook.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/ApacheLang3-3-3/commons-lang3-3.3.2.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/commons-net-3.3/commons-net-3.3.jar!/" />
+    <src_description expected_position="0">
+      <src_folder value="file://$MODULE_DIR$/src" expected_position="0" />
+      <src_folder value="file://$MODULE_DIR$/resources" expected_position="1" />
+      <src_folder value="file://$MODULE_DIR$/commons-io-2.4" expected_position="2" />
+      <src_folder value="file://$MODULE_DIR$/SIGAR-hyperic-1-6-4" expected_position="3" />
+      <src_folder value="file://$MODULE_DIR$/jhook" expected_position="4" />
+      <src_folder value="file://$MODULE_DIR$/ApacheLang3-3-3" expected_position="5" />
+      <src_folder value="file://$MODULE_DIR$/commons-net-3.3" expected_position="6" />
+    </src_description>
+  </component>
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_6" inherit-compiler-output="false">
+    <output url="file://$MODULE_DIR$/bin" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/resources" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/commons-io-2.4" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/SIGAR-hyperic-1-6-4" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/jhook" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/ApacheLang3-3-3" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/commons-net-3.3" isTestSource="false" />
+    </content>
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
+    <orderEntry type="module-library" exported="">
+      <library name="forms-1.3.0.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/forms-1.3.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/forms-1.3.0-src.zip!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="swingx-all-1.6.4.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/SwingX/swingx-all-1.6.4.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="icu4j-3.4.4.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/Jasypt/icu4j-3.4.4.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="jasypt-1.9.2-javadoc.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/Jasypt/jasypt-1.9.2-javadoc.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="jasypt-1.9.2-lite.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/Jasypt/jasypt-1.9.2-lite.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="jasypt-1.9.2-sources.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/Jasypt/jasypt-1.9.2-sources.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="jasypt-1.9.2.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/Jasypt/jasypt-1.9.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="jasypt-acegisecurity-1.9.2-javadoc.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/Jasypt/jasypt-acegisecurity-1.9.2-javadoc.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="jasypt-acegisecurity-1.9.2-sources.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/Jasypt/jasypt-acegisecurity-1.9.2-sources.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="jasypt-hibernate3-1.9.2-javadoc.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/Jasypt/jasypt-hibernate3-1.9.2-javadoc.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="jasypt-hibernate3-1.9.2-sources.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/Jasypt/jasypt-hibernate3-1.9.2-sources.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="jasypt-hibernate3-1.9.2.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/Jasypt/jasypt-hibernate3-1.9.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="jasypt-acegisecurity-1.9.2.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/Jasypt/jasypt-acegisecurity-1.9.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="jasypt-hibernate4-1.9.2-javadoc.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/Jasypt/jasypt-hibernate4-1.9.2-javadoc.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="jasypt-hibernate4-1.9.2-sources.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/Jasypt/jasypt-hibernate4-1.9.2-sources.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="jasypt-hibernate4-1.9.2.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/Jasypt/jasypt-hibernate4-1.9.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="jasypt-spring2-1.9.2-javadoc.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/Jasypt/jasypt-spring2-1.9.2-javadoc.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="jasypt-spring2-1.9.2-sources.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/Jasypt/jasypt-spring2-1.9.2-sources.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="jasypt-spring2-1.9.2.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/Jasypt/jasypt-spring2-1.9.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="jasypt-spring3-1.9.2-javadoc.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/Jasypt/jasypt-spring3-1.9.2-javadoc.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="jasypt-spring3-1.9.2-sources.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/Jasypt/jasypt-spring3-1.9.2-sources.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="jasypt-spring3-1.9.2.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/Jasypt/jasypt-spring3-1.9.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="jasypt-spring31-1.9.2-javadoc.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/Jasypt/jasypt-spring31-1.9.2-javadoc.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="jasypt-spring31-1.9.2-sources.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/Jasypt/jasypt-spring31-1.9.2-sources.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="jasypt-spring31-1.9.2.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/Jasypt/jasypt-spring31-1.9.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="jasypt-springsecurity2-1.9.2-javadoc.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/Jasypt/jasypt-springsecurity2-1.9.2-javadoc.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="jasypt-springsecurity2-1.9.2-sources.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/Jasypt/jasypt-springsecurity2-1.9.2-sources.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="jasypt-springsecurity2-1.9.2.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/Jasypt/jasypt-springsecurity2-1.9.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="jasypt-springsecurity3-1.9.2-javadoc.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/Jasypt/jasypt-springsecurity3-1.9.2-javadoc.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="jasypt-springsecurity3-1.9.2-sources.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/Jasypt/jasypt-springsecurity3-1.9.2-sources.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="jasypt-springsecurity3-1.9.2.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/Jasypt/jasypt-springsecurity3-1.9.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="jasypt-wicket13-1.9.2-javadoc.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/Jasypt/jasypt-wicket13-1.9.2-javadoc.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="jasypt-wicket13-1.9.2-sources.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/Jasypt/jasypt-wicket13-1.9.2-sources.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="jasypt-wicket13-1.9.2.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/Jasypt/jasypt-wicket13-1.9.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="jasypt-wicket15-1.9.2-javadoc.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/Jasypt/jasypt-wicket15-1.9.2-javadoc.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="jasypt-wicket15-1.9.2-sources.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/Jasypt/jasypt-wicket15-1.9.2-sources.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="jasypt-wicket15-1.9.2.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/Jasypt/jasypt-wicket15-1.9.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="commons-io-2.4-javadoc.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/commons-io-2.4/commons-io-2.4-javadoc.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="commons-io-2.4-sources.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/commons-io-2.4/commons-io-2.4-sources.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="commons-io-2.4-test-sources.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/commons-io-2.4/commons-io-2.4-test-sources.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="commons-io-2.4-tests.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/commons-io-2.4/commons-io-2.4-tests.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="commons-io-2.4.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/commons-io-2.4/commons-io-2.4.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="log4j.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/SIGAR-hyperic-1-6-4/log4j.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="sigar.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/SIGAR-hyperic-1-6-4/sigar.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="JHook.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/jhook/JHook.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="commons-lang3-3.3.2.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/ApacheLang3-3-3/commons-lang3-3.3.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="commons-net-3.3.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/commons-net-3.3/commons-net-3.3.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+  </component>
+</module>
+
