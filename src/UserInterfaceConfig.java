@@ -485,7 +485,7 @@ public class UserInterfaceConfig extends JFrame {
 		ZoneConfigIp3.add(TextConfigIp3Password);
 
 		LabelEnregistrement = new JLabel("Enregistrement en cours :");
-		LabelEnregistrement.setBounds(575, 531, 211, 19);
+		LabelEnregistrement.setBounds(229, 468, 211, 19);
 		getContentPane().add(LabelEnregistrement);
 
 		JToggleButton BoutonReveler = new JToggleButton("R\u00E9v\u00E9ler");
@@ -526,8 +526,20 @@ public class UserInterfaceConfig extends JFrame {
 
 			}
 		});
-		BoutonReveler.setBounds(413, 527, 121, 23);
+		BoutonReveler.setBounds(665, 527, 121, 23);
 		getContentPane().add(BoutonReveler);
+
+		JButton BoutonAnnuler = new JButton("Annuler");
+		BoutonAnnuler.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				dispose();
+			}
+		});
+		final ImageIcon IconAnnuler = new ImageIcon(getClass().getResource("/cancel-icon.png"));
+		BoutonAnnuler.setIcon(IconAnnuler);
+		BoutonAnnuler.setBounds(430, 499, 121, 51);
+		getContentPane().add(BoutonAnnuler);
 
 		// Fin
 
@@ -867,6 +879,7 @@ public class UserInterfaceConfig extends JFrame {
 				// GP.ModifierTempsRefresh("BDAFCLY", 6584521);
 
 				ProgressBarValideConfig.setValue(100);
+				MaConfig.ReOrderFichierConfig();
 				LabelConfigValide.setText("Config sauvegard\u00E9e!");
 
 			}

@@ -106,6 +106,18 @@ public class UserInterfaceFavoris extends JFrame {
 		lblAttentionLa.setFont(new Font("Verdana", Font.BOLD, 14));
 		lblAttentionLa.setBounds(413, 470, 315, 41);
 		getContentPane().add(lblAttentionLa);
+
+		JButton BoutonAnnuler = new JButton("Annuler");
+		BoutonAnnuler.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				dispose();
+			}
+		});
+		final ImageIcon IconAnnuler = new ImageIcon(getClass().getResource("/cancel-icon.png"));
+		BoutonAnnuler.setIcon(IconAnnuler);
+		BoutonAnnuler.setBounds(238, 449, 116, 58);
+		getContentPane().add(BoutonAnnuler);
 		TableColumn tc = TableFavoris.getColumnModel().getColumn(2);
 		tc.setCellEditor(TableFavoris.getDefaultEditor(Boolean.class));
 		tc.setCellRenderer(TableFavoris.getDefaultRenderer(Boolean.class));

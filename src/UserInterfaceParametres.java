@@ -62,6 +62,7 @@ public class UserInterfaceParametres extends JFrame {
 	private JCheckBox BoxChoixAutoExceed;
 	private JCheckBox BoxChoixAutoNavigateur;
 	private JLabel LabelSaveEnCours;
+	private JButton BoutonAnnuler;
 
 	public UserInterfaceParametres() {
 		setType(Type.UTILITY);
@@ -282,13 +283,13 @@ public class UserInterfaceParametres extends JFrame {
 		ZoneWeb.add(BoxChoixAutoVcenter);
 
 		JPanel ZoneNavigateurAuto = new JPanel();
-		ZoneNavigateurAuto.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Navigateur par d\u00E9faut", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		ZoneNavigateurAuto.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Navigateur", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		ZoneNavigateurAuto.setBounds(574, 75, 160, 46);
 		getContentPane().add(ZoneNavigateurAuto);
 		ZoneNavigateurAuto.setLayout(null);
 
 		BoxChoixAutoNavigateur = new JCheckBox("Navigateur");
-		BoxChoixAutoNavigateur.setBounds(6, 16, 97, 23);
+		BoxChoixAutoNavigateur.setBounds(6, 16, 148, 23);
 		ZoneNavigateurAuto.add(BoxChoixAutoNavigateur);
 
 		LabelSaveEnCours = new JLabel("Enregistrement des param\u00E8tres dans la configuration en cours ...");
@@ -296,6 +297,18 @@ public class UserInterfaceParametres extends JFrame {
 		LabelSaveEnCours.setForeground(new Color(106, 90, 205));
 		LabelSaveEnCours.setBounds(10, 451, 361, 14);
 		getContentPane().add(LabelSaveEnCours);
+
+		BoutonAnnuler = new JButton("Annuler");
+		BoutonAnnuler.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				dispose();
+			}
+		});
+		final ImageIcon IconAnnuler = new ImageIcon(getClass().getResource("/cancel-icon.png"));
+		BoutonAnnuler.setIcon(IconAnnuler);
+		BoutonAnnuler.setBounds(188, 476, 113, 39);
+		getContentPane().add(BoutonAnnuler);
 
 		// --------------------------------------------------
 		// -----------LANCER AU CHARGEMENT PAGE
@@ -693,6 +706,8 @@ public class UserInterfaceParametres extends JFrame {
 					break;
 
 			}
+
+			BoxChoixAutoNavigateur.setText(Navigateur);
 
 			if (FichierGestion.DemandeChoixBoutonPosteComplet("Sysa").equals("true") == true) {
 				BoxChoixAutoSysa.setSelected(true);

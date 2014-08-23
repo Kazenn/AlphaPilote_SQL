@@ -55,6 +55,7 @@ public class UserInterfaceEditionMachine extends JFrame {
 	private JLabel LabelValidation;
 	private JTextField TextRechercheMachine;
 	private JPanel panel_1;
+	private JButton BoutonAnnuler;
 
 	public UserInterfaceEditionMachine() throws IOException {
 		setType(Type.UTILITY);
@@ -197,6 +198,18 @@ public class UserInterfaceEditionMachine extends JFrame {
 		});
 		TextRechercheMachine.setColumns(10);
 
+		BoutonAnnuler = new JButton("Annuler");
+		BoutonAnnuler.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				dispose();
+			}
+		});
+		final ImageIcon IconAnnuler = new ImageIcon(getClass().getResource("/cancel-icon.png"));
+		BoutonAnnuler.setIcon(IconAnnuler);
+		BoutonAnnuler.setBounds(225, 482, 135, 66);
+		getContentPane().add(BoutonAnnuler);
+
 		TableColumn tc = TableMachine.getColumnModel().getColumn(2);
 		tc.setCellEditor(TableMachine.getDefaultEditor(Boolean.class));
 		tc.setCellRenderer(TableMachine.getDefaultRenderer(Boolean.class));
@@ -279,9 +292,10 @@ public class UserInterfaceEditionMachine extends JFrame {
 						int Lastchar = line.length();
 						line = line.substring(0, Lastchar - 1);
 						if (line.equals("=") == false) {
-							bw.write(line); // Keep the line only if not blank
-											// et
-											// pas egal à "="
+							bw.write(line.toLowerCase()); // Keep the line only
+															// if not blank
+							// et
+							// pas egal à "="
 						}
 
 						if (scanner.hasNextLine()) {

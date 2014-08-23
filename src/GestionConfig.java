@@ -1,8 +1,14 @@
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Properties;
 
 public class GestionConfig extends Properties {
@@ -339,6 +345,7 @@ public class GestionConfig extends Properties {
 
 		String ResultatDemande = "";
 		Properties properties = new Properties();
+
 		try {
 			FileInputStream in = new FileInputStream(RequeteChemin.DemandeChemin("CheminFichierConfig"));
 			properties.load(in);
@@ -351,6 +358,94 @@ public class GestionConfig extends Properties {
 		}
 
 		return ResultatDemande;
+
+	}
+
+	public void ReOrderFichierConfig() {
+		String inputFile = RequeteChemin.DemandeChemin("CheminFichierConfig");
+		String outputFile = RequeteChemin.DemandeChemin("CheminFichierConfig");
+		// Boolean ValideOrder = false;
+
+		try {
+			FileReader fileReader;
+			fileReader = new FileReader(inputFile);
+			BufferedReader bufferedReader = new BufferedReader(fileReader);
+			String inputLine;
+			ArrayList<String> lineList = new ArrayList<String>();
+			while ((inputLine = bufferedReader.readLine()) != null) {
+				lineList.add(inputLine);
+			}
+			fileReader.close();
+
+			Collections.sort(lineList);
+
+			FileWriter fileWriter = new FileWriter(outputFile);
+			PrintWriter out = new PrintWriter(fileWriter);
+			for (String outputLine : lineList) {
+				out.println(outputLine);
+			}
+			out.flush();
+			out.close();
+			fileWriter.close();
+
+		}
+		catch (FileNotFoundException e) {
+
+			e.printStackTrace();
+		}
+		catch (IOException e) {
+
+			e.printStackTrace();
+		}
+
+	}
+
+	public void CheckPropertiesRaccourcis() throws IOException {
+
+		Properties properties = new Properties();
+		new File(CheminFichierConfig);
+
+		try {
+			FileInputStream in = new FileInputStream(RequeteChemin.DemandeChemin("CheminFichierConfig"));
+			properties.load(in);
+
+			in.close();
+			if (properties.getProperty("RaccourciCapture") == null) {
+				FileInputStream stream;
+				stream = new FileInputStream(RequeteChemin.DemandeChemin("CheminFichierConfig"));
+				properties.load(stream);
+				properties.setProperty("RaccourciCapture", "x");
+				FileOutputStream oStream = new FileOutputStream(RequeteChemin.DemandeChemin("CheminFichierConfig"));
+				properties.store(oStream, "Fichier de configuration User/Pass/Paramètres est correctement enregistré");
+				stream.close();
+				oStream.close();
+
+			}
+			if (properties.getProperty("RaccourciConnexion") == null) {
+				FileInputStream stream;
+				stream = new FileInputStream(RequeteChemin.DemandeChemin("CheminFichierConfig"));
+				properties.load(stream);
+				properties.setProperty("RaccourciConnexion", "v");
+				FileOutputStream oStream = new FileOutputStream(RequeteChemin.DemandeChemin("CheminFichierConfig"));
+				properties.store(oStream, "Fichier de configuration User/Pass/Paramètres est correctement enregistré");
+				stream.close();
+				oStream.close();
+
+			}
+			if (properties.getProperty("RaccourciConsignes") == null) {
+				FileInputStream stream;
+				stream = new FileInputStream(RequeteChemin.DemandeChemin("CheminFichierConfig"));
+				properties.load(stream);
+				properties.setProperty("RaccourciConsignes", "c");
+				FileOutputStream oStream = new FileOutputStream(RequeteChemin.DemandeChemin("CheminFichierConfig"));
+				properties.store(oStream, "Fichier de configuration User/Pass/Paramètres est correctement enregistré");
+				stream.close();
+				oStream.close();
+			}
+		}
+		catch (IOException e) {
+
+		}
 
 	}
 

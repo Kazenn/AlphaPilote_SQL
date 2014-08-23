@@ -31,8 +31,12 @@ import java.net.URI;
 import java.net.UnknownHostException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
@@ -128,7 +132,6 @@ public class UserInterface extends JFrame implements ActionListener {
 	private JMenuItem MenuSismoIp2;
 	private JMenuItem MenuSismoOceor;
 	private JMenuItem MenuSismoPalatine;
-	// private JMenuItem MenuFav1;
 	private JMenu MenuFavoris;
 	private JMenuItem MenuArsV8;
 	private JMenuItem MenuWebIas;
@@ -149,6 +152,13 @@ public class UserInterface extends JFrame implements ActionListener {
 	private JMenu MenuParametresHaut;
 	private JLabel LabelTestFichierFavoris;
 	private JLabel LabelDateHeure;
+	private CatchKeyboardEvent CK;
+	private JLabel LabelCapture;
+	private JLabel LabelConnexion;
+	private JLabel LabelDetectionDoublon;
+	private JLabel LabelConsignes;
+	private JLabel LabelChargementProfil;
+	GestionProduits LanceProduit = new GestionProduits();
 
 	public UserInterface() {
 		addWindowFocusListener(new WindowFocusListener() {
@@ -159,6 +169,14 @@ public class UserInterface extends JFrame implements ActionListener {
 					MenuFavorisCommuns.removeAll();
 					new Thread(new ThreadChargementFavoris()).start();
 					GainedFocus = false;
+					try {
+						ReloadRaccourcis();
+						MajAffichageRaccourcis();
+					}
+					catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 
 				}
 
@@ -178,10 +196,10 @@ public class UserInterface extends JFrame implements ActionListener {
 
 		setIconImage(Toolkit.getDefaultToolkit().getImage(UserInterface.class.getResource("/javax/swing/plaf/metal/icons/ocean/computer.gif")));
 		UserNameStation = System.getProperty("user.name");
-		setTitle(" Projet AlphaPilote BETA_ - Prêt à demembrer pour " + UserNameStation + "");
+		setTitle("AlphaPilote - Pr\u00EAt \u00E0 demembrer pour Etienne");
 		// setAlwaysOnTop(true);
 
-		setSize(790, 650);
+		setSize(790, 570);
 		setLocationRelativeTo(null);
 
 		// PositionFenetrePrincipale = this.getLocation();
@@ -193,7 +211,7 @@ public class UserInterface extends JFrame implements ActionListener {
 			@Override
 			public void componentMoved(ComponentEvent e) {
 
-				MiseAjoutPositionFenetre();
+				MiseAjourPositionFenetre();
 				// ZoneTextLog.append(MachineDansMaComboBox);
 				// ZoneTextLog.setText (ZoneTextLog.getText() + "\n");
 
@@ -255,7 +273,7 @@ public class UserInterface extends JFrame implements ActionListener {
 		JScrollPane ScrollZoneTextLog = new JScrollPane();
 		ScrollZoneTextLog.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		ScrollZoneTextLog.setViewportBorder(new TitledBorder(null, "Log", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(255, 69, 0)));
-		ScrollZoneTextLog.setBounds(10, 364, 478, 201);
+		ScrollZoneTextLog.setBounds(10, 291, 478, 201);
 		getContentPane().add(ScrollZoneTextLog);
 
 		ZoneTextLog = new JTextArea();
@@ -280,7 +298,12 @@ public class UserInterface extends JFrame implements ActionListener {
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
 
-				LancePutty();
+				if (LanceProduit.LancePutty() == true) {
+					ZoneTextLog.append("Lancement de putty." + "\n");
+				}
+				else {
+					ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
+				}
 
 			}
 		});
@@ -293,7 +316,12 @@ public class UserInterface extends JFrame implements ActionListener {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 
-				LanceOutlook();
+				if (LanceProduit.LanceOutlook() == true) {
+					ZoneTextLog.append("Lancement d'outlook." + "\n");
+				}
+				else {
+					ZoneTextLog.append("Erreur au d'Outlook : Consulter la log." + "\n");
+				}
 
 			}
 		});
@@ -307,16 +335,16 @@ public class UserInterface extends JFrame implements ActionListener {
 			public void mouseReleased(MouseEvent arg0) {
 
 				try {
-					LanceControlm();
+					if (LanceProduit.LanceControlm() == true) {
+						ZoneTextLog.append("Lancement de Control-m." + "\n");
+					}
+					else {
+						ZoneTextLog.append("Erreur au lancement de control-m: Consulter la log." + "\n");
+					}
 				}
 				catch (IOException e) {
-
-					e.printStackTrace();
-
-					GestionLog MaLog = new GestionLog();
-					MaLog.EcrireDansFichierLog("Erreur au lancement de control-m : " + e);
 					ZoneTextLog.append("Erreur au lancement de control-m: Consulter la log." + "\n");
-
+					e.printStackTrace();
 				}
 
 			}
@@ -330,7 +358,12 @@ public class UserInterface extends JFrame implements ActionListener {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 
-				LanceIprox();
+				if (LanceProduit.LanceIprox() == true) {
+					ZoneTextLog.append("Lancement d'Iprox." + "\n");
+				}
+				else {
+					ZoneTextLog.append("Erreur au lancement d'Iprox : Consulter la log." + "\n");
+				}
 
 			}
 		});
@@ -343,7 +376,12 @@ public class UserInterface extends JFrame implements ActionListener {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 
-				LanceArsRemedy();
+				if (LanceProduit.LanceArsRemedy() == true) {
+					ZoneTextLog.append("Ouverture d'ARS Remedy v7." + "\n");
+				}
+				else {
+					ZoneTextLog.append("Erreur lancement ARS Remedy v7 : Consulter la log." + "\n");
+				}
 
 			}
 		});
@@ -402,8 +440,14 @@ public class UserInterface extends JFrame implements ActionListener {
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
 
-				LancePuttyCm();
+				if (LanceProduit.LancePuttyCm() == true) {
+					ZoneTextLog.append("Lancement de Putty CM." + "\n");
+				}
+				else {
+					ZoneTextLog.append("Erreur au lancement de Putty Connection Manager: Consulter la log." + "\n");
+				}
 			}
+
 		});
 		MenuOutils.add(MenuPuttyCm);
 		MenuOutils.add(MenuQuick3270);
@@ -474,7 +518,12 @@ public class UserInterface extends JFrame implements ActionListener {
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
 
-				LanceExceed();
+				if (LanceProduit.LanceExceed() == true) {
+					ZoneTextLog.append("Lancement d'exceed." + "\n");
+				}
+				else {
+					ZoneTextLog.append("Erreur au lancement d'exceed Manager: Consulter la log." + "\n");
+				}
 			}
 		});
 		MenuTinaExceed.add(MenuExceed);
@@ -486,7 +535,12 @@ public class UserInterface extends JFrame implements ActionListener {
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
 
-				LanceTinaCltec5();
+				if (LanceProduit.LanceTinaCltec5() == true) {
+					ZoneTextLog.append("Lancement de Tina Cltec5." + "\n");
+				}
+				else {
+					ZoneTextLog.append("Erreur au lancement de Tina Cltec5: Consulter la log." + "\n");
+				}
 
 			}
 		});
@@ -497,7 +551,12 @@ public class UserInterface extends JFrame implements ActionListener {
 		mntmTinaCltec.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				LanceTinaCltec6();
+				if (LanceProduit.LanceTinaCltec6() == true) {
+					ZoneTextLog.append("Lancement de Tina Cltec6." + "\n");
+				}
+				else {
+					ZoneTextLog.append("Erreur au lancement de Tina Cltec6: Consulter la log." + "\n");
+				}
 			}
 		});
 		MenuTinaExceed.add(mntmTinaCltec);
@@ -1065,7 +1124,7 @@ public class UserInterface extends JFrame implements ActionListener {
 		MenuParametresHaut = new JMenu("Param\u00E8tres");
 		BarreMenuPrincipale.add(MenuParametresHaut);
 
-		JMenuItem MenuParametres = new JMenuItem("Param\u00EAtres G\u00E9n\u00E9raux et bouton \"lancer poste complet\" ");
+		JMenuItem MenuParametres = new JMenuItem("Param\u00E8tres g\u00E9n\u00E9raux & \"lancer poste complet\" ");
 		MenuParametresHaut.add(MenuParametres);
 		MenuParametres.addMouseListener(new MouseAdapter() {
 			@Override
@@ -1079,6 +1138,24 @@ public class UserInterface extends JFrame implements ActionListener {
 			}
 		});
 		MenuParametres.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/scene/web/skin/AlignJustified_16x16_JFX.png")));
+
+		JMenuItem mntmParamtrerSesRacourcis = new JMenuItem("Attribuer les racourcis");
+		final ImageIcon IconEditionRaccourcis = new ImageIcon(getClass().getResource("/shortcut-icon.png"));
+		mntmParamtrerSesRacourcis.setIcon(IconEditionRaccourcis);
+		mntmParamtrerSesRacourcis.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+
+				GainedFocus = true;
+				UserInterfaceRaccourcis PageRaccourci = new UserInterfaceRaccourcis();
+
+				PageRaccourci.setVisible(true);
+				PageRaccourci.setSize(280, 500);
+				PageRaccourci.setLocation(PositionFenetrePrincipale);
+			}
+		});
+
+		MenuParametresHaut.add(mntmParamtrerSesRacourcis);
 
 		JMenu MenuAPropos = new JMenu("Aide");
 		BarreMenuPrincipale.add(MenuAPropos);
@@ -1132,9 +1209,29 @@ public class UserInterface extends JFrame implements ActionListener {
 		});
 		MenuAPropos.add(MenuSignalerUnBug);
 
-		JMenuItem MenuInterrogation = new JMenuItem("Version 1.1");
-		MenuInterrogation.setEnabled(false);
+		JMenuItem MenuInterrogation = new JMenuItem("A propos d'AlphaPilote");
+		MenuInterrogation.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+
+				ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/C", "start ", "\"", "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe", "\"", " \"",
+						" file://fsitceti/entites/ITC%20PPR-EDC-PIL-724%20ETI/Pilotage%20Mutualise/Sauvegarde%20Olive&Pascal/Outils%20de%20pilotage/Alphapilote/Data/htm/index.html", " \"");
+				try {
+					builder.start();
+				}
+				catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		});
 		MenuAPropos.add(MenuInterrogation);
+
+		JMenuItem mntmNewMenuItem = new JMenuItem("Version 1.1b");
+		mntmNewMenuItem.setEnabled(false);
+		mntmNewMenuItem.setForeground(new Color(51, 153, 102));
+		MenuAPropos.add(mntmNewMenuItem);
 
 		JButton BoutonValideMstsc = new JButton("TS (mstsc)");
 		BoutonValideMstsc.setMargin(new Insets(0, 0, 0, 0));
@@ -1244,6 +1341,7 @@ public class UserInterface extends JFrame implements ActionListener {
 				}
 			}
 		});
+
 		BoutonConnexionTelnetOuSsh = new JButton("Telnet/SSH");
 		BoutonConnexionTelnetOuSsh.addMouseListener(new MouseAdapter() {
 			@Override
@@ -1272,7 +1370,7 @@ public class UserInterface extends JFrame implements ActionListener {
 		MaBarreProgression.setOpaque(true);
 		MaBarreProgression.setBackground(Color.BLACK);
 		MaBarreProgression.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-		MaBarreProgression.setBounds(10, 576, 169, 14);
+		MaBarreProgression.setBounds(10, 503, 169, 14);
 		getContentPane().add(MaBarreProgression);
 		MaBarreProgression.setIndeterminate(true);
 		MaBarreProgression.setForeground(new Color(178, 34, 34));
@@ -1320,7 +1418,7 @@ public class UserInterface extends JFrame implements ActionListener {
 		JPanel PanelZoneTestFichier = new JPanel();
 		PanelZoneTestFichier.setForeground(new Color(255, 69, 0));
 		PanelZoneTestFichier.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Acc\u00E8s aux fichiers", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(255, 99, 71)));
-		PanelZoneTestFichier.setBounds(604, 390, 164, 175);
+		PanelZoneTestFichier.setBounds(610, 291, 164, 175);
 		getContentPane().add(PanelZoneTestFichier);
 		PanelZoneTestFichier.setLayout(null);
 
@@ -1478,45 +1576,72 @@ public class UserInterface extends JFrame implements ActionListener {
 		ProgressBarExecutionGlobale.setValue(0);
 		ProgressBarExecutionGlobale.setStringPainted(true);
 		ProgressBarExecutionGlobale.setMaximum(15000);
-		ProgressBarExecutionGlobale.setBounds(349, 262, 270, 23);
+		ProgressBarExecutionGlobale.setBounds(278, 214, 270, 23);
 		getContentPane().add(ProgressBarExecutionGlobale);
 
 		LabelUtilisationMemoire = new JLabel("Utilisation m\u00E9moire : ");
 		LabelUtilisationMemoire.setForeground(new Color(205, 92, 92));
-		LabelUtilisationMemoire.setBounds(188, 576, 164, 14);
+		LabelUtilisationMemoire.setBounds(185, 503, 164, 14);
 		getContentPane().add(LabelUtilisationMemoire);
 
 		LabelNombreThread = new JLabel("Threads en cours :");
 		LabelNombreThread.setForeground(new Color(95, 158, 160));
-		LabelNombreThread.setBounds(359, 576, 117, 14);
+		LabelNombreThread.setBounds(361, 503, 127, 14);
 		getContentPane().add(LabelNombreThread);
 
 		LabelAdresseIp = new JLabel("Adresse IP :");
 		LabelAdresseIp.setForeground(new Color(100, 149, 237));
-		LabelAdresseIp.setBounds(485, 576, 156, 14);
+		LabelAdresseIp.setBounds(488, 503, 156, 14);
 		getContentPane().add(LabelAdresseIp);
 
 		LabelDateHeure = new JLabel("Date/heure :");
-		LabelDateHeure.setBounds(651, 576, 120, 14);
+		LabelDateHeure.setBounds(654, 503, 120, 14);
 		getContentPane().add(LabelDateHeure);
 
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new TitledBorder(null, "Raccourcis", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 139, 139)));
-		panel_1.setBounds(10, 214, 298, 140);
+		panel_1.setBounds(558, 100, 216, 134);
 		getContentPane().add(panel_1);
 		panel_1.setLayout(null);
 
-		JLabel lblWindowsX = new JLabel("WINDOWS + X = Outil Capture");
-		lblWindowsX.setFont(new Font("Calibri", Font.PLAIN, 12));
-		lblWindowsX.setForeground(new Color(178, 34, 34));
-		lblWindowsX.setBounds(6, 27, 245, 14);
-		panel_1.add(lblWindowsX);
+		LabelCapture = new JLabel("+  = Outil Capture");
 
-		JLabel lblWindowsv = new JLabel("WINDOWS + V = Putty sur s\u00E9lection souris");
-		lblWindowsv.setFont(new Font("Calibri", Font.PLAIN, 12));
-		lblWindowsv.setForeground(new Color(178, 34, 34));
-		lblWindowsv.setBounds(6, 52, 279, 14);
-		panel_1.add(lblWindowsv);
+		LabelCapture.setFont(new Font("Calibri", Font.PLAIN, 12));
+		final ImageIcon IconWindows = new ImageIcon(getClass().getResource("/Windows-icon.png"));
+		LabelCapture.setIcon(IconWindows);
+		LabelCapture.setForeground(new Color(178, 34, 34));
+		LabelCapture.setBounds(6, 17, 202, 24);
+		panel_1.add(LabelCapture);
+
+		LabelConnexion = new JLabel("+  = Putty sur s\u00E9lection souris");
+		LabelConnexion.setIcon(IconWindows);
+		LabelConnexion.setFont(new Font("Calibri", Font.PLAIN, 12));
+		LabelConnexion.setForeground(new Color(178, 34, 34));
+		LabelConnexion.setBounds(6, 52, 202, 24);
+		panel_1.add(LabelConnexion);
+
+		LabelConsignes = new JLabel("+  = Dossier Consignes");
+		LabelConsignes.setIcon(IconWindows);
+		LabelConsignes.setForeground(new Color(178, 34, 34));
+		LabelConsignes.setFont(new Font("Calibri", Font.PLAIN, 12));
+		LabelConsignes.setBounds(6, 87, 202, 24);
+		panel_1.add(LabelConsignes);
+		final ImageIcon IconWarning = new ImageIcon(getClass().getResource("/warning-icon.png"));
+
+		LabelDetectionDoublon = new JLabel("Conflit dans les raccourcis");
+		LabelDetectionDoublon.setVisible(false);
+		LabelDetectionDoublon.setBounds(214, 248, 189, 24);
+		getContentPane().add(LabelDetectionDoublon);
+		LabelDetectionDoublon.setIcon(IconWarning);
+		LabelDetectionDoublon.setForeground(new Color(220, 20, 60));
+		LabelDetectionDoublon.setFont(new Font("Tahoma", Font.BOLD, 11));
+
+		LabelChargementProfil = new JLabel("Chargement du profil en cours ....");
+		LabelChargementProfil.setVisible(false);
+		LabelChargementProfil.setForeground(new Color(60, 179, 113));
+		LabelChargementProfil.setFont(new Font("Times New Roman", Font.BOLD, 18));
+		LabelChargementProfil.setBounds(203, 204, 331, 76);
+		getContentPane().add(LabelChargementProfil);
 
 		BoutonValideSsh.addMouseListener(new MouseAdapter() {
 			@Override
@@ -1568,29 +1693,57 @@ public class UserInterface extends JFrame implements ActionListener {
 		//
 		//
 		// ----------------------------------------------
-		UserNameStation = System.getProperty("user.name");
-		CreationProfileAlphaPilote(UserNameStation);
-		TestAccesFichier();
-		new Thread(new ThreadEtatSysteme()).start();
-		new Thread(new ThreadChargementFavoris()).start();
-		new Thread(new ThreadGrabber()).start();
+		new Thread(new InitialisationInterface()).start();
 
-		// GestionConfig GC = new GestionConfig();
-		// String PremierLancement = GC.DemandePremierLancement();
-		// UserInterfaceConfig UicThreadvalidation = new UserInterfaceConfig();
-		// UicThreadvalidation.new ThreadValidationConfig().run();
+	}
 
-		if (SuccesCreation == true) {
-			ZoneTextLog.append("Le profile pour " + UserNameStation + " n'existait pas, il vient d'être créé avec tous les fichiers nécessaires." + "\n");
-			// GestionConfig GC = new GestionConfig();
-			// String PremierLancement = GC.DemandePremierLancement();
-			UserInterfaceConfig UicThreadvalidation = new UserInterfaceConfig();
-			UicThreadvalidation.new ThreadValidationConfig().run();
-			// new Thread(new ThreadRechargementConfigInterface()).start();
+	public class InitialisationInterface implements Runnable {
+
+		@Override
+		public void run() {
+			try {
+				LabelChargementProfil.setVisible(true);
+				Thread.sleep(2000);
+			}
+			catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			UserNameStation = System.getProperty("user.name");
+			CreationProfileAlphaPilote(UserNameStation);
+			TestAccesFichier();
+			GestionConfig GC = new GestionConfig();
+			try {
+				GC.CheckPropertiesRaccourcis();
+			}
+			catch (IOException e2) {
+
+				e2.printStackTrace();
+			}
+			new Thread(new ThreadEtatSysteme()).start();
+			new Thread(new ThreadChargementFavoris()).start();
+
+			new Thread(new ThreadGrabber()).start();
+			try {
+
+				MajAffichageRaccourcis();
+			}
+			catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
+			if (SuccesCreation == true) {
+				ZoneTextLog.append("Le profile pour " + UserNameStation + " n'existait pas, il vient d'être créé avec tous les fichiers nécessaires." + "\n");
+
+				UserInterfaceConfig UicThreadvalidation = new UserInterfaceConfig();
+				UicThreadvalidation.new ThreadValidationConfig().run();
+
+			}
+
+			new Thread(new ThreadRechargementConfigInterface()).start();
+			LabelChargementProfil.setVisible(false);
 		}
-		// UserInterfaceConfig UicThreadvalidation = new UserInterfaceConfig();
-		// UicThreadvalidation.new ThreadValidationConfig().run();
-		new Thread(new ThreadRechargementConfigInterface()).start();
 
 	}
 
@@ -1697,184 +1850,8 @@ public class UserInterface extends JFrame implements ActionListener {
 	// --------------OUTILS RACCOURCIS
 	// ---
 	// ---
-	public void LanceCapture() {
-		GestionLog MaLog = new GestionLog();
-		// GestionChemin Chemin = new GestionChemin();
-
-		ProcessBuilder builder = new ProcessBuilder(new String[] { "C:\\Windows\\system32\\SnippingTool.exe" });
-		try {
-			builder.start();
-		}
-		catch (IOException e) {
-
-			e.printStackTrace();
-			MaLog.EcrireDansFichierLog("Erreur au lancement de l'outil Capture : " + e);
-			ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
-
-		}
-
-	}
 
 	// --------------------------------
-	public void LancePutty() {
-		GestionLog MaLog = new GestionLog();
-		GestionChemin Chemin = new GestionChemin();
-
-		ProcessBuilder builder = new ProcessBuilder(new String[] { Chemin.DemandeChemin("CheminPutty") });
-		try {
-			builder.start();
-		}
-		catch (IOException e) {
-
-			e.printStackTrace();
-			MaLog.EcrireDansFichierLog("Erreur au lancement de putty : " + e);
-			ZoneTextLog.append("Erreur au lancement : Consulter la log." + "\n");
-
-		}
-	}
-
-	public void LanceOutlook() {
-		GestionLog MaLog = new GestionLog();
-		GestionChemin Chemin = new GestionChemin();
-
-		try {
-			Runtime.getRuntime().exec(String.format(Chemin.DemandeChemin("CheminOutlook") + " /recycle"));
-			ZoneTextLog.append("Ouverture d'Outlook" + "\n");
-		}
-		catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			MaLog.EcrireDansFichierLog("Erreur au lancement d'Outlook: " + e);
-			ZoneTextLog.append("Erreur au d'Outlook : Consulter la log." + "\n");
-
-		}
-
-	}
-
-	public void LanceControlm() throws IOException {
-
-		GestionChemin Chemin = new GestionChemin();
-		try {
-			Runtime.getRuntime().exec(String.format(Chemin.DemandeChemin("CheminControlm") + " -u PiloteGo -p goatos -m kaji -vp \"All Jobs\""));
-			ZoneTextLog.append("Ouverture de Control-m" + "\n");
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	public void LanceIprox() {
-		GestionChemin Chemin = new GestionChemin();
-
-		// Runtime.getRuntime().exec(String.format("cmd.exe"+" start "+"\""+Chemin.DemandeChemin("CheminIprox")+"\""));
-		ProcessBuilder pb = new ProcessBuilder("cmd.exe", " start", "/C", Chemin.DemandeChemin("CheminIprox"));
-		try {
-			pb.start();
-			ZoneTextLog.append("Ouverture du portail Iprox" + "\n");
-		}
-		catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			GestionLog MaLog = new GestionLog();
-			MaLog.EcrireDansFichierLog("Erreur au lancement d'Iprox : " + e);
-			ZoneTextLog.append("Erreur au lancement d'Iprox : Consulter la log." + "\n");
-
-		}
-
-	}
-
-	public void LanceArsRemedy() {
-		GestionChemin Chemin = new GestionChemin();
-		try {
-			Runtime.getRuntime().exec(String.format(Chemin.DemandeChemin("CheminArsRemedy")));
-			ZoneTextLog.append("Ouverture d'ARS Remedy v7" + "\n");
-		}
-		catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			GestionLog MaLog = new GestionLog();
-			MaLog.EcrireDansFichierLog("Erreur au lancement d'ARS-Remedy v7 : " + e);
-			ZoneTextLog.append("Erreur au lancement d'ARS-Remedy v7 : Consulter la log." + "\n");
-
-		}
-
-	}
-
-	public void LancePuttyCm() {
-		GestionChemin Chemin = new GestionChemin();
-		try {
-			Runtime.getRuntime().exec(String.format(Chemin.DemandeChemin("CheminPuttyCm")));
-			ZoneTextLog.append("Ouverture de Putty Connection Manager." + "\n");
-		}
-		catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			GestionLog MaLog = new GestionLog();
-			MaLog.EcrireDansFichierLog("Erreur au lancement de Putty Connection Manager : " + e);
-			ZoneTextLog.append("Erreur au lancement de Putty Connection Manager: Consulter la log." + "\n");
-
-		}
-
-	}
-
-	public void LanceExceed() {
-		GestionChemin Chemin = new GestionChemin();
-		try {
-			Runtime.getRuntime().exec(String.format(Chemin.DemandeChemin("CheminExceed")));
-			ZoneTextLog.append("Ouverture d'Exceed." + "\n");
-		}
-		catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			GestionLog MaLog = new GestionLog();
-			MaLog.EcrireDansFichierLog("Erreur au lancement d'exceed : " + e);
-			ZoneTextLog.append("Erreur au lancement d'exceed Manager: Consulter la log." + "\n");
-
-		}
-
-	}
-
-	public void LanceTinaCltec5() {
-		GestionChemin RequeteChemin = new GestionChemin();
-		GestionProfile ModifProfileTina = new GestionProfile();
-		try {
-			ModifProfileTina.ModifierIpTina("tina.txt");
-			Runtime.getRuntime()
-					.exec(String.format(RequeteChemin.DemandeChemin("CheminPutty") + " -ssh root@126.40.230.16 -pw cpnonart -m " + "\"" + RequeteChemin.DemandeChemin("CheminTinaMacro") + "tina.txt"
-							+ "\""));
-			ZoneTextLog.append("Ouverture de Tina Cltec5. " + "\n");
-		}
-		catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			GestionLog MaLog = new GestionLog();
-			MaLog.EcrireDansFichierLog("Erreur au lancement de Tina Cltec5: " + e);
-			ZoneTextLog.append("Erreur au lancement de Tina Cltec5: Consulter la log." + "\n");
-
-		}
-
-	}
-
-	public void LanceTinaCltec6() {
-		GestionChemin RequeteChemin = new GestionChemin();
-		GestionProfile ModifProfileTina = new GestionProfile();
-		try {
-			ModifProfileTina.ModifierIpTina("tina.txt");
-			Runtime.getRuntime()
-					.exec(String.format(RequeteChemin.DemandeChemin("CheminPutty") + " -ssh root@126.196.96.22 -pw bullbull -m " + "\"" + RequeteChemin.DemandeChemin("CheminTinaMacro") + "tina.txt"
-							+ "\""));
-			ZoneTextLog.append("Ouverture de Tina Cltec6." + "\n");
-		}
-		catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			GestionLog MaLog = new GestionLog();
-			MaLog.EcrireDansFichierLog("Erreur au lancement de Tina Cltec6: " + e);
-			ZoneTextLog.append("Erreur au lancement de Tina Cltec6: Consulter la log." + "\n");
-
-		}
-	}
 
 	public class LanceTinaSiris1 implements Runnable {
 
@@ -3290,11 +3267,12 @@ public class UserInterface extends JFrame implements ActionListener {
 			}
 			else {
 
-				ZoneTextLog.append("Raccourci détecté : En cours de connexion vers " + IpDansLePressePapier + " en telnet (port23) ou ssh (port22)" + "\n");
+				ZoneTextLog.append("Tentative de connexion vers " + IpDansLePressePapier + " en telnet, ssh ou mstsc " + "\n");
 				RetourTestConnexion = TestConnexionValideSurCible.InitSocket(IpDansLePressePapier, 22);
 				if (RetourTestConnexion == true) {
 					try {
 						Runtime.getRuntime().exec(String.format(RequeteChemin.DemandeChemin("CheminPutty") + " " + IpDansLePressePapier + " -ssh"));
+						ZoneTextLog.append("Lancement ssh vers " + IpDansLePressePapier + "\n");
 					}
 					catch (IOException e) {
 						// TODO Auto-generated catch block
@@ -3306,15 +3284,32 @@ public class UserInterface extends JFrame implements ActionListener {
 					if (RetourTestConnexion == true) {
 						try {
 							Runtime.getRuntime().exec(String.format(RequeteChemin.DemandeChemin("CheminPutty") + " " + IpDansLePressePapier + " -telnet"));
+							ZoneTextLog.append("Lancement telnet vers " + IpDansLePressePapier + "\n");
 						}
 						catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}
+					else {
+						RetourTestConnexion = TestConnexionValideSurCible.InitSocket(IpDansLePressePapier, 3389);
+						if (RetourTestConnexion == true) {
+							try {
+								Runtime.getRuntime().exec(String.format("mstsc.exe /v:" + IpDansLePressePapier));
+								ZoneTextLog.append("Lancement mstsc vers " + IpDansLePressePapier + "\n");
+								// MSTSC
+
+							}
+							catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+
+					}
 				}
 				if (RetourTestConnexion == false) {
-					ZoneTextLog.append("Impossible de trouver une connexion valide en telnet(port23) ou ssh(port22)" + "\n");
+					ZoneTextLog.append("Impossible de trouver une connexion valide en telnet(port23), ssh(port22) ou mstsc(port3389)" + "\n");
 				}
 			}
 		}
@@ -3431,27 +3426,63 @@ public class UserInterface extends JFrame implements ActionListener {
 					Thread.sleep(500);
 				}
 				if (FichierGestion.DemandeChoixBoutonPosteComplet("Controlm").equals("true") == true) {
-					LanceControlm();
+					try {
+						if (LanceProduit.LanceControlm() == true) {
+							ZoneTextLog.append("Lancement de Control-m." + "\n");
+						}
+						else {
+							ZoneTextLog.append("Erreur au lancement de control-m: Consulter la log." + "\n");
+						}
+					}
+					catch (IOException e) {
+						ZoneTextLog.append("Erreur au lancement de control-m: Consulter la log." + "\n");
+						e.printStackTrace();
+					}
 					Thread.sleep(500);
 				}
 				if (FichierGestion.DemandeChoixBoutonPosteComplet("Outlook").equals("true") == true) {
-					LanceOutlook();
+					if (LanceProduit.LanceOutlook() == true) {
+						ZoneTextLog.append("Lancement d'outlook." + "\n");
+					}
+					else {
+						ZoneTextLog.append("Erreur au d'Outlook : Consulter la log." + "\n");
+					}
 					Thread.sleep(500);
 				}
 				if (FichierGestion.DemandeChoixBoutonPosteComplet("Arsv7").equals("true") == true) {
-					LanceArsRemedy();
+					if (LanceProduit.LanceArsRemedy() == true) {
+						ZoneTextLog.append("Ouverture d'ARS Remedy v7." + "\n");
+					}
+					else {
+						ZoneTextLog.append("Erreur lancement ARS Remedy v7 : Consulter la log." + "\n");
+					}
 					Thread.sleep(500);
 				}
 				if (FichierGestion.DemandeChoixBoutonPosteComplet("Iprox").equals("true") == true) {
-					LanceIprox();
+					if (LanceProduit.LanceIprox() == true) {
+						ZoneTextLog.append("Lancement d'Iprox." + "\n");
+					}
+					else {
+						ZoneTextLog.append("Erreur au lancement d'Iprox : Consulter la log." + "\n");
+					}
 					Thread.sleep(500);
 				}
 				if (FichierGestion.DemandeChoixBoutonPosteComplet("Puttycm").equals("true") == true) {
-					LancePuttyCm();
+					if (LanceProduit.LancePuttyCm() == true) {
+						ZoneTextLog.append("Lancement de Putty CM." + "\n");
+					}
+					else {
+						ZoneTextLog.append("Erreur au lancement de Putty Connection Manager: Consulter la log." + "\n");
+					}
 					Thread.sleep(500);
 				}
 				if (FichierGestion.DemandeChoixBoutonPosteComplet("Exceed").equals("true") == true) {
-					LanceExceed();
+					if (LanceProduit.LanceExceed() == true) {
+						ZoneTextLog.append("Lancement d'exceed." + "\n");
+					}
+					else {
+						ZoneTextLog.append("Erreur au lancement d'exceed Manager: Consulter la log." + "\n");
+					}
 					Thread.sleep(500);
 				}
 				if (FichierGestion.DemandeChoixBoutonPosteComplet("VtomIp1Jour").equals("true") == true) {
@@ -3476,7 +3507,7 @@ public class UserInterface extends JFrame implements ActionListener {
 
 					ProcessBuilder pb = new ProcessBuilder("cmd.exe", " start", "/C", Navigateur);
 					pb.start();
-					Thread.sleep(10000);
+					Thread.sleep(8000);
 
 				}
 
@@ -3681,22 +3712,17 @@ public class UserInterface extends JFrame implements ActionListener {
 
 			UserUnix = MaConfig.DemandeUser("Unix");
 			MaConfig.DemandePassword("Unix");
-
-			MaConfig.DemandeUser("Gmvs");
-			MaConfig.DemandePassword("Gmvs");
-
-			MaConfig.DemandeUser("Sysa");
-			MaConfig.DemandePassword("Sysa");
-
-			MaConfig.DemandeUser("Kmvs");
-			MaConfig.DemandePassword("Kmvs");
-
-			MaConfig.DemandeUser("Zmvs");
-			MaConfig.DemandePassword("Zmvs");
-
-			MaConfig.DemandeUser("Sysg");
-			MaConfig.DemandePassword("Sysg");
-
+			/*
+			 * MaConfig.DemandeUser("Gmvs"); MaConfig.DemandePassword("Gmvs");
+			 * 
+			 * MaConfig.DemandeUser("Sysa"); MaConfig.DemandePassword("Sysa");
+			 * 
+			 * MaConfig.DemandeUser("Kmvs"); MaConfig.DemandePassword("Kmvs");
+			 * 
+			 * MaConfig.DemandeUser("Zmvs"); MaConfig.DemandePassword("Zmvs");
+			 * 
+			 * MaConfig.DemandeUser("Sysg"); MaConfig.DemandePassword("Sysg");
+			 */
 			// FIN LECTURE USER
 			// UNIX--------------------------------------------------------
 
@@ -3721,34 +3747,38 @@ public class UserInterface extends JFrame implements ActionListener {
 
 			// LECTURE USER
 			// PROFILE--------------------------------------------------------
-
-			GestionProfile GP = new GestionProfile();
-			try {
-				GP.ModifierPasswordProfile("Gmvs", MaConfig.DemandePassword("Gmvs"));
-				GP.ModifierUserProfile("Gmvs", MaConfig.DemandeUser("Gmvs"));
-
-				GP.ModifierPasswordProfile("Sysg", MaConfig.DemandePassword("Sysg"));
-				GP.ModifierUserProfile("Sysg", MaConfig.DemandeUser("Sysg"));
-
-				GP.ModifierPasswordProfile("Zmvs", MaConfig.DemandePassword("Zmvs"));
-				GP.ModifierUserProfile("Zmvs", MaConfig.DemandeUser("Zmvs"));
-
-				GP.ModifierPasswordProfile("Kmvs", MaConfig.DemandePassword("Kmvs"));
-				GP.ModifierUserProfile("Kmvs", MaConfig.DemandeUser("Kmvs"));
-
-				GP.ModifierPasswordProfile("Sysa", MaConfig.DemandePassword("Sysa"));
-				GP.ModifierUserProfile("Sysa", MaConfig.DemandeUser("Sysa"));
-
-			}
-			catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				GestionLog MaLog = new GestionLog();
-				MaLog.EcrireDansFichierLog("Erreur lors du chargement des macros : " + e);
-				ZoneTextLog.append("Erreur lors du chargement des macros : Consulter la log." + "\n");
-
-			}
-
+			/*
+			 * GestionProfile GP = new GestionProfile(); try {
+			 * GP.ModifierPasswordProfile("Gmvs",
+			 * MaConfig.DemandePassword("Gmvs")); GP.ModifierUserProfile("Gmvs",
+			 * MaConfig.DemandeUser("Gmvs"));
+			 * 
+			 * GP.ModifierPasswordProfile("Sysg",
+			 * MaConfig.DemandePassword("Sysg")); GP.ModifierUserProfile("Sysg",
+			 * MaConfig.DemandeUser("Sysg"));
+			 * 
+			 * GP.ModifierPasswordProfile("Zmvs",
+			 * MaConfig.DemandePassword("Zmvs")); GP.ModifierUserProfile("Zmvs",
+			 * MaConfig.DemandeUser("Zmvs"));
+			 * 
+			 * GP.ModifierPasswordProfile("Kmvs",
+			 * MaConfig.DemandePassword("Kmvs")); GP.ModifierUserProfile("Kmvs",
+			 * MaConfig.DemandeUser("Kmvs"));
+			 * 
+			 * GP.ModifierPasswordProfile("Sysa",
+			 * MaConfig.DemandePassword("Sysa")); GP.ModifierUserProfile("Sysa",
+			 * MaConfig.DemandeUser("Sysa"));
+			 * 
+			 * } catch (IOException e) { // TODO Auto-generated catch block
+			 * e.printStackTrace(); GestionLog MaLog = new GestionLog();
+			 * MaLog.EcrireDansFichierLog
+			 * ("Erreur lors du chargement des macros : " + e);
+			 * ZoneTextLog.append
+			 * ("Erreur lors du chargement des macros : Consulter la log." +
+			 * "\n");
+			 * 
+			 * }
+			 */
 			if (CodeRetour == 0) {
 
 				BoutonRadioUserPerso.setText(UserUnix);
@@ -3850,10 +3880,13 @@ public class UserInterface extends JFrame implements ActionListener {
 
 	public class ThreadGrabber implements Runnable {
 		SmartRobot SuperRobot;
+		private boolean stopThread = false;
 
 		@Override
 		public void run() {
+			boolean fin = false;
 			try {
+
 				SuperRobot = new SmartRobot();
 			}
 			catch (AWTException e) {
@@ -3861,21 +3894,33 @@ public class UserInterface extends JFrame implements ActionListener {
 				e.printStackTrace();
 			}
 
-			CatchKeyboardEvent CK = new CatchKeyboardEvent();
+			CK = new CatchKeyboardEvent();
 			CK.installKeyGrabber();
-			while (true) {
+			while (!fin) {
 				if (CK.RaccourciCapture.equals("Capture") == true) {
-					LanceCapture();
 					CK.RaccourciCapture = "Rien";
+					LanceProduit.LanceCapture();
 					ZoneTextLog.append("Raccourci vers l'outil \"Capture\" détecté." + "\n");
 				}
-				if (CK.RaccourciCapture.equals("Putty") == true) {
+				if (CK.RaccourciCapture.equals("Connexion") == true) {
 					CK.RaccourciCapture = "Rien";
 					ZoneTextLog.append("Raccourci vers Putty+IP détecté." + "\n");
 					SuperRobot.writeToClipboard("");
 					SuperRobot.EcrireDansClipboard();
-					// LancePuttyConnexionAutoRaccourci
 					new Thread(new LancePuttyConnexionAutoRaccourci()).start();
+
+				}
+				if (CK.RaccourciCapture.equals("Consignes") == true) {
+					CK.RaccourciCapture = "Rien";
+					ZoneTextLog.append("Raccourci vers les consignes détecté." + "\n");
+					ProcessBuilder pb = new ProcessBuilder("cmd.exe", " start", "/C", "\\\\fsgcepil\\pilotage\\Consignes de pilotage\\Consignes_Permanente");
+					try {
+						pb.start();
+					}
+					catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 
 				}
 
@@ -3886,15 +3931,62 @@ public class UserInterface extends JFrame implements ActionListener {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				synchronized (this) {
+					Thread.yield();
+
+					fin = this.stopThread;
+				}
+
 			}
 
 		}
 
+		public synchronized void stop() {
+			this.stopThread = true;
+		}
+
+	}
+
+	public void ReloadRaccourcis() throws InterruptedException {
+		CK.UninstallKeyboard();
+		new Thread(new ThreadGrabber()).start();
+
+	}
+
+	public void MajAffichageRaccourcis() throws InterruptedException {
+
+		GestionRaccourcis GC = new GestionRaccourcis();
+		String[] TableauDoublon = new String[3];
+		new HashSet<String>();
+
+		TableauDoublon[0] = GC.DemandeRaccourci("Capture");
+		TableauDoublon[1] = GC.DemandeRaccourci("Connexion");
+		TableauDoublon[2] = GC.DemandeRaccourci("Consignes");
+
+		LabelCapture.setText("+ " + TableauDoublon[0] + " = Outil Capture");
+		LabelConnexion.setText("+ " + TableauDoublon[1] + " = Connexion s\u00E9lection");
+		LabelConsignes.setText("+ " + TableauDoublon[2] + " = Dossier consignes");
+
+		List<String> list = new LinkedList<String>();
+		for (int i = 0; i < 3; i++) {
+			list.add(TableauDoublon[i]);
+		}
+		// System.out.println("DOUBLON =" + GC.RechercheDoublons(list));
+		// ZoneTextLog.append("DOUBLON =" + GC.RechercheDoublons(list));
+		Set<String> set1 = GC.RechercheDoublons(list);
+		if (set1.isEmpty() != true) {
+			// ZoneTextLog.append("Touche attribuée pour 2 actions différentes dans les raccourcis.");
+			LabelDetectionDoublon.setVisible(true);
+
+		}
+		else {
+			LabelDetectionDoublon.setVisible(false);
+		}
 	}
 
 	// ------------------
 
-	public void MiseAjoutPositionFenetre() {
+	public void MiseAjourPositionFenetre() {
 		PositionFenetrePrincipale = this.getLocation();
 
 	}
@@ -3919,4 +4011,5 @@ public class UserInterface extends JFrame implements ActionListener {
 		// TODO Auto-generated method stub
 
 	}
+
 }
