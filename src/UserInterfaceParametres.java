@@ -1,8 +1,11 @@
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Insets;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Connection;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -60,6 +63,8 @@ public class UserInterfaceParametres extends JFrame {
 	private JCheckBox BoxChoixAutoIplabel;
 	private JCheckBox BoxChoixAutoVcenter;
 	private JCheckBox BoxChoixAutoExceed;
+	private JCheckBox BoxChoixAutoMremote;
+	private JCheckBox BoxChoixAutoPartageIprox;
 	private JCheckBox BoxChoixAutoNavigateur;
 	private JLabel LabelSaveEnCours;
 	private JButton BoutonAnnuler;
@@ -70,6 +75,7 @@ public class UserInterfaceParametres extends JFrame {
 		setTitle("Paramètres généraux");
 		setResizable(false);
 		getContentPane().setLayout(null);
+		setAlwaysOnTop(true);
 
 		JPanel ZoneNavigateur = new JPanel();
 		ZoneNavigateur.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Navigateur pour favoris web", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
@@ -78,6 +84,12 @@ public class UserInterfaceParametres extends JFrame {
 		ZoneNavigateur.setLayout(null);
 
 		ComboxNavigateur = new JComboBox();
+		ComboxNavigateur.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent arg0) {
+
+			}
+		});
 		ComboxNavigateur.setBounds(10, 21, 139, 20);
 		ZoneNavigateur.add(ComboxNavigateur);
 		// ComboxNavigateur.addItemListener(new ItemListener() {
@@ -106,7 +118,7 @@ public class UserInterfaceParametres extends JFrame {
 
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "MVS", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panel.setBounds(177, 75, 124, 283);
+		panel.setBounds(208, 75, 124, 283);
 		getContentPane().add(panel);
 		panel.setLayout(null);
 
@@ -153,7 +165,7 @@ public class UserInterfaceParametres extends JFrame {
 
 		JPanel ZoneAutoAs400 = new JPanel();
 		ZoneAutoAs400.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "AS400", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		ZoneAutoAs400.setBounds(311, 75, 109, 225);
+		ZoneAutoAs400.setBounds(331, 75, 109, 225);
 		getContentPane().add(ZoneAutoAs400);
 		ZoneAutoAs400.setLayout(null);
 
@@ -183,7 +195,7 @@ public class UserInterfaceParametres extends JFrame {
 
 		JPanel ZoneAutoOutils = new JPanel();
 		ZoneAutoOutils.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Outils", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		ZoneAutoOutils.setBounds(430, 75, 134, 323);
+		ZoneAutoOutils.setBounds(440, 75, 134, 344);
 		getContentPane().add(ZoneAutoOutils);
 		ZoneAutoOutils.setLayout(null);
 
@@ -227,9 +239,13 @@ public class UserInterfaceParametres extends JFrame {
 		BoxChoixAutoExceed.setBounds(6, 283, 97, 23);
 		ZoneAutoOutils.add(BoxChoixAutoExceed);
 
+		BoxChoixAutoMremote = new JCheckBox("mRemote");
+		BoxChoixAutoMremote.setBounds(6, 309, 97, 23);
+		ZoneAutoOutils.add(BoxChoixAutoMremote);
+
 		JPanel ZoneWeb = new JPanel();
 		ZoneWeb.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Favoris web", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		ZoneWeb.setBounds(574, 148, 160, 335);
+		ZoneWeb.setBounds(584, 132, 160, 335);
 		getContentPane().add(ZoneWeb);
 		ZoneWeb.setLayout(null);
 
@@ -295,7 +311,7 @@ public class UserInterfaceParametres extends JFrame {
 		LabelSaveEnCours = new JLabel("Enregistrement des param\u00E8tres dans la configuration en cours ...");
 		LabelSaveEnCours.setVisible(false);
 		LabelSaveEnCours.setForeground(new Color(106, 90, 205));
-		LabelSaveEnCours.setBounds(10, 451, 361, 14);
+		LabelSaveEnCours.setBounds(10, 451, 413, 14);
 		getContentPane().add(LabelSaveEnCours);
 
 		BoutonAnnuler = new JButton("Annuler");
@@ -309,6 +325,16 @@ public class UserInterfaceParametres extends JFrame {
 		BoutonAnnuler.setIcon(IconAnnuler);
 		BoutonAnnuler.setBounds(188, 476, 113, 39);
 		getContentPane().add(BoutonAnnuler);
+
+		JPanel panel_2 = new JPanel();
+		panel_2.setLayout(null);
+		panel_2.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Divers", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panel_2.setBounds(437, 421, 137, 46);
+		getContentPane().add(panel_2);
+
+		BoxChoixAutoPartageIprox = new JCheckBox("Partage doc Iprox");
+		BoxChoixAutoPartageIprox.setBounds(6, 16, 148, 23);
+		panel_2.add(BoxChoixAutoPartageIprox);
 
 		// --------------------------------------------------
 		// -----------LANCER AU CHARGEMENT PAGE
@@ -324,8 +350,11 @@ public class UserInterfaceParametres extends JFrame {
 	}
 
 	public void SetNavigateurFichierConfig() {
-		GestionConfig FichierGestion = new GestionConfig();
-		FichierGestion.EcrireDefaultBrower(NavigateurDansCombox);
+
+		GestionSql LaBase = new GestionSql();
+		Connection ConnectionBase = LaBase.InitConnexion();
+		LaBase.AjoutBrowserPilote(ConnectionBase, NavigateurDansCombox);
+		LaBase.FermerConnexion(ConnectionBase);
 
 	}
 
@@ -333,9 +362,10 @@ public class UserInterfaceParametres extends JFrame {
 
 		@Override
 		public void run() {
-			GestionConfig FichierGestion = new GestionConfig();
 			String Navigateur = "";
-			Navigateur = FichierGestion.DemandeDefaultBrowser();
+			GestionSql LaBase = new GestionSql();
+			Connection ConnectionBase = LaBase.InitConnexion();
+			Navigateur = LaBase.ConsulterBrowserPilote(ConnectionBase);
 
 			switch (Navigateur) {
 				case "Google Chrome":
@@ -347,8 +377,9 @@ public class UserInterfaceParametres extends JFrame {
 				case "Internet Explorer":
 					ComboxNavigateur.setSelectedIndex(2);
 					break;
-			}
 
+			}
+			LaBase.FermerConnexion(ConnectionBase);
 		}
 	}
 
@@ -356,10 +387,13 @@ public class UserInterfaceParametres extends JFrame {
 
 		@Override
 		public void run() {
-			GestionConfig FichierGestion = new GestionConfig();
+
 			String Choix = "";
+			GestionSql LaBase = new GestionSql();
+			Connection ConnectionBase = LaBase.InitConnexion();
 
 			LabelSaveEnCours.setVisible(true);
+			;
 
 			if (BoxChoixAutoSysa.isSelected() == true) {
 				Choix = "true";
@@ -367,7 +401,7 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			FichierGestion.EcrireChoixBoutonPosteComplet("Sysa", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Sysa", Choix);
 
 			if (BoxChoixAutoSysg.isSelected() == true) {
 				Choix = "true";
@@ -375,7 +409,7 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			FichierGestion.EcrireChoixBoutonPosteComplet("Sysg", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Sysg", Choix);
 
 			if (BoxChoixAutoKmvs.isSelected() == true) {
 				Choix = "true";
@@ -383,7 +417,7 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			FichierGestion.EcrireChoixBoutonPosteComplet("Kmvs", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Kmvs", Choix);
 
 			if (BoxChoixAutoZmvs.isSelected() == true) {
 				Choix = "true";
@@ -391,7 +425,7 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			FichierGestion.EcrireChoixBoutonPosteComplet("Zmvs", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Zmvs", Choix);
 
 			if (BoxChoixAutoGmvs.isSelected() == true) {
 				Choix = "true";
@@ -399,7 +433,7 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			FichierGestion.EcrireChoixBoutonPosteComplet("Gmvs", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Gmvs", Choix);
 
 			if (BoxChoixAutoBmvs.isSelected() == true) {
 				Choix = "true";
@@ -407,7 +441,7 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			FichierGestion.EcrireChoixBoutonPosteComplet("Bmvs", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Bmvs", Choix);
 
 			if (BoxChoixAutoIp1.isSelected() == true) {
 				Choix = "true";
@@ -415,7 +449,7 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			FichierGestion.EcrireChoixBoutonPosteComplet("Ip1", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Ip1", Choix);
 
 			if (BoxChoixAutoIp2.isSelected() == true) {
 				Choix = "true";
@@ -423,7 +457,7 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			FichierGestion.EcrireChoixBoutonPosteComplet("Ip2", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Ip2", Choix);
 
 			if (BoxChoixAutoIp3.isSelected() == true) {
 				Choix = "true";
@@ -431,7 +465,7 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			FichierGestion.EcrireChoixBoutonPosteComplet("Ip3", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Ip3", Choix);
 
 			if (BoxChoixAutoBr.isSelected() == true) {
 				Choix = "true";
@@ -439,7 +473,7 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			FichierGestion.EcrireChoixBoutonPosteComplet("Br", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Br", Choix);
 
 			if (BoxChoixAutoBdi.isSelected() == true) {
 				Choix = "true";
@@ -447,7 +481,7 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			FichierGestion.EcrireChoixBoutonPosteComplet("Bdi", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Bdi", Choix);
 
 			if (BoxChoixAutoBdaf.isSelected() == true) {
 				Choix = "true";
@@ -455,7 +489,7 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			FichierGestion.EcrireChoixBoutonPosteComplet("Bdaf", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Bdaf", Choix);
 
 			if (BoxChoixAutoSocly.isSelected() == true) {
 				Choix = "true";
@@ -463,7 +497,7 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			FichierGestion.EcrireChoixBoutonPosteComplet("Socly", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Socly", Choix);
 
 			if (BoxChoixAutoSocmcsd.isSelected() == true) {
 				Choix = "true";
@@ -471,7 +505,7 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			FichierGestion.EcrireChoixBoutonPosteComplet("Socmcsd", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Socmcsd", Choix);
 
 			if (BoxChoixAutoPfb.isSelected() == true) {
 				Choix = "true";
@@ -479,7 +513,7 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			FichierGestion.EcrireChoixBoutonPosteComplet("Pfb", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Pfb", Choix);
 
 			if (BoxChoixAutoOutlook.isSelected() == true) {
 				Choix = "true";
@@ -487,7 +521,7 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			FichierGestion.EcrireChoixBoutonPosteComplet("Outlook", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Outlook", Choix);
 
 			if (BoxChoixAutoControlm.isSelected() == true) {
 				Choix = "true";
@@ -495,7 +529,7 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			FichierGestion.EcrireChoixBoutonPosteComplet("Controlm", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Controlm", Choix);
 
 			if (BoxChoixAutoArsv7.isSelected() == true) {
 				Choix = "true";
@@ -503,7 +537,7 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			FichierGestion.EcrireChoixBoutonPosteComplet("Arsv7", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Arsv7", Choix);
 
 			if (BoxChoixAutoIprox.isSelected() == true) {
 				Choix = "true";
@@ -511,7 +545,7 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			FichierGestion.EcrireChoixBoutonPosteComplet("Iprox", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Iprox", Choix);
 
 			if (BoxChoixAutoPuttycm.isSelected() == true) {
 				Choix = "true";
@@ -519,7 +553,7 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			FichierGestion.EcrireChoixBoutonPosteComplet("Puttycm", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Puttycm", Choix);
 
 			if (BoxChoixAutoExceed.isSelected() == true) {
 				Choix = "true";
@@ -527,7 +561,25 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			FichierGestion.EcrireChoixBoutonPosteComplet("Exceed", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Exceed", Choix);
+
+			if (BoxChoixAutoMremote.isSelected() == true) {
+				Choix = "true";
+			}
+			else {
+				Choix = "false";
+			}
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Mremote", Choix);
+
+			if (BoxChoixAutoPartageIprox.isSelected() == true) {
+				Choix = "true";
+			}
+			else {
+				Choix = "false";
+			}
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "PartageIprox", Choix);
+
+			// BoxChoixAutoPartageIprox
 
 			if (BoxChoixAutoVtomIp1Jour.isSelected() == true) {
 				Choix = "true";
@@ -535,7 +587,7 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			FichierGestion.EcrireChoixBoutonPosteComplet("VtomIp1Jour", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "VtomIp1Jour", Choix);
 
 			if (BoxChoixAutoVtomIp1Desc.isSelected() == true) {
 				Choix = "true";
@@ -543,7 +595,7 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			FichierGestion.EcrireChoixBoutonPosteComplet("VtomIp1Desc", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "VtomIp1Desc", Choix);
 
 			if (BoxChoixAutoVtomIp2Jour.isSelected() == true) {
 				Choix = "true";
@@ -551,7 +603,7 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			FichierGestion.EcrireChoixBoutonPosteComplet("VtomIp2Jour", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "VtomIp2Jour", Choix);
 
 			if (BoxChoixAutoVtomIp2Desc.isSelected() == true) {
 				Choix = "true";
@@ -559,7 +611,7 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			FichierGestion.EcrireChoixBoutonPosteComplet("VtomIp2Desc", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "VtomIp2Desc", Choix);
 
 			// -----------------------------------------------------------------
 			//
@@ -580,7 +632,7 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			FichierGestion.EcrireChoixBoutonPosteComplet("Navigateur", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Navigateur", Choix);
 
 			if (BoxChoixAutoOdip.isSelected() == true) {
 				Choix = "true";
@@ -588,7 +640,7 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			FichierGestion.EcrireChoixBoutonPosteComplet("Odip", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Odip", Choix);
 
 			if (BoxChoixAutoBbr.isSelected() == true) {
 				Choix = "true";
@@ -596,7 +648,7 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			FichierGestion.EcrireChoixBoutonPosteComplet("Bbr", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Bbr", Choix);
 
 			if (BoxChoixAutoOseIp12.isSelected() == true) {
 				Choix = "true";
@@ -604,7 +656,7 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			FichierGestion.EcrireChoixBoutonPosteComplet("OseIp12", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "OseIp12", Choix);
 
 			if (BoxChoixAutoIplabel.isSelected() == true) {
 				Choix = "true";
@@ -612,7 +664,7 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			FichierGestion.EcrireChoixBoutonPosteComplet("Iplabel", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Iplabel", Choix);
 
 			if (BoxChoixAutoNewtest.isSelected() == true) {
 				Choix = "true";
@@ -620,7 +672,7 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			FichierGestion.EcrireChoixBoutonPosteComplet("Newtest", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Newtest", Choix);
 
 			if (BoxChoixAutoXguard.isSelected() == true) {
 				Choix = "true";
@@ -628,7 +680,7 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			FichierGestion.EcrireChoixBoutonPosteComplet("Xguard", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Xguard", Choix);
 
 			if (BoxChoixAutoHmc.isSelected() == true) {
 				Choix = "true";
@@ -636,7 +688,7 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			FichierGestion.EcrireChoixBoutonPosteComplet("Hmc", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Hmc", Choix);
 
 			if (BoxChoixAutoKvm.isSelected() == true) {
 				Choix = "true";
@@ -645,7 +697,7 @@ public class UserInterfaceParametres extends JFrame {
 				Choix = "false";
 			}
 
-			FichierGestion.EcrireChoixBoutonPosteComplet("Kvm", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Kvm", Choix);
 
 			if (BoxChoixAutoTina5.isSelected() == true) {
 				Choix = "true";
@@ -653,7 +705,7 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			FichierGestion.EcrireChoixBoutonPosteComplet("Tina5", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Tina5", Choix);
 
 			if (BoxChoixAutoTina6.isSelected() == true) {
 				Choix = "true";
@@ -661,7 +713,7 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			FichierGestion.EcrireChoixBoutonPosteComplet("Tina6", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Tina6", Choix);
 
 			if (BoxChoixAutoSismoTous.isSelected() == true) {
 				Choix = "true";
@@ -669,7 +721,7 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			FichierGestion.EcrireChoixBoutonPosteComplet("SismoTous", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "SismoTous", Choix);
 
 			if (BoxChoixAutoVcenter.isSelected() == true) {
 				Choix = "true";
@@ -677,10 +729,11 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			FichierGestion.EcrireChoixBoutonPosteComplet("Vcenter", Choix);
+			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Vcenter", Choix);
 
 			// ----Attente fin d'enregistrement pour fermer la fenêtre des
 			// paramêtres.
+			LaBase.FermerConnexion(ConnectionBase);
 			dispose();
 
 		}
@@ -690,9 +743,12 @@ public class UserInterfaceParametres extends JFrame {
 
 		@Override
 		public void run() {
-			GestionConfig FichierGestion = new GestionConfig();
+
 			String Navigateur = "";
-			Navigateur = FichierGestion.DemandeDefaultBrowser();
+
+			GestionSql LaBase = new GestionSql();
+			Connection ConnectionBase = LaBase.InitConnexion();
+			Navigateur = LaBase.ConsulterBrowserPilote(ConnectionBase);
 
 			switch (Navigateur) {
 				case "Google Chrome":
@@ -709,166 +765,166 @@ public class UserInterfaceParametres extends JFrame {
 
 			BoxChoixAutoNavigateur.setText(Navigateur);
 
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("Sysa").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Sysa").equals("true") == true) {
 				BoxChoixAutoSysa.setSelected(true);
 			}
 			else {
 				BoxChoixAutoSysa.setSelected(false);
 			}
 
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("Sysg").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Sysg").equals("true") == true) {
 				BoxChoixAutoSysg.setSelected(true);
 			}
 			else {
 				BoxChoixAutoSysg.setSelected(false);
 			}
 
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("Kmvs").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Kmvs").equals("true") == true) {
 				BoxChoixAutoKmvs.setSelected(true);
 			}
 			else {
 				BoxChoixAutoKmvs.setSelected(false);
 			}
 
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("Zmvs").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Zmvs").equals("true") == true) {
 				BoxChoixAutoZmvs.setSelected(true);
 			}
 			else {
 				BoxChoixAutoZmvs.setSelected(false);
 			}
 
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("Gmvs").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Gmvs").equals("true") == true) {
 				BoxChoixAutoGmvs.setSelected(true);
 			}
 			else {
 				BoxChoixAutoGmvs.setSelected(false);
 			}
 
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("Bmvs").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Bmvs").equals("true") == true) {
 				BoxChoixAutoBmvs.setSelected(true);
 			}
 			else {
 				BoxChoixAutoBmvs.setSelected(false);
 			}
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("Ip1").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Ip1").equals("true") == true) {
 				BoxChoixAutoIp1.setSelected(true);
 			}
 			else {
 				BoxChoixAutoIp1.setSelected(false);
 			}
 
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("Ip2").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Ip2").equals("true") == true) {
 				BoxChoixAutoIp2.setSelected(true);
 			}
 			else {
 				BoxChoixAutoIp2.setSelected(false);
 			}
 
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("Ip3").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Ip3").equals("true") == true) {
 				BoxChoixAutoIp3.setSelected(true);
 			}
 			else {
 				BoxChoixAutoIp3.setSelected(false);
 			}
 
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("Br").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Br").equals("true") == true) {
 				BoxChoixAutoBr.setSelected(true);
 			}
 			else {
 				BoxChoixAutoBr.setSelected(false);
 			}
 
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("Bdi").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Bdi").equals("true") == true) {
 				BoxChoixAutoBdi.setSelected(true);
 			}
 			else {
 				BoxChoixAutoBdi.setSelected(false);
 			}
 
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("Bdaf").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Bdaf").equals("true") == true) {
 				BoxChoixAutoBdaf.setSelected(true);
 			}
 			else {
 				BoxChoixAutoBdaf.setSelected(false);
 			}
 
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("Socly").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Socly").equals("true") == true) {
 				BoxChoixAutoSocly.setSelected(true);
 			}
 			else {
 				BoxChoixAutoSocly.setSelected(false);
 			}
 
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("Socmcsd").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Socmcsd").equals("true") == true) {
 				BoxChoixAutoSocmcsd.setSelected(true);
 			}
 			else {
 				BoxChoixAutoSocmcsd.setSelected(false);
 			}
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("Pfb").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Pfb").equals("true") == true) {
 				BoxChoixAutoPfb.setSelected(true);
 			}
 			else {
 				BoxChoixAutoPfb.setSelected(false);
 			}
 
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("Controlm").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Controlm").equals("true") == true) {
 				BoxChoixAutoControlm.setSelected(true);
 			}
 			else {
 				BoxChoixAutoControlm.setSelected(false);
 			}
 
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("Outlook").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Outlook").equals("true") == true) {
 				BoxChoixAutoOutlook.setSelected(true);
 			}
 			else {
 				BoxChoixAutoOutlook.setSelected(false);
 			}
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("Iprox").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Iprox").equals("true") == true) {
 				BoxChoixAutoIprox.setSelected(true);
 			}
 			else {
 				BoxChoixAutoIprox.setSelected(false);
 			}
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("Arsv7").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Arsv7").equals("true") == true) {
 				BoxChoixAutoArsv7.setSelected(true);
 			}
 			else {
 				BoxChoixAutoArsv7.setSelected(false);
 			}
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("Puttycm").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Puttycm").equals("true") == true) {
 				BoxChoixAutoPuttycm.setSelected(true);
 			}
 			else {
 				BoxChoixAutoPuttycm.setSelected(false);
 			}
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("Exceed").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Exceed").equals("true") == true) {
 				BoxChoixAutoExceed.setSelected(true);
 			}
 			else {
 				BoxChoixAutoExceed.setSelected(false);
 			}
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("VtomIp1Jour").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "VtomIp1Jour").equals("true") == true) {
 				BoxChoixAutoVtomIp1Jour.setSelected(true);
 			}
 			else {
 				BoxChoixAutoVtomIp1Jour.setSelected(false);
 			}
 
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("VtomIp1Desc").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "VtomIp1Desc").equals("true") == true) {
 				BoxChoixAutoVtomIp1Desc.setSelected(true);
 			}
 			else {
 				BoxChoixAutoVtomIp1Desc.setSelected(false);
 			}
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("VtomIp2Jour").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "VtomIp2Jour").equals("true") == true) {
 				BoxChoixAutoVtomIp2Jour.setSelected(true);
 			}
 			else {
 				BoxChoixAutoVtomIp2Jour.setSelected(false);
 			}
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("VtomIp2Desc").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "VtomIp2Desc").equals("true") == true) {
 				BoxChoixAutoVtomIp2Desc.setSelected(true);
 			}
 			else {
@@ -881,87 +937,88 @@ public class UserInterfaceParametres extends JFrame {
 			//
 			// ---------------------------------------
 
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("Navigateur").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Navigateur").equals("true") == true) {
 				BoxChoixAutoNavigateur.setSelected(true);
 			}
 			else {
 				BoxChoixAutoNavigateur.setSelected(false);
 			}
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("Odip").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Odip").equals("true") == true) {
 				BoxChoixAutoOdip.setSelected(true);
 			}
 			else {
 				BoxChoixAutoOdip.setSelected(false);
 			}
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("Bbr").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Bbr").equals("true") == true) {
 				BoxChoixAutoBbr.setSelected(true);
 			}
 			else {
 				BoxChoixAutoBbr.setSelected(false);
 			}
 
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("OseIp12").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "OseIp12").equals("true") == true) {
 				BoxChoixAutoOseIp12.setSelected(true);
 			}
 			else {
 				BoxChoixAutoOseIp12.setSelected(false);
 			}
 
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("Iplabel").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Iplabel").equals("true") == true) {
 				BoxChoixAutoIplabel.setSelected(true);
 			}
 			else {
 				BoxChoixAutoIplabel.setSelected(false);
 			}
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("Newtest").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Newtest").equals("true") == true) {
 				BoxChoixAutoNewtest.setSelected(true);
 			}
 			else {
 				BoxChoixAutoNewtest.setSelected(false);
 			}
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("Xguard").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Xguard").equals("true") == true) {
 				BoxChoixAutoXguard.setSelected(true);
 			}
 			else {
 				BoxChoixAutoXguard.setSelected(false);
 			}
 
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("Hmc").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Hmc").equals("true") == true) {
 				BoxChoixAutoHmc.setSelected(true);
 			}
 			else {
 				BoxChoixAutoHmc.setSelected(false);
 			}
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("Kvm").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Kvm").equals("true") == true) {
 				BoxChoixAutoKvm.setSelected(true);
 			}
 			else {
 				BoxChoixAutoKvm.setSelected(false);
 			}
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("Tina5").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Tina5").equals("true") == true) {
 				BoxChoixAutoTina5.setSelected(true);
 			}
 			else {
 				BoxChoixAutoTina5.setSelected(false);
 			}
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("Tina6").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Tina6").equals("true") == true) {
 				BoxChoixAutoTina6.setSelected(true);
 			}
 			else {
 				BoxChoixAutoTina6.setSelected(false);
 			}
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("Vcenter").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Vcenter").equals("true") == true) {
 				BoxChoixAutoVcenter.setSelected(true);
 			}
 			else {
 				BoxChoixAutoVcenter.setSelected(false);
 			}
-			if (FichierGestion.DemandeChoixBoutonPosteComplet("SismoTous").equals("true") == true) {
+			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "SismoTous").equals("true") == true) {
 				BoxChoixAutoSismoTous.setSelected(true);
 			}
 			else {
 				BoxChoixAutoSismoTous.setSelected(false);
 			}
+			LaBase.FermerConnexion(ConnectionBase);
 		}
 	}
 }

@@ -17,6 +17,7 @@ public class UserInterfaceRaccourcis extends JFrame {
 	public UserInterfaceRaccourcis() {
 		setTitle("Configuration des raccourcis");
 		setType(Type.UTILITY);
+		setAlwaysOnTop(true);
 		getContentPane().setLayout(null);
 		final ImageIcon IconWindows = new ImageIcon(getClass().getResource("/Windows-icon.png"));
 
@@ -90,6 +91,13 @@ public class UserInterfaceRaccourcis extends JFrame {
 		getContentPane().add(BoutonValiderRaccourcis);
 
 		JButton BoutonAnnuler = new JButton("Annuler");
+		BoutonAnnuler.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+
+				dispose();
+			}
+		});
 		final ImageIcon IconAnnuler = new ImageIcon(getClass().getResource("/cancel-icon.png"));
 		BoutonAnnuler.setIcon(IconAnnuler);
 		BoutonAnnuler.setBounds(138, 419, 118, 35);

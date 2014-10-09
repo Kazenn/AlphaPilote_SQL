@@ -37,7 +37,7 @@ public class UserInterfaceFavoris extends JFrame {
 
 	public UserInterfaceFavoris() throws IOException {
 		setType(Type.UTILITY);
-
+		setAlwaysOnTop(true);
 		NomFavoris = new Vector();
 		UrlFavoris = new Vector();
 		GestionFavoris GF = new GestionFavoris();

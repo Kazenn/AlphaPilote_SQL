@@ -1,41 +1,17 @@
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.sql.Connection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Properties;
 import java.util.Set;
 
 public class GestionRaccourcis {
-	GestionChemin RequeteChemin = new GestionChemin();
 
 	public String EcrireRaccourcis(String NomRaccourci, String LettreRaccourci) {
 		String ValidationEcriture = "";
-		Properties properties = new Properties();
-		new File(RequeteChemin.DemandeChemin("CheminFichierConfig"));
-		FileInputStream stream;
-		try {
 
-			stream = new FileInputStream(RequeteChemin.DemandeChemin("CheminFichierConfig"));
-			properties.load(stream);
-			properties.setProperty("Raccourci" + NomRaccourci, LettreRaccourci);
-			FileOutputStream oStream = new FileOutputStream(RequeteChemin.DemandeChemin("CheminFichierConfig"));
-			properties.store(oStream, "Fichier de configuration User/Pass/Paramètres est correctement enregistré");
-			ValidationEcriture = "Fichier correctement enregistré";
-			oStream.close();
-		}
-		catch (FileNotFoundException e) {
+		GestionSql LaBase = new GestionSql();
+		Connection ConnectionBase = LaBase.InitConnexion();
 
-			e.printStackTrace();
-			ValidationEcriture = "Impossible de trouver le fichier : " + e;
-		}
-		catch (IOException e) {
-
-			e.printStackTrace();
-			ValidationEcriture = "Erreur lors de l'écriture du fichier : " + e;
-		}
+		LaBase.AjoutDonneePilote(ConnectionBase, "Raccourci" + NomRaccourci, LettreRaccourci);
 
 		return ValidationEcriture;
 
@@ -44,18 +20,10 @@ public class GestionRaccourcis {
 	public String DemandeRaccourci(String NomRaccourci) {
 
 		String ResultatDemandeRaccourci = "";
+		GestionSql LaBase = new GestionSql();
+		Connection ConnectionBase = LaBase.InitConnexion();
 
-		Properties properties = new Properties();
-		try {
-			FileInputStream in = new FileInputStream(RequeteChemin.DemandeChemin("CheminFichierConfig"));
-			properties.load(in);
-			in.close();
-			ResultatDemandeRaccourci = properties.getProperty("Raccourci" + NomRaccourci);
-
-		}
-		catch (IOException e) {
-
-		}
+		ResultatDemandeRaccourci = LaBase.ConsulterDonneePilote(ConnectionBase, "Raccourci" + NomRaccourci);
 
 		return ResultatDemandeRaccourci;
 

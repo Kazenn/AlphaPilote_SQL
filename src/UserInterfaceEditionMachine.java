@@ -1,190 +1,261 @@
+import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Font;
+import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Scanner;
-import java.util.Vector;
+import java.sql.SQLException;
 import java.util.regex.Pattern;
 
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
-import org.apache.commons.lang3.StringUtils;
-
 public class UserInterfaceEditionMachine extends JFrame {
-	private JTable TableMachine;
-
-	String line;
-	Vector NomMachine;
-	Vector IpMachine;
-	ArrayList<String> strings = new ArrayList<String>();
-	private DefaultTableModel ModeleTableMachine;
-	private String PathToMachine = "Chemin Vide";
-	private String PathToMachineTemp = "Chemin Vide";
-	private JScrollPane ScrollZoneTablemachine;
-	private JLabel LabelNombreMachines;
+	private JTable table;
+	private JScrollPane scrollPane;
+	GestionMachine GM = new GestionMachine();
+	private JTextField TextMachine;
+	private JTextField TextIp;
+	private JButton BoutonAjouter;
+	private JLabel lblMachine;
+	private JLabel lblAdresseIp;
 	private JPanel panel;
-	private JLabel LabelAjout;
-	private JLabel LabelDoublon;
-	private JLabel LabelReorg;
-	private JLabel LabelValidation;
+	private JLabel LabelMachineLog;
+	private JLabel LabelNombreMachine;
+	private JTextField TextSuppression;
 	private JTextField TextRechercheMachine;
+	private JButton BoutonRechercher;
 	private JPanel panel_1;
-	private JButton BoutonAnnuler;
+	private JPanel panel_2;
+	private JLabel lblAttentionVa;
+	private int PositionInterfaceX;
+	private int PositionInterfaceY;
 
-	public UserInterfaceEditionMachine() throws IOException {
+	public UserInterfaceEditionMachine() throws SQLException {
 		setType(Type.UTILITY);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(UserInterfaceEditionMachine.class.getResource("/com/sun/java/swing/plaf/windows/icons/Computer.gif")));
 		setTitle("Gestion des machines");
+		setAlwaysOnTop(true);
 		getContentPane().setLayout(null);
-		ScrollZoneTablemachine = new JScrollPane();
-		ScrollZoneTablemachine.setBounds(10, 11, 473, 442);
-		ScrollZoneTablemachine.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		getContentPane().add(ScrollZoneTablemachine);
 
-		NomMachine = new Vector();
-		IpMachine = new Vector();
-		GestionEditionFichierMachine EditionMachine = new GestionEditionFichierMachine();
-		GestionChemin GC = new GestionChemin();
-		PathToMachine = GC.DemandeChemin("CheminFichierMachine");
-		PathToMachineTemp = GC.DemandeChemin("CheminFichierTemp2");
-		strings = EditionMachine.ArrayFichierMachine();
-		//
-		// ----- FIN DECLARATION
-		//
+		table = new JTable();
+		table = GM.buildTableModel();
 
-		//
-		// ----- FIN DESCRIPTION
-		//
-		String col[] = { "Nom machine", "IP machine", "Decocher pour supprimer" };
-		ModeleTableMachine = new DefaultTableModel(col, 0);
-		TableMachine = new JTable();
-		ScrollZoneTablemachine.setViewportView(TableMachine);
-		TableMachine.setModel(ModeleTableMachine);
-
-		JButton BoutonValider = new JButton("Valider et quitter");
-
-		final ImageIcon IconBoutonValiderFavoris = new ImageIcon(getClass().getResource("/Ok-icon.png"));
-		BoutonValider.setIcon(IconBoutonValiderFavoris);
-		BoutonValider.addMouseListener(new MouseAdapter() {
+		table.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseReleased(MouseEvent e) {
+			public void mouseClicked(MouseEvent arg0) {
 
-				new Thread(new ExtractTableMachineVersFichier()).start();
 			}
 		});
-		BoutonValider.setBounds(10, 482, 181, 66);
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 11, 371, 532);
+		getContentPane().add(scrollPane);
+		scrollPane.setViewportView(table);
+
+		JButton btnNewButton = new JButton("Recharger");
+		btnNewButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+
+				RefeshTable();
+			}
+		});
+		btnNewButton.setBounds(684, 11, 95, 23);
+		getContentPane().add(btnNewButton);
+
+		JButton BoutonValider = new JButton("Valider");
+		final ImageIcon IconValider = new ImageIcon(getClass().getResource("/Ok-icon.png"));
+		BoutonValider.setIcon(IconValider);
+		BoutonValider.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+
+				PositionInterfaceX = getX();
+				PositionInterfaceY = getY();
+				System.out.println("" + PositionInterfaceX + "," + PositionInterfaceY);
+				final JDialog loading = new JDialog();
+				JPanel p1 = new JPanel(new BorderLayout());
+
+				p1.add(new JLabel("Enregistrement dans la base, merci de patienter ...."), BorderLayout.CENTER);
+				p1.setBackground(Color.ORANGE);
+				// loading.getContentPane().setBackground(Color.RED);
+				// p1.setForeground(Color.RED);
+
+				loading.setUndecorated(true);
+				loading.getContentPane().add(p1);
+				p1.setSize(400, 200);
+				loading.pack();
+				// loading.setLocationRelativeTo(PositionInterfaceX+50,PositionInterfaceY+50);
+				loading.setLocation(PositionInterfaceX + 290, PositionInterfaceY + 270);
+				loading.setAlwaysOnTop(true);
+				loading.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+				loading.setModal(true);
+
+				SwingWorker<String, Void> worker = new SwingWorker<String, Void>() {
+					@Override
+					protected String doInBackground() throws SQLException {
+						VersDB(table);
+						return null;
+					}
+
+					@Override
+					protected void done() {
+						loading.dispose();
+					}
+				};
+				worker.execute();
+				loading.setVisible(true);
+				try {
+					worker.get();
+				}
+				catch (Exception e1) {
+					e1.printStackTrace();
+				}
+
+			}
+		});
+		BoutonValider.setBounds(400, 505, 123, 38);
 		getContentPane().add(BoutonValider);
 
-		JButton BoutonAjouter = new JButton("Ajouter");
-		final ImageIcon IconBoutonAjouterFavoris = new ImageIcon(getClass().getResource("/add-icon.png"));
-		BoutonAjouter.setIcon(IconBoutonAjouterFavoris);
-		BoutonAjouter.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent e) {
-
-				RefreshTable();
-			}
-		});
-		BoutonAjouter.setBounds(493, 226, 111, 38);
-		getContentPane().add(BoutonAjouter);
-
 		panel = new JPanel();
-		panel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panel.setBounds(493, 24, 210, 54);
+		panel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Ajouter une machine", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 128, 0)));
+		panel.setBounds(432, 146, 234, 114);
 		getContentPane().add(panel);
 		panel.setLayout(null);
 
-		LabelNombreMachines = new JLabel("Le fichier machine compte XXX machines.");
-		LabelNombreMachines.setBounds(10, 11, 189, 31);
-		panel.add(LabelNombreMachines);
-		LabelNombreMachines.setForeground(new Color(210, 105, 30));
-		LabelNombreMachines.setFont(new Font("Verdana", Font.PLAIN, 13));
-		int NombreMachine = EditionMachine.CompteLigneFichierMachine();
-		LabelNombreMachines.setText(NombreMachine + " machines enregistrées");
+		TextMachine = new JTextField();
+		TextMachine.setBounds(113, 16, 111, 23);
+		panel.add(TextMachine);
+		TextMachine.setColumns(10);
 
-		LabelAjout = new JLabel("     Ajout des nouvelles entr\u00E9es...");
-		LabelAjout.setEnabled(false);
-		LabelAjout.setIcon(new ImageIcon(UserInterfaceEditionMachine.class.getResource("/javax/swing/plaf/basic/icons/JavaCup16.png")));
-		LabelAjout.setBounds(508, 388, 220, 22);
-		getContentPane().add(LabelAjout);
+		TextIp = new JTextField();
+		TextIp.setBounds(113, 46, 111, 23);
+		panel.add(TextIp);
+		TextIp.setColumns(10);
 
-		LabelDoublon = new JLabel("     Recherche de doublons...");
-		LabelDoublon.setEnabled(false);
-		LabelDoublon.setIcon(new ImageIcon(UserInterfaceEditionMachine.class.getResource("/javax/swing/plaf/basic/icons/JavaCup16.png")));
-		LabelDoublon.setBounds(508, 421, 220, 22);
-		getContentPane().add(LabelDoublon);
+		BoutonAjouter = new JButton("Ajouter");
+		BoutonAjouter.setBounds(123, 80, 101, 23);
+		final ImageIcon IconAjouter = new ImageIcon(getClass().getResource("/add2-icon.png"));
+		BoutonAjouter.setIcon(IconAjouter);
+		panel.add(BoutonAjouter);
 
-		LabelReorg = new JLabel("     R\u00E9oganisation du fichier...");
-		LabelReorg.setEnabled(false);
-		LabelReorg.setIcon(new ImageIcon(UserInterfaceEditionMachine.class.getResource("/javax/swing/plaf/basic/icons/JavaCup16.png")));
-		LabelReorg.setBounds(508, 454, 220, 22);
-		getContentPane().add(LabelReorg);
+		lblMachine = new JLabel("Nom :");
+		lblMachine.setBounds(53, 16, 38, 23);
+		panel.add(lblMachine);
 
-		LabelValidation = new JLabel("     Validation du nouveau fichier...");
-		LabelValidation.setEnabled(false);
-		LabelValidation.setIcon(new ImageIcon(UserInterfaceEditionMachine.class.getResource("/javax/swing/plaf/basic/icons/JavaCup16.png")));
-		LabelValidation.setBounds(508, 491, 220, 22);
-		getContentPane().add(LabelValidation);
+		lblAdresseIp = new JLabel("Adresse IP :");
+		lblAdresseIp.setBounds(23, 46, 80, 23);
+		panel.add(lblAdresseIp);
+
+		LabelMachineLog = new JLabel("");
+		LabelMachineLog.setForeground(new Color(0, 100, 0));
+		LabelMachineLog.setFont(new Font("Tahoma", Font.BOLD, 12));
+		LabelMachineLog.setBounds(400, 432, 334, 32);
+		getContentPane().add(LabelMachineLog);
+
+		LabelNombreMachine = new JLabel("New label");
+		LabelNombreMachine.setForeground(new Color(25, 25, 112));
+		LabelNombreMachine.setFont(new Font("Tahoma", Font.BOLD, 11));
+		LabelNombreMachine.setBounds(409, 6, 225, 32);
+		getContentPane().add(LabelNombreMachine);
+
+		panel_2 = new JPanel();
+		panel_2.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Suppression d\u00E9finitive", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(165, 42, 42)));
+		panel_2.setBounds(432, 271, 234, 150);
+		getContentPane().add(panel_2);
+		panel_2.setLayout(null);
+
+		TextSuppression = new JTextField();
+		TextSuppression.setBounds(111, 82, 113, 23);
+		panel_2.add(TextSuppression);
+		TextSuppression.setColumns(10);
+
+		JButton BoutonSupprimer = new JButton("Supprimer");
+		BoutonSupprimer.setMargin(new Insets(1, 1, 1, 1));
+		final ImageIcon IconSupprimer = new ImageIcon(getClass().getResource("/poubelle-icon.png"));
+		BoutonSupprimer.setIcon(IconSupprimer);
+		BoutonSupprimer.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Boolean Suppresion = false;
+
+				try {
+					Suppresion = GM.SupprimerMachine(TextSuppression.getText());
+				}
+				catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				if (Suppresion == true) {
+					LabelMachineLog.setText("La machine " + TextSuppression.getText() + " a été correctement supprimé.");
+				}
+				if (Suppresion == false) {
+					LabelMachineLog.setText("La machine " + TextSuppression.getText() + " n'a pas été supprimé.");
+				}
+				TextSuppression.setText("");
+				RefeshTable();
+
+			}
+		});
+		BoutonSupprimer.setBounds(121, 116, 103, 23);
+		panel_2.add(BoutonSupprimer);
+
+		JLabel label = new JLabel("Nom :");
+		label.setBounds(47, 82, 38, 23);
+		panel_2.add(label);
+
+		lblAttentionVa = new JLabel("<html>Vous pouvez d\u00E9sactiver une machine<br>en d\u00E9cochant la case \"Utilis\u00E9e\",<br> plut\u00F4t que de la supprimer.</html>\r\n");
+		lblAttentionVa.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 11));
+		lblAttentionVa.setBounds(10, 21, 214, 50);
+		panel_2.add(lblAttentionVa);
 
 		panel_1 = new JPanel();
-		panel_1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Rechercher une machine", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panel_1.setBounds(493, 93, 210, 54);
+		panel_1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Rechercher une machine", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 139, 139)));
+		panel_1.setBounds(432, 49, 234, 89);
 		getContentPane().add(panel_1);
 		panel_1.setLayout(null);
 
 		TextRechercheMachine = new JTextField();
-		TextRechercheMachine.setBounds(10, 24, 190, 20);
+		TextRechercheMachine.setBounds(94, 20, 130, 23);
 		panel_1.add(TextRechercheMachine);
 		TextRechercheMachine.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				System.out.println("Action performed");
+
 				String value = TextRechercheMachine.getText();
-				TableMachine.repaint();
+				table.repaint();
 				// Object text = TableMachine.getValueAt(row, col);
 				if (value != null && value.toString().matches(".*" + Pattern.quote(value) + ".*")) {
 
-					for (int row = 0; row <= TableMachine.getRowCount() - 1; row++) {
+					for (int row = 0; row <= table.getRowCount() - 1; row++) {
 
-						for (int col = 0; col <= TableMachine.getColumnCount() - 1; col++) {
+						for (int col = 0; col <= table.getColumnCount() - 1; col++) {
 
-							if (value.equals(TableMachine.getValueAt(row, col))) {
+							if (value.equals(table.getValueAt(row, col))) {
 
 								// this will automatically set the view of the
 								// scroll in the location of the value
-								TableMachine.scrollRectToVisible(TableMachine.getCellRect(row, 0, true));
+								table.scrollRectToVisible(table.getCellRect(row, 0, true));
 
 								// this will automatically set the focus of the
 								// searched/selected row/value
-								TableMachine.setRowSelectionInterval(row, row);
+								table.setRowSelectionInterval(row, row);
 
-								for (int i = 0; i <= TableMachine.getColumnCount() - 1; i++) {
+								for (int i = 0; i <= table.getColumnCount() - 1; i++) {
 
 									// TableMachine.getColumnModel().getColumn(i).setCellRenderer(new
 									// HighlightRenderer());
@@ -198,212 +269,151 @@ public class UserInterfaceEditionMachine extends JFrame {
 		});
 		TextRechercheMachine.setColumns(10);
 
-		BoutonAnnuler = new JButton("Annuler");
-		BoutonAnnuler.addMouseListener(new MouseAdapter() {
+		JLabel lblNomOuIp = new JLabel("Nom ou IP :");
+		lblNomOuIp.setBounds(16, 19, 68, 23);
+		panel_1.add(lblNomOuIp);
+
+		BoutonRechercher = new JButton("Rechercher");
+		BoutonRechercher.setMargin(new Insets(1, 1, 1, 1));
+		final ImageIcon IconRechercher = new ImageIcon(getClass().getResource("/loupe-icon.png"));
+		BoutonRechercher.setIcon(IconRechercher);
+		BoutonRechercher.addActionListener(new ActionListener() {
 			@Override
-			public void mouseReleased(MouseEvent e) {
+			public void actionPerformed(ActionEvent e) {
+
+				String value = TextRechercheMachine.getText();
+				table.repaint();
+				// Object text = TableMachine.getValueAt(row, col);
+				if (value != null && value.toString().matches(".*" + Pattern.quote(value) + ".*")) {
+
+					for (int row = 0; row <= table.getRowCount() - 1; row++) {
+
+						for (int col = 0; col <= table.getColumnCount() - 1; col++) {
+
+							if (value.equals(table.getValueAt(row, col))) {
+
+								// this will automatically set the view of the
+								// scroll in the location of the value
+								table.scrollRectToVisible(table.getCellRect(row, 0, true));
+
+								// this will automatically set the focus of the
+								// searched/selected row/value
+								table.setRowSelectionInterval(row, row);
+
+								for (int i = 0; i <= table.getColumnCount() - 1; i++) {
+
+									// TableMachine.getColumnModel().getColumn(i).setCellRenderer(new
+									// HighlightRenderer());
+								}
+							}
+						}
+
+					}
+				}
+
+			}
+		});
+		BoutonRechercher.setBounds(117, 54, 107, 23);
+		panel_1.add(BoutonRechercher);
+
+		JButton BoutonAnnuler = new JButton("Annuler");
+		BoutonAnnuler.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
 				dispose();
 			}
 		});
+		BoutonAnnuler.setBounds(656, 505, 123, 38);
 		final ImageIcon IconAnnuler = new ImageIcon(getClass().getResource("/cancel-icon.png"));
 		BoutonAnnuler.setIcon(IconAnnuler);
-		BoutonAnnuler.setBounds(225, 482, 135, 66);
 		getContentPane().add(BoutonAnnuler);
-
-		TableColumn tc = TableMachine.getColumnModel().getColumn(2);
-		tc.setCellEditor(TableMachine.getDefaultEditor(Boolean.class));
-		tc.setCellRenderer(TableMachine.getDefaultRenderer(Boolean.class));
-
-		AlimentationTableMachine();
-
-		TableMachine.getModel().addTableModelListener(new TableModelListener() {
+		BoutonAjouter.addActionListener(new ActionListener() {
 			@Override
-			public void tableChanged(TableModelEvent e) {
-				for (int i = 0; i < TableMachine.getModel().getRowCount(); i++) {
-					if ((Boolean) TableMachine.getModel().getValueAt(i, 2)) {
-						System.out.println(">\t" + TableMachine.getSelectedRow());
+			public void actionPerformed(ActionEvent arg0) {
 
-						break;
+				try {
+					Boolean ExisteDeja = GM.AjouterMachine(table, TextMachine.getText(), TextIp.getText());
+
+					if (ExisteDeja == true) {
+						LabelMachineLog.setText("La machine " + TextMachine.getText().toLowerCase() + " existe déjà, elle n'est pas ajoutée.");
+						LabelMachineLog.setForeground(Color.RED);
 					}
+					if (ExisteDeja == false) {
+						LabelMachineLog.setText("La machine " + TextMachine.getText().toLowerCase() + " est ajoutée.");
+						LabelMachineLog.setForeground(new Color(0, 100, 0));
+						TextMachine.setText("");
+						TextIp.setText("");
+					}
+
 				}
+
+				catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				RefeshTable();
+
 			}
 		});
 
+		// INIT
+		CustumizeTable();
+		// FIN INIT
+
 	}
 
-	public void AlimentationTableMachine() throws IOException {
-
-		for (int i = 0; i < strings.size(); i++) {
-
-			String string = strings.get(i);
-			String[] parts = string.split("=");
-			String NomMachine = parts[0];
-			String IpMachine = parts[1];
-
-			Object[] Donnees = { NomMachine, IpMachine, new Boolean(true) };
-			ModeleTableMachine.addRow(Donnees);
-
+	public void RefeshTable() {
+		try {
+			GM.buildTableModel();
 		}
+		catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		table.setModel(GM.GetTableModel());
+		CustumizeTable();
+		table.repaint();
 	}
 
-	public class ExtractTableMachineVersFichier implements Runnable {
+	public void CustumizeTable() {
+
+		TableColumn tc0 = table.getColumnModel().getColumn(0);
+		TableColumn tc1 = table.getColumnModel().getColumn(1);
+		TableColumn tc2 = table.getColumnModel().getColumn(2);
+		TableColumn tc3 = table.getColumnModel().getColumn(3);
+
+		tc0.setResizable(false);
+		tc3.setResizable(false);
+		tc0.setPreferredWidth(10);
+		tc1.setPreferredWidth(50);
+		tc2.setPreferredWidth(50);
+		tc3.setPreferredWidth(20);
+
+		tc3.setCellEditor(table.getDefaultEditor(Boolean.class));
+		tc3.setCellRenderer(table.getDefaultRenderer(Boolean.class));
+
+		LabelNombreMachine.setText("La base contient " + GM.getCompteur() + " enregistements");
+
+	}
+
+	public void VersDB(JTable table) throws SQLException {
+		// new Thread(new ThreadVersDB()).start();
+		GM.ExtractTableVersDatabase(table);
+		dispose();
+	}
+
+	public class ThreadVersDB implements Runnable {
 
 		@Override
 		public void run() {
-			final ImageIcon IconLabelFleche = new ImageIcon(getClass().getResource("/fleche-icon.png"));
-			final ImageIcon IconLabelCheck = new ImageIcon(getClass().getResource("/ok-apply-icon.png"));
-			LabelAjout.setEnabled(true);
-			LabelAjout.setIcon(IconLabelFleche);
-
-			GestionMachine GC = new GestionMachine();
-			BufferedWriter bfw;
 			try {
-				bfw = new BufferedWriter(new FileWriter(PathToMachine));
-				for (int i = 0; i < TableMachine.getRowCount(); i++) {
-					bfw.newLine();
-					for (int j = 0; j < 2; j++) {
-						if ((Boolean) TableMachine.getModel().getValueAt(i, 2) == true) {
-							if (TableMachine.getModel().getValueAt(i, 0) != null && TableMachine.getModel().getValueAt(i, 1) != null) {
-								bfw.write((String) (TableMachine.getValueAt(i, j)));
-							}
-						}
-						bfw.write("=");
-
-					}
-				}
-				bfw.close();
+				GM.ExtractTableVersDatabase(table);
 			}
-			catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			LabelAjout.setIcon(IconLabelCheck);
-			LabelDoublon.setEnabled(true);
-			LabelDoublon.setIcon(IconLabelFleche);
-
-			File temporaire = new File(PathToMachineTemp);
-			File FichierSortieMachine = new File(PathToMachine);
-			try {
-				Scanner scanner = new Scanner(FichierSortieMachine);
-				BufferedWriter bw = new BufferedWriter(new FileWriter(temporaire));
-				while (scanner.hasNextLine()) {
-					String line = StringUtils.stripEnd(scanner.nextLine(), null);
-					if (StringUtils.isNotBlank(line)) {
-						int Lastchar = line.length();
-						line = line.substring(0, Lastchar - 1);
-						if (line.equals("=") == false) {
-							bw.write(line.toLowerCase()); // Keep the line only
-															// if not blank
-							// et
-							// pas egal à "="
-						}
-
-						if (scanner.hasNextLine()) {
-							// Go to next line (Win,Mac,Unix) if there is one
-							bw.write(System.getProperty("line.separator"));
-						}
-					}
-					bw.flush();
-				}
-				scanner.close();
-				bw.close();
-				FichierSortieMachine.delete();
-				temporaire.renameTo(FichierSortieMachine);
-
-			}
-			catch (FileNotFoundException e) {
-				System.out.println(e.getMessage());
-			}
-			catch (IOException e) {
-				System.out.println(e.getMessage());
-			}
-
-			LabelDoublon.setIcon(IconLabelCheck);
-			LabelReorg.setEnabled(true);
-			LabelReorg.setIcon(IconLabelFleche);
-
-			try {
-				Scanner scanner = new Scanner(FichierSortieMachine);
-				BufferedWriter bw = new BufferedWriter(new FileWriter(temporaire));
-				while (scanner.hasNextLine()) {
-					String line = StringUtils.stripEnd(scanner.nextLine(), null);
-					if (StringUtils.isNotBlank(line)) {
-						bw.write(line); // Keep the line only if not blank
-						if (scanner.hasNextLine()) {
-							// Go to next line (Win,Mac,Unix) if there is one
-							bw.write(System.getProperty("line.separator"));
-						}
-					}
-					bw.flush();
-				}
-				scanner.close();
-				bw.close();
-				FichierSortieMachine.delete();
-				temporaire.renameTo(FichierSortieMachine);
-
-			}
-			catch (FileNotFoundException e) {
-				System.out.println(e.getMessage());
-			}
-			catch (IOException e) {
-				System.out.println(e.getMessage());
-			}
-
-			LabelReorg.setIcon(IconLabelCheck);
-			LabelValidation.setEnabled(true);
-			LabelValidation.setIcon(IconLabelFleche);
-			try {
-				GC.EliminationDoublons();
-				GC.ReorderFichierMachine();
-			}
-			catch (IOException e) {
+			catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			LabelValidation.setIcon(IconLabelCheck);
-			try {
-				Thread.sleep(1000);
-			}
-			catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			dispose();
 
 		}
-
 	}
-
-	public void RefreshTable() {
-		ScrollZoneTablemachine.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		DefaultTableModel dm = (DefaultTableModel) TableMachine.getModel();
-		dm.addRow(new Object[] { null, null, Boolean.TRUE });
-		dm.fireTableDataChanged();
-		dm.fireTableRowsInserted(0, TableMachine.getRowCount());
-		// dm.fireTableRowsInserted(rows.size()-1,rows.size()-1);
-		TableMachine.repaint();
-		TableMachine.scrollRectToVisible(TableMachine.getCellRect(TableMachine.getRowCount(), 0, true));
-		TableMachine.scrollRectToVisible(TableMachine.getCellRect(TableMachine.getRowCount() + 1, 0, true));
-	}
-
-	private class HighlightRenderer extends DefaultTableCellRenderer {
-
-		@Override
-		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-
-			// everything as usual
-			super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-
-			// added behavior
-			if (row == table.getSelectedRow()) {
-
-				// this will customize that kind of border that will be use to
-				// highlight a row
-				setBorder(BorderFactory.createMatteBorder(2, 1, 2, 1, Color.BLACK));
-			}
-
-			return this;
-		}
-	}
-
 }

@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.sql.Connection;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -35,9 +36,10 @@ public class UserInterfaceConfig extends JFrame {
 		setType(Type.UTILITY);
 		getContentPane().setEnabled(false);
 
-		setTitle("Configuration des logins et passwords");
+		setTitle("Gestion des accès");
 		setResizable(false);
 		getContentPane().setLayout(null);
+		setAlwaysOnTop(true);
 
 		ZoneConfigUnix = new JPanel();
 		ZoneConfigUnix.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
@@ -510,7 +512,7 @@ public class UserInterfaceConfig extends JFrame {
 
 				}
 				else {
-					BoutonReveler.setForeground(Color.GREEN);
+					BoutonReveler.setForeground(Color.BLACK);
 					TextConfigUnixPassword.setEchoChar('\u2022');
 					TextConfigWindowsPassword.setEchoChar('\u2022');
 					TextConfigSysaPassword.setEchoChar('\u2022');
@@ -595,6 +597,9 @@ public class UserInterfaceConfig extends JFrame {
 			BoutonValiderConfig.setEnabled(false);
 			BoutonRechargerConfig.setEnabled(false);
 
+			GestionSql LaBase = new GestionSql();
+			Connection ConnectionBase = LaBase.InitConnexion();
+
 			String UserUnix = TextConfigUnixUser.getText().toLowerCase();
 			TextConfigUnixUser.setText(UserUnix);
 			@SuppressWarnings("deprecation")
@@ -665,145 +670,145 @@ public class UserInterfaceConfig extends JFrame {
 
 			LabelConfigValide.setForeground(Color.GRAY);
 			LabelConfigValide.setText("");
-			GestionConfig MaConfig = new GestionConfig();
 
-			MaConfig.EcrireUser("user", "Unix", UserUnix);
+			LaBase.AjoutUserPilote(ConnectionBase, "Unix", UserUnix);
+
 			ProgressBarValideConfig.setValue(5);
 			LabelEnregistrement.setText("Enregistrement User Unix");
-			MaConfig.EcrireUser("user", "Windows", UserWindows);
+			LaBase.AjoutUserPilote(ConnectionBase, "Windows", UserWindows);
 			ProgressBarValideConfig.setValue(10);
 			LabelEnregistrement.setText("Enregistrement User Windows");
-			MaConfig.EcrireUser("user", "Gmvs", UserGmvs);
+			LaBase.AjoutUserPilote(ConnectionBase, "Gmvs", UserGmvs);
 			ProgressBarValideConfig.setValue(15);
 			LabelEnregistrement.setText("Enregistrement User Gmvs");
-			MaConfig.EcrireUser("user", "Sysa", UserSysa);
+			LaBase.AjoutUserPilote(ConnectionBase, "Sysa", UserSysa);
 			ProgressBarValideConfig.setValue(20);
 			LabelEnregistrement.setText("Enregistrement User Sysa");
-			MaConfig.EcrireUser("user", "Kmvs", UserKmvs);
+			LaBase.AjoutUserPilote(ConnectionBase, "Kmvs", UserKmvs);
 			ProgressBarValideConfig.setValue(25);
 			LabelEnregistrement.setText("Enregistrement User Kmvs");
-			MaConfig.EcrireUser("user", "Zmvs", UserZmvs);
+			LaBase.AjoutUserPilote(ConnectionBase, "Zmvs", UserZmvs);
 			ProgressBarValideConfig.setValue(30);
 			LabelEnregistrement.setText("Enregistrement User Zmvs");
-			MaConfig.EcrireUser("user", "Sysg", UserSysg);
+			LaBase.AjoutUserPilote(ConnectionBase, "Sysg", UserSysg);
 			LabelEnregistrement.setText("Enregistrement User Sysg");
-			MaConfig.EcrireUser("user", "Bmvs", UserBmvs);
+			LaBase.AjoutUserPilote(ConnectionBase, "Bmvs", UserBmvs);
 			LabelEnregistrement.setText("Enregistrement User Bmvs");
-			MaConfig.EcrireUser("user", "Ip1", UserIp1);
+			LaBase.AjoutUserPilote(ConnectionBase, "Ip1", UserIp1);
 			LabelEnregistrement.setText("Enregistrement User IP1");
-			MaConfig.EcrireUser("user", "Ip2", UserIp2);
+			LaBase.AjoutUserPilote(ConnectionBase, "Ip2", UserIp2);
 			LabelEnregistrement.setText("Enregistrement User IP2");
-			MaConfig.EcrireUser("user", "Ip3", UserIp3);
+			LaBase.AjoutUserPilote(ConnectionBase, "Ip3", UserIp3);
 			LabelEnregistrement.setText("Enregistrement User IP3");
 
-			MaConfig.EcrirePassword("password", "Unix", PassUnix);
+			LaBase.AjoutPasswordPilote(ConnectionBase, "Unix", PassUnix);
 			ProgressBarValideConfig.setValue(35);
 			LabelEnregistrement.setText("Enregistrement passwword Unix");
-			MaConfig.EcrirePassword("password", "Windows", PassWindows);
+			LaBase.AjoutPasswordPilote(ConnectionBase, "Windows", PassWindows);
 			ProgressBarValideConfig.setValue(40);
 			LabelEnregistrement.setText("Enregistrement passwword Windows");
-			MaConfig.EcrirePassword("password", "Gmvs", PassGmvs);
+			LaBase.AjoutPasswordPilote(ConnectionBase, "Gmvs", PassGmvs);
 			ProgressBarValideConfig.setValue(45);
 			LabelEnregistrement.setText("Enregistrement passwword Gmvs");
-			MaConfig.EcrirePassword("password", "Sysa", PassSysa);
+			LaBase.AjoutPasswordPilote(ConnectionBase, "Sysa", PassSysa);
 			ProgressBarValideConfig.setValue(50);
 			LabelEnregistrement.setText("Enregistrement passwword Sysa");
-			MaConfig.EcrirePassword("password", "Kmvs", PassKmvs);
+			LaBase.AjoutPasswordPilote(ConnectionBase, "Kmvs", PassKmvs);
 			ProgressBarValideConfig.setValue(55);
 			LabelEnregistrement.setText("Enregistrement passwword Kmvs");
-			MaConfig.EcrirePassword("password", "Zmvs", PassZmvs);
+			LaBase.AjoutPasswordPilote(ConnectionBase, "Zmvs", PassZmvs);
 			ProgressBarValideConfig.setValue(60);
 			LabelEnregistrement.setText("Enregistrement passwword Zmvs");
-			MaConfig.EcrirePassword("password", "Sysg", PassSysg);
+			LaBase.AjoutPasswordPilote(ConnectionBase, "Sysg", PassSysg);
 			ProgressBarValideConfig.setValue(65);
 			LabelEnregistrement.setText("Enregistrement passwword Sysg");
-			MaConfig.EcrirePassword("password", "Bmvs", PassBmvs);
+			LaBase.AjoutPasswordPilote(ConnectionBase, "Bmvs", PassBmvs);
 			LabelEnregistrement.setText("Enregistrement passwword Bmvs");
-			MaConfig.EcrirePassword("password", "Ip1", PassIp1);
+			LaBase.AjoutPasswordPilote(ConnectionBase, "Ip1", PassIp1);
 			LabelEnregistrement.setText("Enregistrement passwword Ip1");
-			MaConfig.EcrirePassword("password", "Ip2", PassIp2);
+			LaBase.AjoutPasswordPilote(ConnectionBase, "Ip2", PassIp2);
 			LabelEnregistrement.setText("Enregistrement passwword Ip2");
-			MaConfig.EcrirePassword("password", "Ip3", PassIp3);
+			LaBase.AjoutPasswordPilote(ConnectionBase, "Ip3", PassIp3);
 			LabelEnregistrement.setText("Enregistrement passwword Ip3");
 
-			MaConfig.EcrireUser("DeviceName", "Br", DeviceAs400Br);
+			LaBase.AjoutDeviceNamePilote(ConnectionBase, "Br", DeviceAs400Br);
 			ProgressBarValideConfig.setValue(70);
 			LabelEnregistrement.setText("Enregistrement macro BR");
-			MaConfig.EcrireUser("DeviceName", "Bdi", DeviceAs400Bdi);
+			LaBase.AjoutDeviceNamePilote(ConnectionBase, "Bdi", DeviceAs400Bdi);
 			ProgressBarValideConfig.setValue(75);
 			LabelEnregistrement.setText("Enregistrement macro BDI");
-			MaConfig.EcrireUser("DeviceName", "Bdaf", DeviceAs400Bdaf);
+			LaBase.AjoutDeviceNamePilote(ConnectionBase, "Bdaf", DeviceAs400Bdaf);
 			ProgressBarValideConfig.setValue(80);
 			LabelEnregistrement.setText("Enregistrement macro BDAF");
-			MaConfig.EcrireUser("DeviceName", "Socly", DeviceAs400Socly);
+			LaBase.AjoutDeviceNamePilote(ConnectionBase, "Socly", DeviceAs400Socly);
 			ProgressBarValideConfig.setValue(85);
 			LabelEnregistrement.setText("Enregistrement macro SOCLY");
-			MaConfig.EcrireUser("DeviceName", "Socmcsd", DeviceAs400Socmcsd);
+			LaBase.AjoutDeviceNamePilote(ConnectionBase, "Socmcsd", DeviceAs400Socmcsd);
 			LabelEnregistrement.setText("Enregistrement macro SOCMCSD");
-			MaConfig.EcrireUser("DeviceName", "Pfb", DeviceAs400Pfb);
+			LaBase.AjoutDeviceNamePilote(ConnectionBase, "Pfb", DeviceAs400Pfb);
 			LabelEnregistrement.setText("Enregistrement macro PFB");
 
 			if (EtatAutoConnectGmvs == true) {
-				MaConfig.EcrireAutoConnect("autoconnect", "Gmvs", "true");
+				LaBase.AjoutAutoconnectPilote(ConnectionBase, "Gmvs", "true");
 			}
 			if (EtatAutoConnectGmvs == false) {
-				MaConfig.EcrireAutoConnect("autoconnect", "Gmvs", "false");
+				LaBase.AjoutAutoconnectPilote(ConnectionBase, "Gmvs", "false");
 			}
 
 			if (EtatAutoConnectSysa == true) {
-				MaConfig.EcrireAutoConnect("autoconnect", "Sysa", "true");
+				LaBase.AjoutAutoconnectPilote(ConnectionBase, "Sysa", "true");
 			}
 			if (EtatAutoConnectSysa == false) {
-				MaConfig.EcrireAutoConnect("autoconnect", "Sysa", "false");
+				LaBase.AjoutAutoconnectPilote(ConnectionBase, "Sysa", "false");
 			}
 
 			if (EtatAutoConnectSysg == true) {
-				MaConfig.EcrireAutoConnect("autoconnect", "Sysg", "true");
+				LaBase.AjoutAutoconnectPilote(ConnectionBase, "Sysg", "true");
 			}
 			if (EtatAutoConnectSysg == false) {
-				MaConfig.EcrireAutoConnect("autoconnect", "Sysg", "false");
+				LaBase.AjoutAutoconnectPilote(ConnectionBase, "Sysg", "false");
 			}
 
 			if (EtatAutoConnectKmvs == true) {
-				MaConfig.EcrireAutoConnect("autoconnect", "Kmvs", "true");
+				LaBase.AjoutAutoconnectPilote(ConnectionBase, "Kmvs", "true");
 			}
 			if (EtatAutoConnectKmvs == false) {
-				MaConfig.EcrireAutoConnect("autoconnect", "Kmvs", "false");
+				LaBase.AjoutAutoconnectPilote(ConnectionBase, "Kmvs", "false");
 			}
 
 			if (EtatAutoConnectZmvs == true) {
-				MaConfig.EcrireAutoConnect("autoconnect", "Zmvs", "true");
+				LaBase.AjoutAutoconnectPilote(ConnectionBase, "Zmvs", "true");
 			}
 			if (EtatAutoConnectZmvs == false) {
-				MaConfig.EcrireAutoConnect("autoconnect", "Zmvs", "false");
+				LaBase.AjoutAutoconnectPilote(ConnectionBase, "Zmvs", "false");
 			}
 
 			if (EtatAutoConnectBmvs == true) {
-				MaConfig.EcrireAutoConnect("autoconnect", "Bmvs", "true");
+				LaBase.AjoutAutoconnectPilote(ConnectionBase, "Bmvs", "true");
 			}
 			if (EtatAutoConnectBmvs == false) {
-				MaConfig.EcrireAutoConnect("autoconnect", "Bmvs", "false");
+				LaBase.AjoutAutoconnectPilote(ConnectionBase, "Bmvs", "false");
 			}
 
 			if (EtatAutoConnectIp1 == true) {
-				MaConfig.EcrireAutoConnect("autoconnect", "Ip1", "true");
+				LaBase.AjoutAutoconnectPilote(ConnectionBase, "Ip1", "true");
 			}
 			if (EtatAutoConnectIp1 == false) {
-				MaConfig.EcrireAutoConnect("autoconnect", "Ip1", "false");
+				LaBase.AjoutAutoconnectPilote(ConnectionBase, "Ip1", "false");
 			}
 
 			if (EtatAutoConnectIp2 == true) {
-				MaConfig.EcrireAutoConnect("autoconnect", "Ip2", "true");
+				LaBase.AjoutAutoconnectPilote(ConnectionBase, "Ip2", "true");
 			}
 			if (EtatAutoConnectIp2 == false) {
-				MaConfig.EcrireAutoConnect("autoconnect", "Ip2", "false");
+				LaBase.AjoutAutoconnectPilote(ConnectionBase, "Ip2", "false");
 			}
 
 			if (EtatAutoConnectIp3 == true) {
-				MaConfig.EcrireAutoConnect("autoconnect", "Ip3", "true");
+				LaBase.AjoutAutoconnectPilote(ConnectionBase, "Ip3", "true");
 			}
 			if (EtatAutoConnectIp3 == false) {
-				MaConfig.EcrireAutoConnect("autoconnect", "Ip3", "false");
+				LaBase.AjoutAutoconnectPilote(ConnectionBase, "Ip3", "false");
 			}
 
 			// System.out.println(EcritureValideOuErreur);
@@ -814,50 +819,90 @@ public class UserInterfaceConfig extends JFrame {
 			GestionProfile GP = new GestionProfile();
 
 			try {
+
+				// ENREGISTRMENT PROFIL 1 = IT-CE BERCY
 				LabelEnregistrement.setText("Enregistrement macro GMVS");
-				GP.ModifierPasswordProfile("Gmvs", MaConfig.DemandePassword("Gmvs"));
-				GP.ModifierUserProfile("Gmvs", MaConfig.DemandeUser("Gmvs"));
+				GP.ModifierPasswordProfile("Gmvs", LaBase.ConsulterPasswordPilote(ConnectionBase, "Gmvs"));
+				GP.ModifierUserProfile("Gmvs", LaBase.ConsulterUserPilote(ConnectionBase, "Gmvs"));
 				GP.ModifierUserNameStationProfile("GMVS");
 
 				LabelEnregistrement.setText("Enregistrement macro SYSG");
-				GP.ModifierPasswordProfile("Sysg", MaConfig.DemandePassword("Sysg"));
-				GP.ModifierUserProfile("Sysg", MaConfig.DemandeUser("Sysg"));
+				GP.ModifierPasswordProfile("Sysg", LaBase.ConsulterPasswordPilote(ConnectionBase, "Sysg"));
+				GP.ModifierUserProfile("Sysg", LaBase.ConsulterUserPilote(ConnectionBase, "Sysg"));
 				GP.ModifierUserNameStationProfile("Sysg");
 
 				LabelEnregistrement.setText("Enregistrement macro ZMVS");
-				GP.ModifierPasswordProfile("Zmvs", MaConfig.DemandePassword("Zmvs"));
-				GP.ModifierUserProfile("Zmvs", MaConfig.DemandeUser("Zmvs"));
+				GP.ModifierPasswordProfile("Zmvs", LaBase.ConsulterPasswordPilote(ConnectionBase, "Zmvs"));
+				GP.ModifierUserProfile("Zmvs", LaBase.ConsulterUserPilote(ConnectionBase, "Zmvs"));
 				GP.ModifierUserNameStationProfile("ZMVS");
 
 				LabelEnregistrement.setText("Enregistrement macro KMVS");
-				GP.ModifierPasswordProfile("Kmvs", MaConfig.DemandePassword("Kmvs"));
-				GP.ModifierUserProfile("Kmvs", MaConfig.DemandeUser("Kmvs"));
+				GP.ModifierPasswordProfile("Kmvs", LaBase.ConsulterPasswordPilote(ConnectionBase, "Kmvs"));
+				GP.ModifierUserProfile("Kmvs", LaBase.ConsulterUserPilote(ConnectionBase, "Kmvs"));
 				GP.ModifierUserNameStationProfile("KMVS");
 
 				LabelEnregistrement.setText("Enregistrement macro SYSA");
-				GP.ModifierPasswordProfile("Sysa", MaConfig.DemandePassword("Sysa"));
-				GP.ModifierUserProfile("Sysa", MaConfig.DemandeUser("Sysa"));
+				GP.ModifierPasswordProfile("Sysa", LaBase.ConsulterPasswordPilote(ConnectionBase, "Sysa"));
+				GP.ModifierUserProfile("Sysa", LaBase.ConsulterUserPilote(ConnectionBase, "Sysa"));
 				GP.ModifierUserNameStationProfile("Sysa");
 
 				LabelEnregistrement.setText("Enregistrement macro BMVS");
-				GP.ModifierPasswordProfile("Bmvs", MaConfig.DemandePassword("Bmvs"));
-				GP.ModifierUserProfile("Bmvs", MaConfig.DemandeUser("Bmvs"));
+				GP.ModifierPasswordProfile("Bmvs", LaBase.ConsulterPasswordPilote(ConnectionBase, "Bmvs"));
+				GP.ModifierUserProfile("Bmvs", LaBase.ConsulterUserPilote(ConnectionBase, "Bmvs"));
 				GP.ModifierUserNameStationProfile("BMVS");
 
 				LabelEnregistrement.setText("Enregistrement macro IP1");
-				GP.ModifierPasswordProfile("Ip1", MaConfig.DemandePassword("Ip1"));
-				GP.ModifierUserProfile("Ip1", MaConfig.DemandeUser("Ip1"));
+				GP.ModifierPasswordProfile("Ip1", LaBase.ConsulterPasswordPilote(ConnectionBase, "Ip1"));
+				GP.ModifierUserProfile("Ip1", LaBase.ConsulterUserPilote(ConnectionBase, "Ip1"));
 				GP.ModifierUserNameStationProfile("IP1");
 
 				LabelEnregistrement.setText("Enregistrement macro IP2");
-				GP.ModifierPasswordProfile("Ip2", MaConfig.DemandePassword("Ip2"));
-				GP.ModifierUserProfile("Ip2", MaConfig.DemandeUser("Ip2"));
+				GP.ModifierPasswordProfile("Ip2", LaBase.ConsulterPasswordPilote(ConnectionBase, "Ip2"));
+				GP.ModifierUserProfile("Ip2", LaBase.ConsulterUserPilote(ConnectionBase, "Ip2"));
 				GP.ModifierUserNameStationProfile("IP2");
 
 				LabelEnregistrement.setText("Enregistrement macro IP3");
-				GP.ModifierPasswordProfile("Ip3", MaConfig.DemandePassword("Ip3"));
-				GP.ModifierUserProfile("Ip3", MaConfig.DemandeUser("Ip3"));
+				GP.ModifierPasswordProfile("Ip3", LaBase.ConsulterPasswordPilote(ConnectionBase, "Ip3"));
+				GP.ModifierUserProfile("Ip3", LaBase.ConsulterUserPilote(ConnectionBase, "Ip3"));
 				GP.ModifierUserNameStationProfile("IP3");
+
+				// ENREGISTREMENT PROFILE 2 : BLR
+
+				LabelEnregistrement.setText("Enregistrement macro GMVS_2");
+
+				GP.ModifierUserNameStationProfile("GMVS_2");
+
+				LabelEnregistrement.setText("Enregistrement macro SYSG_2");
+
+				GP.ModifierUserNameStationProfile("Sysg_2");
+
+				LabelEnregistrement.setText("Enregistrement macro ZMVS_2");
+
+				GP.ModifierUserNameStationProfile("ZMVS_2");
+
+				LabelEnregistrement.setText("Enregistrement macro KMVS_2");
+
+				GP.ModifierUserNameStationProfile("KMVS_2");
+
+				LabelEnregistrement.setText("Enregistrement macro SYSA_2");
+
+				GP.ModifierUserNameStationProfile("Sysa_2");
+
+				LabelEnregistrement.setText("Enregistrement macro BMVS_2");
+
+				GP.ModifierUserNameStationProfile("BMVS_2");
+
+				LabelEnregistrement.setText("Enregistrement macro IP1_2");
+
+				GP.ModifierUserNameStationProfile("IP1_2");
+
+				LabelEnregistrement.setText("Enregistrement macro IP2_2");
+
+				GP.ModifierUserNameStationProfile("IP2_2");
+
+				LabelEnregistrement.setText("Enregistrement macro IP3_2");
+
+				GP.ModifierUserNameStationProfile("IP3_2");
 
 				// AS400
 				ProgressBarValideConfig.setValue(95);
@@ -869,6 +914,13 @@ public class UserInterfaceConfig extends JFrame {
 				GP.ModifierUserNameStationProfile("SOCMCSD");
 				GP.ModifierUserNameStationProfile("PFBCLY");
 
+				GP.ModifierUserNameStationProfile("BRCLY_2");
+				GP.ModifierUserNameStationProfile("BDAFCLY_2");
+				GP.ModifierUserNameStationProfile("BDICLY_2");
+				GP.ModifierUserNameStationProfile("SOCLY_2");
+				GP.ModifierUserNameStationProfile("SOCMCSD_2");
+				GP.ModifierUserNameStationProfile("PFBCLY_2");
+
 				GP.ModifierDeviceName("BRCLY", DeviceAs400Br);
 				GP.ModifierDeviceName("BDICLY", DeviceAs400Bdi);
 				GP.ModifierDeviceName("BDAFCLY", DeviceAs400Bdaf);
@@ -879,7 +931,7 @@ public class UserInterfaceConfig extends JFrame {
 				// GP.ModifierTempsRefresh("BDAFCLY", 6584521);
 
 				ProgressBarValideConfig.setValue(100);
-				MaConfig.ReOrderFichierConfig();
+
 				LabelConfigValide.setText("Config sauvegard\u00E9e!");
 
 			}
@@ -890,6 +942,7 @@ public class UserInterfaceConfig extends JFrame {
 			EnableDisableTouteZonesSaisies(true);
 			BoutonValiderConfig.setEnabled(true);
 			BoutonRechargerConfig.setEnabled(true);
+			LaBase.FermerConnexion(ConnectionBase);
 			dispose();
 		}
 
@@ -899,11 +952,10 @@ public class UserInterfaceConfig extends JFrame {
 
 		@Override
 		public void run() {
-
+			GestionSql LaBase = new GestionSql();
+			Connection ConnectionBase = LaBase.InitConnexion();
 			EnableDisableTouteZonesSaisies(false);
 			BoutonRechargerConfig.setEnabled(false);
-			int CodeRetour = 5;
-
 			String UserUnix = "#erreur";
 			String PassUnix = "#erreur";
 
@@ -956,160 +1008,152 @@ public class UserInterfaceConfig extends JFrame {
 			ProgressBarValideConfig.setValue(0);
 			LabelConfigValide.setForeground(Color.GRAY);
 			LabelConfigValide.setText("Config rechargée");
-			GestionConfig MaConfig = new GestionConfig();
-			CodeRetour = MaConfig.LireConfig();
-			// UserG = MaConfig.DemandeUser("G");
-			// UserUnix = MaConfig.DemandeUser("Unix");
-			if (CodeRetour == 0) {
 
-				// LOAD AS4000
+			// LOAD AS4000
 
-				DeviceBr = MaConfig.DemandeDevice("Br");
-				TextConfigAs400DeviceBr.setText(DeviceBr);
+			DeviceBr = LaBase.ConsulterDeviceNamePilote(ConnectionBase, "Br");
+			TextConfigAs400DeviceBr.setText(DeviceBr);
 
-				DeviceBdi = MaConfig.DemandeDevice("Bdi");
-				TextConfigAs400DeviceBdi.setText(DeviceBdi);
+			DeviceBdi = LaBase.ConsulterDeviceNamePilote(ConnectionBase, "Bdi");
+			TextConfigAs400DeviceBdi.setText(DeviceBdi);
 
-				DeviceBdaf = MaConfig.DemandeDevice("Bdaf");
-				TextConfigAs400DeviceBdaf.setText(DeviceBdaf);
+			DeviceBdaf = LaBase.ConsulterDeviceNamePilote(ConnectionBase, "Bdaf");
+			TextConfigAs400DeviceBdaf.setText(DeviceBdaf);
 
-				DeviceSocly = MaConfig.DemandeDevice("Socly");
-				TextConfigAs400DeviceSocly.setText(DeviceSocly);
+			DeviceSocly = LaBase.ConsulterDeviceNamePilote(ConnectionBase, "Socly");
+			TextConfigAs400DeviceSocly.setText(DeviceSocly);
 
-				DeviceSocmcsd = MaConfig.DemandeDevice("Socmcsd");
-				TextConfigAs400DeviceSocmcsd.setText(DeviceSocmcsd);
+			DeviceSocmcsd = LaBase.ConsulterDeviceNamePilote(ConnectionBase, "Socmcsd");
+			TextConfigAs400DeviceSocmcsd.setText(DeviceSocmcsd);
 
-				DevicePfb = MaConfig.DemandeDevice("Pfb");
-				TextConfigAs400DevicePfb.setText(DevicePfb);
+			DevicePfb = LaBase.ConsulterDeviceNamePilote(ConnectionBase, "Pfb");
+			TextConfigAs400DevicePfb.setText(DevicePfb);
 
-				// ---------
+			// ---------
 
-				UserUnix = MaConfig.DemandeUser("Unix");
-				PassUnix = MaConfig.DemandePassword("Unix");
-				TextConfigUnixUser.setText(UserUnix);
-				TextConfigUnixPassword.setText(PassUnix);
+			UserUnix = LaBase.ConsulterUserPilote(ConnectionBase, "Unix");
+			PassUnix = LaBase.ConsulterPasswordPilote(ConnectionBase, "Unix");
+			TextConfigUnixUser.setText(UserUnix);
+			TextConfigUnixPassword.setText(PassUnix);
 
-				UserWindows = MaConfig.DemandeUser("Windows");
-				PassWindows = MaConfig.DemandePassword("Windows");
-				TextConfigWindowsUser.setText(UserWindows);
-				TextConfigWindowsPassword.setText(PassWindows);
+			UserWindows = LaBase.ConsulterUserPilote(ConnectionBase, "Windows");
+			PassWindows = LaBase.ConsulterPasswordPilote(ConnectionBase, "Windows");
+			TextConfigWindowsUser.setText(UserWindows);
+			TextConfigWindowsPassword.setText(PassWindows);
 
-				UserGmvs = MaConfig.DemandeUser("Gmvs");
-				PassGmvs = MaConfig.DemandePassword("Gmvs");
-				TextConfigGmvsUser.setText(UserGmvs);
-				TextConfigGmvsPassword.setText(PassGmvs);
-				ResultatDemandeAutoConnectGmvs = MaConfig.DemandeAutoConnect("Gmvs");
-				if (ResultatDemandeAutoConnectGmvs.equals("true")) {
-					CheckBoxAutoGmvs.setSelected(true);
-				}
-				if (ResultatDemandeAutoConnectGmvs.equals("false")) {
-					CheckBoxAutoGmvs.setSelected(false);
-				}
+			UserGmvs = LaBase.ConsulterUserPilote(ConnectionBase, "Gmvs");
+			PassGmvs = LaBase.ConsulterPasswordPilote(ConnectionBase, "Gmvs");
+			TextConfigGmvsUser.setText(UserGmvs);
+			TextConfigGmvsPassword.setText(PassGmvs);
 
-				UserSysa = MaConfig.DemandeUser("Sysa");
-				PassSysa = MaConfig.DemandePassword("Sysa");
-				TextConfigSysaUser.setText(UserSysa);
-				TextConfigSysaPassword.setText(PassSysa);
-				ResultatDemandeAutoConnectSysa = MaConfig.DemandeAutoConnect("Sysa");
-				if (ResultatDemandeAutoConnectSysa.equals("true")) {
-					CheckBoxAutoSysa.setSelected(true);
-				}
-				if (ResultatDemandeAutoConnectSysa.equals("false")) {
-					CheckBoxAutoSysa.setSelected(false);
-				}
-				;
-
-				UserKmvs = MaConfig.DemandeUser("Kmvs");
-				PassKmvs = MaConfig.DemandePassword("Kmvs");
-				TextConfigKmvsUser.setText(UserKmvs);
-				TextConfigKmvsPassword.setText(PassKmvs);
-				ResultatDemandeAutoConnectKmvs = MaConfig.DemandeAutoConnect("Kmvs");
-				if (ResultatDemandeAutoConnectKmvs.equals("true")) {
-					CheckBoxAutoKmvs.setSelected(true);
-				}
-				if (ResultatDemandeAutoConnectKmvs.equals("false")) {
-					CheckBoxAutoKmvs.setSelected(false);
-				}
-
-				UserZmvs = MaConfig.DemandeUser("Zmvs");
-				PassZmvs = MaConfig.DemandePassword("Zmvs");
-				TextConfigZmvsUser.setText(UserZmvs);
-				TextConfigZmvsPassword.setText(PassZmvs);
-				ResultatDemandeAutoConnectZmvs = MaConfig.DemandeAutoConnect("Zmvs");
-				if (ResultatDemandeAutoConnectZmvs.equals("true")) {
-					CheckBoxAutoZmvs.setSelected(true);
-				}
-				if (ResultatDemandeAutoConnectZmvs.equals("false")) {
-					CheckBoxAutoZmvs.setSelected(false);
-				}
-
-				UserSysg = MaConfig.DemandeUser("Sysg");
-				PassSysg = MaConfig.DemandePassword("Sysg");
-				TextConfigSysgUser.setText(UserSysg);
-				TextConfigSysgPassword.setText(PassSysg);
-				ResultatDemandeAutoConnectSysg = MaConfig.DemandeAutoConnect("Sysg");
-				if (ResultatDemandeAutoConnectSysg.equals("true")) {
-					CheckBoxAutoSysg.setSelected(true);
-				}
-				if (ResultatDemandeAutoConnectSysg.equals("false")) {
-					CheckBoxAutoSysg.setSelected(false);
-				}
-
-				UserBmvs = MaConfig.DemandeUser("Bmvs");
-				PassBmvs = MaConfig.DemandePassword("Bmvs");
-				TextConfigBmvsUser.setText(UserBmvs);
-				TextConfigBmvsPassword.setText(PassBmvs);
-				ResultatDemandeAutoConnectBmvs = MaConfig.DemandeAutoConnect("Bmvs");
-				if (ResultatDemandeAutoConnectBmvs.equals("true")) {
-					CheckBoxAutoBmvs.setSelected(true);
-				}
-				if (ResultatDemandeAutoConnectBmvs.equals("false")) {
-					CheckBoxAutoBmvs.setSelected(false);
-				}
-
-				UserIp1 = MaConfig.DemandeUser("Ip1");
-				PassIp1 = MaConfig.DemandePassword("Ip1");
-				TextConfigIp1User.setText(UserIp1);
-				TextConfigIp1Password.setText(PassIp1);
-				ResultatDemandeAutoConnectIp1 = MaConfig.DemandeAutoConnect("Ip1");
-				if (ResultatDemandeAutoConnectIp1.equals("true")) {
-					CheckBoxAutoIp1.setSelected(true);
-				}
-				if (ResultatDemandeAutoConnectIp1.equals("false")) {
-					CheckBoxAutoIp1.setSelected(false);
-				}
-
-				UserIp2 = MaConfig.DemandeUser("Ip2");
-				PassIp2 = MaConfig.DemandePassword("Ip2");
-				TextConfigIp2User.setText(UserIp2);
-				TextConfigIp2Password.setText(PassIp2);
-				ResultatDemandeAutoConnectIp2 = MaConfig.DemandeAutoConnect("Ip2");
-				if (ResultatDemandeAutoConnectIp2.equals("true")) {
-					CheckBoxAutoIp2.setSelected(true);
-				}
-				if (ResultatDemandeAutoConnectIp2.equals("false")) {
-					CheckBoxAutoIp2.setSelected(false);
-				}
-
-				UserIp3 = MaConfig.DemandeUser("Ip3");
-				PassIp3 = MaConfig.DemandePassword("Ip3");
-				TextConfigIp3User.setText(UserIp3);
-				TextConfigIp3Password.setText(PassIp3);
-				ResultatDemandeAutoConnectIp3 = MaConfig.DemandeAutoConnect("Ip3");
-				if (ResultatDemandeAutoConnectIp3.equals("true")) {
-					CheckBoxAutoIp3.setSelected(true);
-				}
-				if (ResultatDemandeAutoConnectIp3.equals("false")) {
-					CheckBoxAutoIp3.setSelected(false);
-				}
-
+			ResultatDemandeAutoConnectGmvs = LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Gmvs");
+			if (ResultatDemandeAutoConnectGmvs.equals("true")) {
+				CheckBoxAutoGmvs.setSelected(true);
 			}
-			if (CodeRetour == 1) {
-
+			if (ResultatDemandeAutoConnectGmvs.equals("false")) {
+				CheckBoxAutoGmvs.setSelected(false);
 			}
+
+			UserSysa = LaBase.ConsulterUserPilote(ConnectionBase, "Sysa");
+			PassSysa = LaBase.ConsulterPasswordPilote(ConnectionBase, "Sysa");
+			TextConfigSysaUser.setText(UserSysa);
+			TextConfigSysaPassword.setText(PassSysa);
+			ResultatDemandeAutoConnectSysa = LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Sysa");
+			if (ResultatDemandeAutoConnectSysa.equals("true")) {
+				CheckBoxAutoSysa.setSelected(true);
+			}
+			if (ResultatDemandeAutoConnectSysa.equals("false")) {
+				CheckBoxAutoSysa.setSelected(false);
+			}
+			;
+
+			UserKmvs = LaBase.ConsulterUserPilote(ConnectionBase, "Kmvs");
+			PassKmvs = LaBase.ConsulterPasswordPilote(ConnectionBase, "Kmvs");
+			TextConfigKmvsUser.setText(UserKmvs);
+			TextConfigKmvsPassword.setText(PassKmvs);
+			ResultatDemandeAutoConnectKmvs = LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Kmvs");
+			if (ResultatDemandeAutoConnectKmvs.equals("true")) {
+				CheckBoxAutoKmvs.setSelected(true);
+			}
+			if (ResultatDemandeAutoConnectKmvs.equals("false")) {
+				CheckBoxAutoKmvs.setSelected(false);
+			}
+
+			UserZmvs = LaBase.ConsulterUserPilote(ConnectionBase, "Zmvs");
+			PassZmvs = LaBase.ConsulterPasswordPilote(ConnectionBase, "Zmvs");
+			TextConfigZmvsUser.setText(UserZmvs);
+			TextConfigZmvsPassword.setText(PassZmvs);
+			ResultatDemandeAutoConnectZmvs = LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Zmvs");
+			if (ResultatDemandeAutoConnectZmvs.equals("true")) {
+				CheckBoxAutoZmvs.setSelected(true);
+			}
+			if (ResultatDemandeAutoConnectZmvs.equals("false")) {
+				CheckBoxAutoZmvs.setSelected(false);
+			}
+
+			UserSysg = LaBase.ConsulterUserPilote(ConnectionBase, "Sysg");
+			PassSysg = LaBase.ConsulterPasswordPilote(ConnectionBase, "Sysg");
+			TextConfigSysgUser.setText(UserSysg);
+			TextConfigSysgPassword.setText(PassSysg);
+			ResultatDemandeAutoConnectSysg = LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Sysg");
+			if (ResultatDemandeAutoConnectSysg.equals("true")) {
+				CheckBoxAutoSysg.setSelected(true);
+			}
+			if (ResultatDemandeAutoConnectSysg.equals("false")) {
+				CheckBoxAutoSysg.setSelected(false);
+			}
+
+			UserBmvs = LaBase.ConsulterUserPilote(ConnectionBase, "Bmvs");
+			PassBmvs = LaBase.ConsulterPasswordPilote(ConnectionBase, "Bmvs");
+			TextConfigBmvsUser.setText(UserBmvs);
+			TextConfigBmvsPassword.setText(PassBmvs);
+			ResultatDemandeAutoConnectBmvs = LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Bmvs");
+			if (ResultatDemandeAutoConnectBmvs.equals("true")) {
+				CheckBoxAutoBmvs.setSelected(true);
+			}
+			if (ResultatDemandeAutoConnectBmvs.equals("false")) {
+				CheckBoxAutoBmvs.setSelected(false);
+			}
+
+			UserIp1 = LaBase.ConsulterUserPilote(ConnectionBase, "Ip1");
+			PassIp1 = LaBase.ConsulterPasswordPilote(ConnectionBase, "Ip1");
+			TextConfigIp1User.setText(UserIp1);
+			TextConfigIp1Password.setText(PassIp1);
+			ResultatDemandeAutoConnectIp1 = LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Ip1");
+			if (ResultatDemandeAutoConnectIp1.equals("true")) {
+				CheckBoxAutoIp1.setSelected(true);
+			}
+			if (ResultatDemandeAutoConnectIp1.equals("false")) {
+				CheckBoxAutoIp1.setSelected(false);
+			}
+
+			UserIp2 = LaBase.ConsulterUserPilote(ConnectionBase, "Ip2");
+			PassIp2 = LaBase.ConsulterPasswordPilote(ConnectionBase, "Ip2");
+			TextConfigIp2User.setText(UserIp2);
+			TextConfigIp2Password.setText(PassIp2);
+			ResultatDemandeAutoConnectIp2 = LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Ip2");
+			if (ResultatDemandeAutoConnectIp2.equals("true")) {
+				CheckBoxAutoIp2.setSelected(true);
+			}
+			if (ResultatDemandeAutoConnectIp2.equals("false")) {
+				CheckBoxAutoIp2.setSelected(false);
+			}
+
+			UserIp3 = LaBase.ConsulterUserPilote(ConnectionBase, "Ip3");
+			PassIp3 = LaBase.ConsulterPasswordPilote(ConnectionBase, "Ip3");
+			TextConfigIp3User.setText(UserIp3);
+			TextConfigIp3Password.setText(PassIp3);
+			ResultatDemandeAutoConnectIp3 = LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Ip3");
+			if (ResultatDemandeAutoConnectIp3.equals("true")) {
+				CheckBoxAutoIp3.setSelected(true);
+			}
+			if (ResultatDemandeAutoConnectIp3.equals("false")) {
+				CheckBoxAutoIp3.setSelected(false);
+			}
+
 			EnableDisableTouteZonesSaisies(true);
 			BoutonRechargerConfig.setEnabled(true);
-
+			LaBase.FermerConnexion(ConnectionBase);
 		}
 	}
 
