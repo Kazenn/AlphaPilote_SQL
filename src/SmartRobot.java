@@ -34,6 +34,12 @@ class SmartRobot extends Robot {
 		delay(50);
 		keyRelease(KeyEvent.VK_C);
 		keyRelease(KeyEvent.VK_CONTROL);
+		delay(50);
+		keyPress(KeyEvent.VK_CONTROL);
+		keyPress(KeyEvent.VK_C);
+		delay(50);
+		keyRelease(KeyEvent.VK_C);
+		keyRelease(KeyEvent.VK_CONTROL);
 
 	}
 

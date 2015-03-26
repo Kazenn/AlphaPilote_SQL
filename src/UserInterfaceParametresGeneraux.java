@@ -5,6 +5,7 @@ import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
+import java.sql.SQLException;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -30,10 +31,11 @@ public class UserInterfaceParametresGeneraux extends JFrame {
 		setTitle("Options g\u00E9n\u00E9rales");
 		setType(Type.UTILITY);
 		getContentPane().setLayout(null);
+		setAlwaysOnTop(true);
 
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
-		panel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Position fen\u00EAtre principale", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Position d'AlphaPilote", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		panel.setBounds(10, 11, 180, 50);
 		getContentPane().add(panel);
 
@@ -116,7 +118,7 @@ public class UserInterfaceParametresGeneraux extends JFrame {
 		panel_2.setLayout(null);
 
 		ComboBoxSession = new JComboBox();
-		ComboBoxSession.setModel(new DefaultComboBoxModel(new String[] { "", "IT-CE Bercy", "Bourg-la-reine" }));
+		ComboBoxSession.setModel(new DefaultComboBoxModel(new String[] { "-", "IT-CE Bercy", "Bourg-la-reine", "Centrale IP1 & IP2", "Centrale QPA" }));
 		ComboBoxSession.setSelectedIndex(1);
 		ComboBoxSession.setBounds(6, 16, 131, 20);
 		panel_2.add(ComboBoxSession);
@@ -132,27 +134,45 @@ public class UserInterfaceParametresGeneraux extends JFrame {
 		public void run() {
 			Connection ConnexionBase = LaBase.InitConnexion();
 
-			if (LaBase.ConsulterDonneePilote(ConnexionBase, "PositionFenetreDernierLancement").equals("true") == true) {
-				CheckBoxRestaurePosition.setSelected(true);
+			try {
+				if (LaBase.ConsulterDonneePilote(ConnexionBase, "PositionFenetreDernierLancement").equals("true") == true) {
+					CheckBoxRestaurePosition.setSelected(true);
+				}
+				else {
+					CheckBoxRestaurePosition.setSelected(false);
+				}
 			}
-			else {
-				CheckBoxRestaurePosition.setSelected(false);
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
-			if (LaBase.ConsulterDonneePilote(ConnexionBase, "LancementAutoPoste").equals("true") == true) {
-				BoxLancementAutomatiquePoste.setSelected(true);
-				int Temps = (LaBase.ConsulterDonneeIntPilote(ConnexionBase, "LancementAutoTemps"));
-				TextTemps.setText(Integer.toString(Temps));
+			try {
+				if (LaBase.ConsulterDonneePilote(ConnexionBase, "LancementAutoPoste").equals("true") == true) {
+					BoxLancementAutomatiquePoste.setSelected(true);
+					int Temps = (LaBase.ConsulterDonneeIntPilote(ConnexionBase, "LancementAutoTemps"));
+					TextTemps.setText(Integer.toString(Temps));
 
+				}
+				else {
+					BoxLancementAutomatiquePoste.setSelected(false);
+					TextTemps.setEnabled(false);
+				}
 			}
-			else {
-				BoxLancementAutomatiquePoste.setSelected(false);
-				TextTemps.setEnabled(false);
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
 			int Session = 0;
 
-			Session = LaBase.ConsulterDonneeIntPilote(ConnexionBase, "SessionDefault");
+			try {
+				Session = LaBase.ConsulterDonneeIntPilote(ConnexionBase, "SessionDefault");
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			switch (Session) {
 				case 1:
@@ -160,6 +180,12 @@ public class UserInterfaceParametresGeneraux extends JFrame {
 					break;
 				case 2:
 					ComboBoxSession.setSelectedIndex(2);
+					break;
+				case 3:
+					ComboBoxSession.setSelectedIndex(3);
+					break;
+				case 4:
+					ComboBoxSession.setSelectedIndex(4);
 					break;
 
 			}
@@ -182,7 +208,13 @@ public class UserInterfaceParametresGeneraux extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutDonneePilote(ConnexionBase, "PositionFenetreDernierLancement", Choix);
+			try {
+				LaBase.AjoutDonneePilote(ConnexionBase, "PositionFenetreDernierLancement", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxLancementAutomatiquePoste.isSelected() == true) {
 				Choix = "true";
@@ -190,10 +222,28 @@ public class UserInterfaceParametresGeneraux extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutDonneePilote(ConnexionBase, "LancementAutoPoste", Choix);
-			LaBase.AjoutDonneeIntPilote(ConnexionBase, "LancementAutoTemps", Integer.parseInt(TextTemps.getText()));
+			try {
+				LaBase.AjoutDonneePilote(ConnexionBase, "LancementAutoPoste", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				LaBase.AjoutDonneeIntPilote(ConnexionBase, "LancementAutoTemps", Integer.parseInt(TextTemps.getText()));
+			}
+			catch (NumberFormatException | SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
-			LaBase.AjoutDonneeIntPilote(ConnexionBase, "SessionDefault", ComboBoxSession.getSelectedIndex());
+			try {
+				LaBase.AjoutDonneeIntPilote(ConnexionBase, "SessionDefault", ComboBoxSession.getSelectedIndex());
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			dispose();
 

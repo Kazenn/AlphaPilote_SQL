@@ -6,6 +6,7 @@ import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
+import java.sql.SQLException;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -349,7 +350,7 @@ public class UserInterfaceParametres extends JFrame {
 
 	}
 
-	public void SetNavigateurFichierConfig() {
+	public void SetNavigateurFichierConfig() throws SQLException {
 
 		GestionSql LaBase = new GestionSql();
 		Connection ConnectionBase = LaBase.InitConnexion();
@@ -365,7 +366,13 @@ public class UserInterfaceParametres extends JFrame {
 			String Navigateur = "";
 			GestionSql LaBase = new GestionSql();
 			Connection ConnectionBase = LaBase.InitConnexion();
-			Navigateur = LaBase.ConsulterBrowserPilote(ConnectionBase);
+			try {
+				Navigateur = LaBase.ConsulterBrowserPilote(ConnectionBase);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			switch (Navigateur) {
 				case "Google Chrome":
@@ -401,7 +408,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Sysa", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "Sysa", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxChoixAutoSysg.isSelected() == true) {
 				Choix = "true";
@@ -409,7 +422,14 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Sysg", Choix);
+
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "Sysg", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxChoixAutoKmvs.isSelected() == true) {
 				Choix = "true";
@@ -417,7 +437,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Kmvs", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "Kmvs", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxChoixAutoZmvs.isSelected() == true) {
 				Choix = "true";
@@ -425,7 +451,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Zmvs", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "Zmvs", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxChoixAutoGmvs.isSelected() == true) {
 				Choix = "true";
@@ -433,7 +465,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Gmvs", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "Gmvs", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxChoixAutoBmvs.isSelected() == true) {
 				Choix = "true";
@@ -441,7 +479,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Bmvs", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "Bmvs", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxChoixAutoIp1.isSelected() == true) {
 				Choix = "true";
@@ -449,7 +493,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Ip1", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "Ip1", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxChoixAutoIp2.isSelected() == true) {
 				Choix = "true";
@@ -457,7 +507,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Ip2", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "Ip2", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxChoixAutoIp3.isSelected() == true) {
 				Choix = "true";
@@ -465,7 +521,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Ip3", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "Ip3", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxChoixAutoBr.isSelected() == true) {
 				Choix = "true";
@@ -473,7 +535,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Br", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "Br", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxChoixAutoBdi.isSelected() == true) {
 				Choix = "true";
@@ -481,7 +549,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Bdi", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "Bdi", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxChoixAutoBdaf.isSelected() == true) {
 				Choix = "true";
@@ -489,7 +563,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Bdaf", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "Bdaf", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxChoixAutoSocly.isSelected() == true) {
 				Choix = "true";
@@ -497,7 +577,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Socly", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "Socly", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxChoixAutoSocmcsd.isSelected() == true) {
 				Choix = "true";
@@ -505,7 +591,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Socmcsd", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "Socmcsd", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxChoixAutoPfb.isSelected() == true) {
 				Choix = "true";
@@ -513,7 +605,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Pfb", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "Pfb", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxChoixAutoOutlook.isSelected() == true) {
 				Choix = "true";
@@ -521,7 +619,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Outlook", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "Outlook", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxChoixAutoControlm.isSelected() == true) {
 				Choix = "true";
@@ -529,7 +633,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Controlm", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "Controlm", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxChoixAutoArsv7.isSelected() == true) {
 				Choix = "true";
@@ -537,7 +647,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Arsv7", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "Arsv7", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxChoixAutoIprox.isSelected() == true) {
 				Choix = "true";
@@ -545,7 +661,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Iprox", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "Iprox", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxChoixAutoPuttycm.isSelected() == true) {
 				Choix = "true";
@@ -553,7 +675,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Puttycm", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "Puttycm", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxChoixAutoExceed.isSelected() == true) {
 				Choix = "true";
@@ -561,7 +689,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Exceed", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "Exceed", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxChoixAutoMremote.isSelected() == true) {
 				Choix = "true";
@@ -569,7 +703,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Mremote", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "Mremote", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxChoixAutoPartageIprox.isSelected() == true) {
 				Choix = "true";
@@ -577,7 +717,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "PartageIprox", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "PartageIprox", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			// BoxChoixAutoPartageIprox
 
@@ -587,7 +733,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "VtomIp1Jour", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "VtomIp1Jour", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxChoixAutoVtomIp1Desc.isSelected() == true) {
 				Choix = "true";
@@ -595,7 +747,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "VtomIp1Desc", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "VtomIp1Desc", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxChoixAutoVtomIp2Jour.isSelected() == true) {
 				Choix = "true";
@@ -603,7 +761,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "VtomIp2Jour", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "VtomIp2Jour", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxChoixAutoVtomIp2Desc.isSelected() == true) {
 				Choix = "true";
@@ -611,7 +775,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "VtomIp2Desc", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "VtomIp2Desc", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			// -----------------------------------------------------------------
 			//
@@ -619,7 +789,13 @@ public class UserInterfaceParametres extends JFrame {
 			// --------------------------------------------------------------
 
 			NavigateurDansCombox = (String) ComboxNavigateur.getSelectedItem();
-			SetNavigateurFichierConfig();
+			try {
+				SetNavigateurFichierConfig();
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			// -----------------------------------------------------------------
 			//
@@ -632,7 +808,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Navigateur", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "Navigateur", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxChoixAutoOdip.isSelected() == true) {
 				Choix = "true";
@@ -640,7 +822,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Odip", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "Odip", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxChoixAutoBbr.isSelected() == true) {
 				Choix = "true";
@@ -648,7 +836,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Bbr", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "Bbr", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxChoixAutoOseIp12.isSelected() == true) {
 				Choix = "true";
@@ -656,7 +850,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "OseIp12", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "OseIp12", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxChoixAutoIplabel.isSelected() == true) {
 				Choix = "true";
@@ -664,7 +864,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Iplabel", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "Iplabel", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxChoixAutoNewtest.isSelected() == true) {
 				Choix = "true";
@@ -672,7 +878,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Newtest", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "Newtest", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxChoixAutoXguard.isSelected() == true) {
 				Choix = "true";
@@ -680,7 +892,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Xguard", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "Xguard", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxChoixAutoHmc.isSelected() == true) {
 				Choix = "true";
@@ -688,7 +906,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Hmc", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "Hmc", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxChoixAutoKvm.isSelected() == true) {
 				Choix = "true";
@@ -697,7 +921,13 @@ public class UserInterfaceParametres extends JFrame {
 				Choix = "false";
 			}
 
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Kvm", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "Kvm", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxChoixAutoTina5.isSelected() == true) {
 				Choix = "true";
@@ -705,7 +935,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Tina5", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "Tina5", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxChoixAutoTina6.isSelected() == true) {
 				Choix = "true";
@@ -713,7 +949,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Tina6", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "Tina6", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxChoixAutoSismoTous.isSelected() == true) {
 				Choix = "true";
@@ -721,7 +963,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "SismoTous", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "SismoTous", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (BoxChoixAutoVcenter.isSelected() == true) {
 				Choix = "true";
@@ -729,7 +977,13 @@ public class UserInterfaceParametres extends JFrame {
 			else {
 				Choix = "false";
 			}
-			LaBase.AjoutLancementAutoPilote(ConnectionBase, "Vcenter", Choix);
+			try {
+				LaBase.AjoutLancementAutoPilote(ConnectionBase, "Vcenter", Choix);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			// ----Attente fin d'enregistrement pour fermer la fenêtre des
 			// paramêtres.
@@ -748,7 +1002,13 @@ public class UserInterfaceParametres extends JFrame {
 
 			GestionSql LaBase = new GestionSql();
 			Connection ConnectionBase = LaBase.InitConnexion();
-			Navigateur = LaBase.ConsulterBrowserPilote(ConnectionBase);
+			try {
+				Navigateur = LaBase.ConsulterBrowserPilote(ConnectionBase);
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			switch (Navigateur) {
 				case "Google Chrome":
@@ -765,170 +1025,343 @@ public class UserInterfaceParametres extends JFrame {
 
 			BoxChoixAutoNavigateur.setText(Navigateur);
 
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Sysa").equals("true") == true) {
-				BoxChoixAutoSysa.setSelected(true);
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Sysa").equals("true") == true) {
+					BoxChoixAutoSysa.setSelected(true);
+				}
+				else {
+					BoxChoixAutoSysa.setSelected(false);
+				}
 			}
-			else {
-				BoxChoixAutoSysa.setSelected(false);
-			}
-
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Sysg").equals("true") == true) {
-				BoxChoixAutoSysg.setSelected(true);
-			}
-			else {
-				BoxChoixAutoSysg.setSelected(false);
-			}
-
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Kmvs").equals("true") == true) {
-				BoxChoixAutoKmvs.setSelected(true);
-			}
-			else {
-				BoxChoixAutoKmvs.setSelected(false);
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Zmvs").equals("true") == true) {
-				BoxChoixAutoZmvs.setSelected(true);
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Sysg").equals("true") == true) {
+					BoxChoixAutoSysg.setSelected(true);
+				}
+				else {
+					BoxChoixAutoSysg.setSelected(false);
+				}
 			}
-			else {
-				BoxChoixAutoZmvs.setSelected(false);
-			}
-
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Gmvs").equals("true") == true) {
-				BoxChoixAutoGmvs.setSelected(true);
-			}
-			else {
-				BoxChoixAutoGmvs.setSelected(false);
-			}
-
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Bmvs").equals("true") == true) {
-				BoxChoixAutoBmvs.setSelected(true);
-			}
-			else {
-				BoxChoixAutoBmvs.setSelected(false);
-			}
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Ip1").equals("true") == true) {
-				BoxChoixAutoIp1.setSelected(true);
-			}
-			else {
-				BoxChoixAutoIp1.setSelected(false);
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Ip2").equals("true") == true) {
-				BoxChoixAutoIp2.setSelected(true);
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Kmvs").equals("true") == true) {
+					BoxChoixAutoKmvs.setSelected(true);
+				}
+				else {
+					BoxChoixAutoKmvs.setSelected(false);
+				}
 			}
-			else {
-				BoxChoixAutoIp2.setSelected(false);
-			}
-
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Ip3").equals("true") == true) {
-				BoxChoixAutoIp3.setSelected(true);
-			}
-			else {
-				BoxChoixAutoIp3.setSelected(false);
-			}
-
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Br").equals("true") == true) {
-				BoxChoixAutoBr.setSelected(true);
-			}
-			else {
-				BoxChoixAutoBr.setSelected(false);
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Bdi").equals("true") == true) {
-				BoxChoixAutoBdi.setSelected(true);
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Zmvs").equals("true") == true) {
+					BoxChoixAutoZmvs.setSelected(true);
+				}
+				else {
+					BoxChoixAutoZmvs.setSelected(false);
+				}
 			}
-			else {
-				BoxChoixAutoBdi.setSelected(false);
-			}
-
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Bdaf").equals("true") == true) {
-				BoxChoixAutoBdaf.setSelected(true);
-			}
-			else {
-				BoxChoixAutoBdaf.setSelected(false);
-			}
-
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Socly").equals("true") == true) {
-				BoxChoixAutoSocly.setSelected(true);
-			}
-			else {
-				BoxChoixAutoSocly.setSelected(false);
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Socmcsd").equals("true") == true) {
-				BoxChoixAutoSocmcsd.setSelected(true);
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Gmvs").equals("true") == true) {
+					BoxChoixAutoGmvs.setSelected(true);
+				}
+				else {
+					BoxChoixAutoGmvs.setSelected(false);
+				}
 			}
-			else {
-				BoxChoixAutoSocmcsd.setSelected(false);
-			}
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Pfb").equals("true") == true) {
-				BoxChoixAutoPfb.setSelected(true);
-			}
-			else {
-				BoxChoixAutoPfb.setSelected(false);
-			}
-
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Controlm").equals("true") == true) {
-				BoxChoixAutoControlm.setSelected(true);
-			}
-			else {
-				BoxChoixAutoControlm.setSelected(false);
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Outlook").equals("true") == true) {
-				BoxChoixAutoOutlook.setSelected(true);
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Bmvs").equals("true") == true) {
+					BoxChoixAutoBmvs.setSelected(true);
+				}
+				else {
+					BoxChoixAutoBmvs.setSelected(false);
+				}
 			}
-			else {
-				BoxChoixAutoOutlook.setSelected(false);
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Iprox").equals("true") == true) {
-				BoxChoixAutoIprox.setSelected(true);
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Ip1").equals("true") == true) {
+					BoxChoixAutoIp1.setSelected(true);
+				}
+				else {
+					BoxChoixAutoIp1.setSelected(false);
+				}
 			}
-			else {
-				BoxChoixAutoIprox.setSelected(false);
-			}
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Arsv7").equals("true") == true) {
-				BoxChoixAutoArsv7.setSelected(true);
-			}
-			else {
-				BoxChoixAutoArsv7.setSelected(false);
-			}
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Puttycm").equals("true") == true) {
-				BoxChoixAutoPuttycm.setSelected(true);
-			}
-			else {
-				BoxChoixAutoPuttycm.setSelected(false);
-			}
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Exceed").equals("true") == true) {
-				BoxChoixAutoExceed.setSelected(true);
-			}
-			else {
-				BoxChoixAutoExceed.setSelected(false);
-			}
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "VtomIp1Jour").equals("true") == true) {
-				BoxChoixAutoVtomIp1Jour.setSelected(true);
-			}
-			else {
-				BoxChoixAutoVtomIp1Jour.setSelected(false);
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "VtomIp1Desc").equals("true") == true) {
-				BoxChoixAutoVtomIp1Desc.setSelected(true);
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Ip2").equals("true") == true) {
+					BoxChoixAutoIp2.setSelected(true);
+				}
+				else {
+					BoxChoixAutoIp2.setSelected(false);
+				}
 			}
-			else {
-				BoxChoixAutoVtomIp1Desc.setSelected(false);
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "VtomIp2Jour").equals("true") == true) {
-				BoxChoixAutoVtomIp2Jour.setSelected(true);
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Ip3").equals("true") == true) {
+					BoxChoixAutoIp3.setSelected(true);
+				}
+				else {
+					BoxChoixAutoIp3.setSelected(false);
+				}
 			}
-			else {
-				BoxChoixAutoVtomIp2Jour.setSelected(false);
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "VtomIp2Desc").equals("true") == true) {
-				BoxChoixAutoVtomIp2Desc.setSelected(true);
+
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Br").equals("true") == true) {
+					BoxChoixAutoBr.setSelected(true);
+				}
+				else {
+					BoxChoixAutoBr.setSelected(false);
+				}
 			}
-			else {
-				BoxChoixAutoVtomIp2Desc.setSelected(false);
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Bdi").equals("true") == true) {
+					BoxChoixAutoBdi.setSelected(true);
+				}
+				else {
+					BoxChoixAutoBdi.setSelected(false);
+				}
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Bdaf").equals("true") == true) {
+					BoxChoixAutoBdaf.setSelected(true);
+				}
+				else {
+					BoxChoixAutoBdaf.setSelected(false);
+				}
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Socly").equals("true") == true) {
+					BoxChoixAutoSocly.setSelected(true);
+				}
+				else {
+					BoxChoixAutoSocly.setSelected(false);
+				}
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Socmcsd").equals("true") == true) {
+					BoxChoixAutoSocmcsd.setSelected(true);
+				}
+				else {
+					BoxChoixAutoSocmcsd.setSelected(false);
+				}
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Pfb").equals("true") == true) {
+					BoxChoixAutoPfb.setSelected(true);
+				}
+				else {
+					BoxChoixAutoPfb.setSelected(false);
+				}
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Controlm").equals("true") == true) {
+					BoxChoixAutoControlm.setSelected(true);
+				}
+				else {
+					BoxChoixAutoControlm.setSelected(false);
+				}
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Outlook").equals("true") == true) {
+					BoxChoixAutoOutlook.setSelected(true);
+				}
+				else {
+					BoxChoixAutoOutlook.setSelected(false);
+				}
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Iprox").equals("true") == true) {
+					BoxChoixAutoIprox.setSelected(true);
+				}
+				else {
+					BoxChoixAutoIprox.setSelected(false);
+				}
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Arsv7").equals("true") == true) {
+					BoxChoixAutoArsv7.setSelected(true);
+				}
+				else {
+					BoxChoixAutoArsv7.setSelected(false);
+				}
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Puttycm").equals("true") == true) {
+					BoxChoixAutoPuttycm.setSelected(true);
+				}
+				else {
+					BoxChoixAutoPuttycm.setSelected(false);
+				}
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Exceed").equals("true") == true) {
+					BoxChoixAutoExceed.setSelected(true);
+				}
+				else {
+					BoxChoixAutoExceed.setSelected(false);
+				}
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "PartageIprox").equals("true") == true) {
+					BoxChoixAutoPartageIprox.setSelected(true);
+				}
+				else {
+					BoxChoixAutoPartageIprox.setSelected(false);
+				}
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "VtomIp1Jour").equals("true") == true) {
+					BoxChoixAutoVtomIp1Jour.setSelected(true);
+				}
+				else {
+					BoxChoixAutoVtomIp1Jour.setSelected(false);
+				}
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "VtomIp1Desc").equals("true") == true) {
+					BoxChoixAutoVtomIp1Desc.setSelected(true);
+				}
+				else {
+					BoxChoixAutoVtomIp1Desc.setSelected(false);
+				}
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "VtomIp2Jour").equals("true") == true) {
+					BoxChoixAutoVtomIp2Jour.setSelected(true);
+				}
+				else {
+					BoxChoixAutoVtomIp2Jour.setSelected(false);
+				}
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "VtomIp2Desc").equals("true") == true) {
+					BoxChoixAutoVtomIp2Desc.setSelected(true);
+				}
+				else {
+					BoxChoixAutoVtomIp2Desc.setSelected(false);
+				}
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Mremote").equals("true") == true) {
+					BoxChoixAutoMremote.setSelected(true);
+				}
+				else {
+					BoxChoixAutoMremote.setSelected(false);
+				}
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
 			// ---------------------------------------
@@ -937,86 +1370,164 @@ public class UserInterfaceParametres extends JFrame {
 			//
 			// ---------------------------------------
 
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Navigateur").equals("true") == true) {
-				BoxChoixAutoNavigateur.setSelected(true);
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Navigateur").equals("true") == true) {
+					BoxChoixAutoNavigateur.setSelected(true);
+				}
+				else {
+					BoxChoixAutoNavigateur.setSelected(false);
+				}
 			}
-			else {
-				BoxChoixAutoNavigateur.setSelected(false);
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Odip").equals("true") == true) {
-				BoxChoixAutoOdip.setSelected(true);
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Odip").equals("true") == true) {
+					BoxChoixAutoOdip.setSelected(true);
+				}
+				else {
+					BoxChoixAutoOdip.setSelected(false);
+				}
 			}
-			else {
-				BoxChoixAutoOdip.setSelected(false);
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Bbr").equals("true") == true) {
-				BoxChoixAutoBbr.setSelected(true);
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Bbr").equals("true") == true) {
+					BoxChoixAutoBbr.setSelected(true);
+				}
+				else {
+					BoxChoixAutoBbr.setSelected(false);
+				}
 			}
-			else {
-				BoxChoixAutoBbr.setSelected(false);
-			}
-
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "OseIp12").equals("true") == true) {
-				BoxChoixAutoOseIp12.setSelected(true);
-			}
-			else {
-				BoxChoixAutoOseIp12.setSelected(false);
-			}
-
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Iplabel").equals("true") == true) {
-				BoxChoixAutoIplabel.setSelected(true);
-			}
-			else {
-				BoxChoixAutoIplabel.setSelected(false);
-			}
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Newtest").equals("true") == true) {
-				BoxChoixAutoNewtest.setSelected(true);
-			}
-			else {
-				BoxChoixAutoNewtest.setSelected(false);
-			}
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Xguard").equals("true") == true) {
-				BoxChoixAutoXguard.setSelected(true);
-			}
-			else {
-				BoxChoixAutoXguard.setSelected(false);
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Hmc").equals("true") == true) {
-				BoxChoixAutoHmc.setSelected(true);
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "OseIp12").equals("true") == true) {
+					BoxChoixAutoOseIp12.setSelected(true);
+				}
+				else {
+					BoxChoixAutoOseIp12.setSelected(false);
+				}
 			}
-			else {
-				BoxChoixAutoHmc.setSelected(false);
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Kvm").equals("true") == true) {
-				BoxChoixAutoKvm.setSelected(true);
+
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Iplabel").equals("true") == true) {
+					BoxChoixAutoIplabel.setSelected(true);
+				}
+				else {
+					BoxChoixAutoIplabel.setSelected(false);
+				}
 			}
-			else {
-				BoxChoixAutoKvm.setSelected(false);
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Tina5").equals("true") == true) {
-				BoxChoixAutoTina5.setSelected(true);
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Newtest").equals("true") == true) {
+					BoxChoixAutoNewtest.setSelected(true);
+				}
+				else {
+					BoxChoixAutoNewtest.setSelected(false);
+				}
 			}
-			else {
-				BoxChoixAutoTina5.setSelected(false);
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Tina6").equals("true") == true) {
-				BoxChoixAutoTina6.setSelected(true);
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Xguard").equals("true") == true) {
+					BoxChoixAutoXguard.setSelected(true);
+				}
+				else {
+					BoxChoixAutoXguard.setSelected(false);
+				}
 			}
-			else {
-				BoxChoixAutoTina6.setSelected(false);
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Vcenter").equals("true") == true) {
-				BoxChoixAutoVcenter.setSelected(true);
+
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Hmc").equals("true") == true) {
+					BoxChoixAutoHmc.setSelected(true);
+				}
+				else {
+					BoxChoixAutoHmc.setSelected(false);
+				}
 			}
-			else {
-				BoxChoixAutoVcenter.setSelected(false);
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "SismoTous").equals("true") == true) {
-				BoxChoixAutoSismoTous.setSelected(true);
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Kvm").equals("true") == true) {
+					BoxChoixAutoKvm.setSelected(true);
+				}
+				else {
+					BoxChoixAutoKvm.setSelected(false);
+				}
 			}
-			else {
-				BoxChoixAutoSismoTous.setSelected(false);
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Tina5").equals("true") == true) {
+					BoxChoixAutoTina5.setSelected(true);
+				}
+				else {
+					BoxChoixAutoTina5.setSelected(false);
+				}
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Tina6").equals("true") == true) {
+					BoxChoixAutoTina6.setSelected(true);
+				}
+				else {
+					BoxChoixAutoTina6.setSelected(false);
+				}
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Vcenter").equals("true") == true) {
+					BoxChoixAutoVcenter.setSelected(true);
+				}
+				else {
+					BoxChoixAutoVcenter.setSelected(false);
+				}
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "SismoTous").equals("true") == true) {
+					BoxChoixAutoSismoTous.setSelected(true);
+				}
+				else {
+					BoxChoixAutoSismoTous.setSelected(false);
+				}
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			LaBase.FermerConnexion(ConnectionBase);
 		}

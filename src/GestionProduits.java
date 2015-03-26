@@ -1,11 +1,11 @@
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.SQLException;
 
 public class GestionProduits {
 	GestionLog MaLog = new GestionLog();
 	GestionChemin Chemin = new GestionChemin();
-	GestionSql LaBase = new GestionSql();
-	Connection ConnectionBase = LaBase.InitConnexion();
+
 	GestionProfile Profile = new GestionProfile();
 	SuperLog SL = new SuperLog();
 	String UserNameStation = System.getProperty("user.name");
@@ -14,8 +14,16 @@ public class GestionProduits {
 	GestionSessions Session = new GestionSessions();
 
 	public String SelectionneNavigateur() {
+		GestionSql LaBase = new GestionSql();
+		Connection ConnectionBase = LaBase.InitConnexion();
+		try {
 
-		Navigateur = LaBase.ConsulterBrowserPilote(ConnectionBase);
+			Navigateur = LaBase.ConsulterBrowserPilote(ConnectionBase);
+		}
+		catch (SQLException e) {
+			LaBase.FermerConnexion(ConnectionBase);
+			e.printStackTrace();
+		}
 		switch (Navigateur) {
 			case "Google Chrome":
 				Navigateur = "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe";
@@ -31,6 +39,7 @@ public class GestionProduits {
 				break;
 
 		}
+		LaBase.FermerConnexion(ConnectionBase);
 		return Navigateur;
 	}
 
@@ -122,19 +131,23 @@ public class GestionProduits {
 
 	public Boolean LanceArsRemedy() {
 		SL.EcrireSuperLog("Ars Remedy v7");
+		GestionSql LaBase = new GestionSql();
+		Connection ConnectionBase = LaBase.InitConnexion();
 
 		try {
 			String UserWindows = LaBase.ConsulterUserPilote(ConnectionBase, "Windows");
 			Runtime.getRuntime().exec(String.format(Chemin.DemandeChemin("CheminArsRemedy") + " -user=\"" + UserWindows.toUpperCase() + "\""));
 			RetourLancement = true;
 		}
-		catch (IOException e) {
+		catch (IOException | SQLException e) {
 
 			e.printStackTrace();
 			MaLog.EcrireDansFichierLog("Erreur au lancement d'ARS-Remedy v7 : " + e);
 			RetourLancement = false;
+			LaBase.FermerConnexion(ConnectionBase);
 
 		}
+		LaBase.FermerConnexion(ConnectionBase);
 		return RetourLancement;
 	}
 
@@ -252,14 +265,22 @@ public class GestionProduits {
 
 	public Boolean LanceVtomIp1q() {
 		SL.EcrireSuperLog("Vtom ip1 J");
+		GestionSql LaBase = new GestionSql();
+		Connection ConnectionBase = LaBase.InitConnexion();
 
 		String UserWindows = "";
 		String PassWindows = "";
-		UserWindows = LaBase.ConsulterUserPilote(ConnectionBase, "Windows");
-		PassWindows = LaBase.ConsulterPasswordPilote(ConnectionBase, "Windows");
+		try {
+			UserWindows = LaBase.ConsulterUserPilote(ConnectionBase, "Windows");
+			PassWindows = LaBase.ConsulterPasswordPilote(ConnectionBase, "Windows");
+		}
+		catch (SQLException e1) {
+			LaBase.FermerConnexion(ConnectionBase);
+			e1.printStackTrace();
+		}
 
 		try {
-			Runtime.getRuntime().exec(String.format(Chemin.DemandeChemin("CheminVtom") + " -u " + UserWindows + " -p " + PassWindows + " -s UP2TO002:30017 " + " -d Pilote"));
+			Runtime.getRuntime().exec(String.format(Chemin.DemandeChemin("CheminVtom") + " -u " + UserWindows + " -p " + PassWindows + " -s UP2TO005:30017 " + " -d Pilote"));
 			RetourLancement = true;
 		}
 		catch (IOException e) {
@@ -267,19 +288,27 @@ public class GestionProduits {
 			e.printStackTrace();
 			MaLog.EcrireDansFichierLog("Erreur au lancement de VtomIp1q: " + e);
 		}
+		LaBase.FermerConnexion(ConnectionBase);
 		return RetourLancement;
 	}
 
 	public Boolean LanceVtomIp1d() {
 		SL.EcrireSuperLog("Vtom Ip1 D");
-
+		GestionSql LaBase = new GestionSql();
+		Connection ConnectionBase = LaBase.InitConnexion();
 		String UserWindows = "";
 		String PassWindows = "";
-		UserWindows = LaBase.ConsulterUserPilote(ConnectionBase, "Windows");
-		PassWindows = LaBase.ConsulterPasswordPilote(ConnectionBase, "Windows");
+		try {
+			UserWindows = LaBase.ConsulterUserPilote(ConnectionBase, "Windows");
+			PassWindows = LaBase.ConsulterPasswordPilote(ConnectionBase, "Windows");
+		}
+		catch (SQLException e1) {
+			LaBase.FermerConnexion(ConnectionBase);
+			e1.printStackTrace();
+		}
 
 		try {
-			Runtime.getRuntime().exec(String.format(Chemin.DemandeChemin("CheminVtom") + " -u " + UserWindows + " -p " + PassWindows + " -s UP2TO003:30017 " + " -d Pilote"));
+			Runtime.getRuntime().exec(String.format(Chemin.DemandeChemin("CheminVtom") + " -u " + UserWindows + " -p " + PassWindows + " -s UP2TO006:30017 " + " -d Pilote"));
 			RetourLancement = true;
 		}
 		catch (IOException e) {
@@ -287,19 +316,28 @@ public class GestionProduits {
 			e.printStackTrace();
 			MaLog.EcrireDansFichierLog("Erreur au lancement de VtomIp1d: " + e);
 		}
+		LaBase.FermerConnexion(ConnectionBase);
 		return RetourLancement;
 	}
 
 	public Boolean LanceVtomIp2q() {
 		SL.EcrireSuperLog("Vtom IP2 J");
-
+		GestionSql LaBase = new GestionSql();
+		Connection ConnectionBase = LaBase.InitConnexion();
 		String UserWindows = "";
 		String PassWindows = "";
-		UserWindows = LaBase.ConsulterUserPilote(ConnectionBase, "Windows");
-		PassWindows = LaBase.ConsulterPasswordPilote(ConnectionBase, "Windows");
+		try {
+			UserWindows = LaBase.ConsulterUserPilote(ConnectionBase, "Windows");
+			PassWindows = LaBase.ConsulterPasswordPilote(ConnectionBase, "Windows");
+		}
+		catch (SQLException e1) {
+
+			LaBase.FermerConnexion(ConnectionBase);
+			e1.printStackTrace();
+		}
 
 		try {
-			Runtime.getRuntime().exec(String.format(Chemin.DemandeChemin("CheminVtom") + " -u " + UserWindows + " -p " + PassWindows + " -s UP1TO002:30117 " + " -d Pilote"));
+			Runtime.getRuntime().exec(String.format(Chemin.DemandeChemin("CheminVtom") + " -u " + UserWindows + " -p " + PassWindows + " -s UP1TO005:30117 " + " -d Pilote"));
 			RetourLancement = true;
 		}
 		catch (IOException e) {
@@ -307,19 +345,28 @@ public class GestionProduits {
 			MaLog.EcrireDansFichierLog("Erreur au lancement de VtomIp2q: " + e);
 			RetourLancement = false;
 		}
+
+		LaBase.FermerConnexion(ConnectionBase);
 		return RetourLancement;
 	}
 
 	public Boolean LanceVtomIp2d() {
 		SL.EcrireSuperLog("Vtom IP2 D");
-
+		GestionSql LaBase = new GestionSql();
+		Connection ConnectionBase = LaBase.InitConnexion();
 		String UserWindows = "";
 		String PassWindows = "";
-		UserWindows = LaBase.ConsulterUserPilote(ConnectionBase, "Windows");
-		PassWindows = LaBase.ConsulterPasswordPilote(ConnectionBase, "Windows");
+		try {
+			UserWindows = LaBase.ConsulterUserPilote(ConnectionBase, "Windows");
+			PassWindows = LaBase.ConsulterPasswordPilote(ConnectionBase, "Windows");
+		}
+		catch (SQLException e1) {
+			LaBase.FermerConnexion(ConnectionBase);
+			e1.printStackTrace();
+		}
 
 		try {
-			Runtime.getRuntime().exec(String.format(Chemin.DemandeChemin("CheminVtom") + " -u " + UserWindows + " -p " + PassWindows + " -s UP1TO003:30117 " + " -d Pilote"));
+			Runtime.getRuntime().exec(String.format(Chemin.DemandeChemin("CheminVtom") + " -u " + UserWindows + " -p " + PassWindows + " -s UP1TO006:30117 " + " -d Pilote"));
 			RetourLancement = true;
 		}
 		catch (IOException e) {
@@ -327,28 +374,43 @@ public class GestionProduits {
 			MaLog.EcrireDansFichierLog("Erreur au lancement de VtomIp2d: " + e);
 			RetourLancement = false;
 		}
+		LaBase.FermerConnexion(ConnectionBase);
 		return RetourLancement;
 	}
 
 	public Boolean LanceZmvs() {
 		SL.EcrireSuperLog("Zmvs");
+		GestionSql LaBase = new GestionSql();
+		Connection ConnectionBase = LaBase.InitConnexion();
 
 		try {
 
-			if (LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Zmvs").equals("true") == true) {
+			try {
+				if (LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Zmvs").equals("true") == true) {
 
-				ProcessBuilder builder = new ProcessBuilder(new String[] { Chemin.DemandeChemin("CheminQuick3270"), Chemin.DemandeChemin("CheminQuick3270ProfileZmvs") });
-				builder.start();
-				RetourLancement = true;
+					ProcessBuilder builder = new ProcessBuilder(new String[] { Chemin.DemandeChemin("CheminQuick3270"), Chemin.DemandeChemin("CheminQuick3270ProfileZmvs") });
+					builder.start();
+					RetourLancement = true;
 
+				}
+			}
+			catch (SQLException e) {
+				LaBase.FermerConnexion(ConnectionBase);
+				e.printStackTrace();
 			}
 
-			if (LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Zmvs").equals("true") == false) {
+			try {
+				if (LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Zmvs").equals("true") == false) {
 
-				ProcessBuilder builder = new ProcessBuilder(new String[] { Chemin.DemandeChemin("CheminQuick3270"), Chemin.DemandeChemin("CheminQuick3270ProfileZmvs_no_auto_login") });
-				builder.start();
-				RetourLancement = true;
+					ProcessBuilder builder = new ProcessBuilder(new String[] { Chemin.DemandeChemin("CheminQuick3270"), Chemin.DemandeChemin("CheminQuick3270ProfileZmvs_no_auto_login") });
+					builder.start();
+					RetourLancement = true;
 
+				}
+			}
+			catch (SQLException e) {
+				LaBase.FermerConnexion(ConnectionBase);
+				e.printStackTrace();
 			}
 
 		}
@@ -356,28 +418,44 @@ public class GestionProduits {
 			e1.printStackTrace();
 			MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour ZMVS : " + e1);
 			RetourLancement = false;
+			LaBase.FermerConnexion(ConnectionBase);
 		}
+		LaBase.FermerConnexion(ConnectionBase);
 		return RetourLancement;
 
 	}
 
 	public Boolean LanceSysa() {
 		SL.EcrireSuperLog("Sysa");
+		GestionSql LaBase = new GestionSql();
+		Connection ConnectionBase = LaBase.InitConnexion();
 
 		try {
 
-			if (LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Sysa").equals("true") == true) {
+			try {
+				if (LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Sysa").equals("true") == true) {
 
-				ProcessBuilder builder = new ProcessBuilder(new String[] { Chemin.DemandeChemin("CheminQuick3270"), Chemin.DemandeChemin("CheminQuick3270ProfileSysa") });
-				builder.start();
-				RetourLancement = true;
+					ProcessBuilder builder = new ProcessBuilder(new String[] { Chemin.DemandeChemin("CheminQuick3270"), Chemin.DemandeChemin("CheminQuick3270ProfileSysa") });
+					builder.start();
+					RetourLancement = true;
+				}
+			}
+			catch (SQLException e) {
+				LaBase.FermerConnexion(ConnectionBase);
+				e.printStackTrace();
 			}
 
-			if (LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Sysa").equals("true") == false) {
+			try {
+				if (LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Sysa").equals("true") == false) {
 
-				ProcessBuilder builder = new ProcessBuilder(new String[] { Chemin.DemandeChemin("CheminQuick3270"), Chemin.DemandeChemin("CheminQuick3270ProfileSysa_no_auto_login") });
-				builder.start();
-				RetourLancement = true;
+					ProcessBuilder builder = new ProcessBuilder(new String[] { Chemin.DemandeChemin("CheminQuick3270"), Chemin.DemandeChemin("CheminQuick3270ProfileSysa_no_auto_login") });
+					builder.start();
+					RetourLancement = true;
+				}
+			}
+			catch (SQLException e) {
+				LaBase.FermerConnexion(ConnectionBase);
+				e.printStackTrace();
 			}
 
 		}
@@ -386,6 +464,7 @@ public class GestionProduits {
 			MaLog.EcrireDansFichierLog("Erreur au lancement de Quick3270 pour Sysa : " + e1);
 			RetourLancement = false;
 		}
+		LaBase.FermerConnexion(ConnectionBase);
 		return RetourLancement;
 
 	}
@@ -393,20 +472,34 @@ public class GestionProduits {
 	public Boolean LanceKmvs() {
 		SL.EcrireSuperLog("KMVS");
 
+		GestionSql LaBase = new GestionSql();
+		Connection ConnectionBase = LaBase.InitConnexion();
 		try {
 
-			if (LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Kmvs").equals("true") == true) {
+			try {
+				if (LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Kmvs").equals("true") == true) {
 
-				ProcessBuilder builder = new ProcessBuilder(new String[] { Chemin.DemandeChemin("CheminQuick3270"), Chemin.DemandeChemin("CheminQuick3270ProfileKmvs") });
-				builder.start();
-				RetourLancement = true;
+					ProcessBuilder builder = new ProcessBuilder(new String[] { Chemin.DemandeChemin("CheminQuick3270"), Chemin.DemandeChemin("CheminQuick3270ProfileKmvs") });
+					builder.start();
+					RetourLancement = true;
+				}
+			}
+			catch (SQLException e) {
+				LaBase.FermerConnexion(ConnectionBase);
+				e.printStackTrace();
 			}
 
-			if (LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Kmvs").equals("true") == false) {
+			try {
+				if (LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Kmvs").equals("true") == false) {
 
-				ProcessBuilder builder = new ProcessBuilder(new String[] { Chemin.DemandeChemin("CheminQuick3270"), Chemin.DemandeChemin("CheminQuick3270ProfileKmvs_no_auto_login") });
-				builder.start();
-				RetourLancement = true;
+					ProcessBuilder builder = new ProcessBuilder(new String[] { Chemin.DemandeChemin("CheminQuick3270"), Chemin.DemandeChemin("CheminQuick3270ProfileKmvs_no_auto_login") });
+					builder.start();
+					RetourLancement = true;
+				}
+			}
+			catch (SQLException e) {
+				LaBase.FermerConnexion(ConnectionBase);
+				e.printStackTrace();
 			}
 
 		}
@@ -415,6 +508,7 @@ public class GestionProduits {
 			MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour KMVS : " + e1);
 			RetourLancement = false;
 		}
+		LaBase.FermerConnexion(ConnectionBase);
 		return RetourLancement;
 
 	}
@@ -422,21 +516,35 @@ public class GestionProduits {
 	public Boolean LanceSysg()
 
 	{
+		GestionSql LaBase = new GestionSql();
+		Connection ConnectionBase = LaBase.InitConnexion();
 		SL.EcrireSuperLog("SysG");
 		try {
 
-			if (LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Sysa").equals("true") == true) {
+			try {
+				if (LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Sysa").equals("true") == true) {
 
-				ProcessBuilder builder = new ProcessBuilder(new String[] { Chemin.DemandeChemin("CheminQuick3270"), Chemin.DemandeChemin("CheminQuick3270ProfileSysg") });
-				builder.start();
-				RetourLancement = true;
+					ProcessBuilder builder = new ProcessBuilder(new String[] { Chemin.DemandeChemin("CheminQuick3270"), Chemin.DemandeChemin("CheminQuick3270ProfileSysg") });
+					builder.start();
+					RetourLancement = true;
+				}
+			}
+			catch (SQLException e) {
+				LaBase.FermerConnexion(ConnectionBase);
+				e.printStackTrace();
 			}
 
-			if (LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Sysa").equals("true") == false) {
+			try {
+				if (LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Sysa").equals("true") == false) {
 
-				ProcessBuilder builder = new ProcessBuilder(new String[] { Chemin.DemandeChemin("CheminQuick3270"), Chemin.DemandeChemin("CheminQuick3270ProfileSysg_no_auto_login") });
-				builder.start();
-				RetourLancement = true;
+					ProcessBuilder builder = new ProcessBuilder(new String[] { Chemin.DemandeChemin("CheminQuick3270"), Chemin.DemandeChemin("CheminQuick3270ProfileSysg_no_auto_login") });
+					builder.start();
+					RetourLancement = true;
+				}
+			}
+			catch (SQLException e) {
+				LaBase.FermerConnexion(ConnectionBase);
+				e.printStackTrace();
 			}
 
 		}
@@ -445,26 +553,41 @@ public class GestionProduits {
 			MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour Sysg : " + e1);
 			RetourLancement = false;
 		}
+		LaBase.FermerConnexion(ConnectionBase);
 		return RetourLancement;
 	}
 
 	public Boolean LanceGmvs() {
 		SL.EcrireSuperLog("Gmvs");
+		GestionSql LaBase = new GestionSql();
+		Connection ConnectionBase = LaBase.InitConnexion();
 
 		try {
 
-			if (LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Gmvs").equals("true") == true) {
+			try {
+				if (LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Gmvs").equals("true") == true) {
 
-				ProcessBuilder builder = new ProcessBuilder(new String[] { Chemin.DemandeChemin("CheminQuick3270"), Chemin.DemandeChemin("CheminQuick3270ProfileGmvs") });
-				builder.start();
-				RetourLancement = true;
+					ProcessBuilder builder = new ProcessBuilder(new String[] { Chemin.DemandeChemin("CheminQuick3270"), Chemin.DemandeChemin("CheminQuick3270ProfileGmvs") });
+					builder.start();
+					RetourLancement = true;
+				}
+			}
+			catch (SQLException e) {
+				LaBase.FermerConnexion(ConnectionBase);
+				e.printStackTrace();
 			}
 
-			if (LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Gmvs").equals("true") == false) {
+			try {
+				if (LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Gmvs").equals("true") == false) {
 
-				ProcessBuilder builder = new ProcessBuilder(new String[] { Chemin.DemandeChemin("CheminQuick3270"), Chemin.DemandeChemin("CheminQuick3270ProfileGmvs_no_auto_login") });
-				builder.start();
-				RetourLancement = true;
+					ProcessBuilder builder = new ProcessBuilder(new String[] { Chemin.DemandeChemin("CheminQuick3270"), Chemin.DemandeChemin("CheminQuick3270ProfileGmvs_no_auto_login") });
+					builder.start();
+					RetourLancement = true;
+				}
+			}
+			catch (SQLException e) {
+				LaBase.FermerConnexion(ConnectionBase);
+				e.printStackTrace();
 			}
 
 		}
@@ -473,27 +596,44 @@ public class GestionProduits {
 			MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour GMVS : " + e1);
 			RetourLancement = false;
 		}
+		LaBase.FermerConnexion(ConnectionBase);
 		return RetourLancement;
 
 	}
 
 	public Boolean LanceBmvs() {
 		SL.EcrireSuperLog("Bmvs");
+		GestionSql LaBase = new GestionSql();
+		Connection ConnectionBase = LaBase.InitConnexion();
 
 		try {
 
-			if (LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Bmvs").equals("true") == true) {
+			try {
+				if (LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Bmvs").equals("true") == true) {
 
-				ProcessBuilder builder = new ProcessBuilder(new String[] { Chemin.DemandeChemin("CheminQuick3270"), Chemin.DemandeChemin("CheminQuick3270ProfileBmvs") });
-				builder.start();
-				RetourLancement = true;
+					ProcessBuilder builder = new ProcessBuilder(new String[] { Chemin.DemandeChemin("CheminQuick3270"), Chemin.DemandeChemin("CheminQuick3270ProfileBmvs") });
+					builder.start();
+					RetourLancement = true;
+				}
+			}
+			catch (SQLException e) {
+
+				LaBase.FermerConnexion(ConnectionBase);
+				e.printStackTrace();
 			}
 
-			if (LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Bmvs").equals("false") == true) {
+			try {
+				if (LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Bmvs").equals("false") == true) {
 
-				ProcessBuilder builder = new ProcessBuilder(new String[] { Chemin.DemandeChemin("CheminQuick3270"), Chemin.DemandeChemin("CheminQuick3270ProfileBmvs_no_auto_login") });
-				builder.start();
-				RetourLancement = true;
+					ProcessBuilder builder = new ProcessBuilder(new String[] { Chemin.DemandeChemin("CheminQuick3270"), Chemin.DemandeChemin("CheminQuick3270ProfileBmvs_no_auto_login") });
+					builder.start();
+					RetourLancement = true;
+				}
+			}
+			catch (SQLException e) {
+
+				LaBase.FermerConnexion(ConnectionBase);
+				e.printStackTrace();
 			}
 
 		}
@@ -502,27 +642,43 @@ public class GestionProduits {
 			MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour Bmvs : " + e1);
 			RetourLancement = false;
 		}
+
+		LaBase.FermerConnexion(ConnectionBase);
 		return RetourLancement;
 
 	}
 
 	public Boolean LanceIp1() {
 		SL.EcrireSuperLog("MVS IP1");
+		GestionSql LaBase = new GestionSql();
+		Connection ConnectionBase = LaBase.InitConnexion();
 
 		try {
 
-			if (LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Ip1").equals("true") == true) {
+			try {
+				if (LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Ip1").equals("true") == true) {
 
-				ProcessBuilder builder = new ProcessBuilder(new String[] { Chemin.DemandeChemin("CheminQuick3270"), Chemin.DemandeChemin("CheminQuick3270ProfileIp1") });
-				builder.start();
-				RetourLancement = true;
+					ProcessBuilder builder = new ProcessBuilder(new String[] { Chemin.DemandeChemin("CheminQuick3270"), Chemin.DemandeChemin("CheminQuick3270ProfileIp1") });
+					builder.start();
+					RetourLancement = true;
+				}
+			}
+			catch (SQLException e) {
+				LaBase.FermerConnexion(ConnectionBase);
+				e.printStackTrace();
 			}
 
-			if (LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Ip1").equals("false") == true) {
+			try {
+				if (LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Ip1").equals("false") == true) {
 
-				ProcessBuilder builder = new ProcessBuilder(new String[] { Chemin.DemandeChemin("CheminQuick3270"), Chemin.DemandeChemin("CheminQuick3270ProfileIp1_no_auto_login") });
-				builder.start();
-				RetourLancement = true;
+					ProcessBuilder builder = new ProcessBuilder(new String[] { Chemin.DemandeChemin("CheminQuick3270"), Chemin.DemandeChemin("CheminQuick3270ProfileIp1_no_auto_login") });
+					builder.start();
+					RetourLancement = true;
+				}
+			}
+			catch (SQLException e) {
+				LaBase.FermerConnexion(ConnectionBase);
+				e.printStackTrace();
 			}
 
 		}
@@ -531,27 +687,42 @@ public class GestionProduits {
 			MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour Ip1 : " + e1);
 			RetourLancement = false;
 		}
+		LaBase.FermerConnexion(ConnectionBase);
 		return RetourLancement;
 
 	}
 
 	public Boolean LanceIp3() {
 		SL.EcrireSuperLog("MVS IP3");
+		GestionSql LaBase = new GestionSql();
+		Connection ConnectionBase = LaBase.InitConnexion();
 
 		try {
 
-			if (LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Ip3").equals("true") == true) {
+			try {
+				if (LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Ip3").equals("true") == true) {
 
-				ProcessBuilder builder = new ProcessBuilder(new String[] { Chemin.DemandeChemin("CheminQuick3270"), Chemin.DemandeChemin("CheminQuick3270ProfileIp3") });
-				builder.start();
-				RetourLancement = true;
+					ProcessBuilder builder = new ProcessBuilder(new String[] { Chemin.DemandeChemin("CheminQuick3270"), Chemin.DemandeChemin("CheminQuick3270ProfileIp3") });
+					builder.start();
+					RetourLancement = true;
+				}
+			}
+			catch (SQLException e) {
+				LaBase.FermerConnexion(ConnectionBase);
+				e.printStackTrace();
 			}
 
-			if (LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Ip3").equals("false") == true) {
+			try {
+				if (LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Ip3").equals("false") == true) {
 
-				ProcessBuilder builder = new ProcessBuilder(new String[] { Chemin.DemandeChemin("CheminQuick3270"), Chemin.DemandeChemin("CheminQuick3270ProfileIp3_no_auto_login") });
-				builder.start();
-				RetourLancement = true;
+					ProcessBuilder builder = new ProcessBuilder(new String[] { Chemin.DemandeChemin("CheminQuick3270"), Chemin.DemandeChemin("CheminQuick3270ProfileIp3_no_auto_login") });
+					builder.start();
+					RetourLancement = true;
+				}
+			}
+			catch (SQLException e) {
+				LaBase.FermerConnexion(ConnectionBase);
+				e.printStackTrace();
 			}
 
 		}
@@ -560,27 +731,42 @@ public class GestionProduits {
 			MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour Ip3 : " + e1);
 			RetourLancement = false;
 		}
+		LaBase.FermerConnexion(ConnectionBase);
 		return RetourLancement;
 
 	}
 
 	public Boolean LanceIp2() {
 		SL.EcrireSuperLog("MVS IP2");
+		GestionSql LaBase = new GestionSql();
+		Connection ConnectionBase = LaBase.InitConnexion();
 
 		try {
 
-			if (LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Ip2").equals("true") == true) {
+			try {
+				if (LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Ip2").equals("true") == true) {
 
-				ProcessBuilder builder = new ProcessBuilder(new String[] { Chemin.DemandeChemin("CheminQuick3270"), Chemin.DemandeChemin("CheminQuick3270ProfileIp2") });
-				builder.start();
-				RetourLancement = true;
+					ProcessBuilder builder = new ProcessBuilder(new String[] { Chemin.DemandeChemin("CheminQuick3270"), Chemin.DemandeChemin("CheminQuick3270ProfileIp2") });
+					builder.start();
+					RetourLancement = true;
+				}
+			}
+			catch (SQLException e) {
+				LaBase.FermerConnexion(ConnectionBase);
+				e.printStackTrace();
 			}
 
-			if (LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Ip2").equals("false") == true) {
+			try {
+				if (LaBase.ConsulterAutoconnectPilote(ConnectionBase, "Ip2").equals("false") == true) {
 
-				ProcessBuilder builder = new ProcessBuilder(new String[] { Chemin.DemandeChemin("CheminQuick3270"), Chemin.DemandeChemin("CheminQuick3270ProfileIp2_no_auto_login") });
-				builder.start();
-				RetourLancement = true;
+					ProcessBuilder builder = new ProcessBuilder(new String[] { Chemin.DemandeChemin("CheminQuick3270"), Chemin.DemandeChemin("CheminQuick3270ProfileIp2_no_auto_login") });
+					builder.start();
+					RetourLancement = true;
+				}
+			}
+			catch (SQLException e) {
+				LaBase.FermerConnexion(ConnectionBase);
+				e.printStackTrace();
 			}
 
 		}
@@ -589,6 +775,7 @@ public class GestionProduits {
 			MaLog.EcrireDansFichierLog("Erreur au lancement de quick3270 pour Ip2 : " + e1);
 			RetourLancement = false;
 		}
+		LaBase.FermerConnexion(ConnectionBase);
 		return RetourLancement;
 
 	}

@@ -5,6 +5,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import javax.swing.JTable;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
 public class GestionMachine extends DefaultTableModel {
@@ -30,7 +32,7 @@ public class GestionMachine extends DefaultTableModel {
 		while (rs.next()) {
 			AdresseIp = rs.getString("AdresseIP");
 		}
-		System.out.println(AdresseIp);
+
 		LaBase.FermerConnexion(ConnectionBase);
 		return AdresseIp;
 
@@ -57,6 +59,7 @@ public class GestionMachine extends DefaultTableModel {
 		int ID;
 		String Machine = "";
 		String AdresseIP = "";
+		String Os = "";
 		String Utilisée = "";
 
 		compteur = 0;
@@ -71,24 +74,85 @@ public class GestionMachine extends DefaultTableModel {
 		MonModele.addColumn("ID");
 		MonModele.addColumn("Machine");
 		MonModele.addColumn("Adresse IP");
-		MonModele.addColumn("Utilisée");
+		MonModele.addColumn("Système(OS)");
+		MonModele.addColumn("Utilisé");
 
 		while (rs.next()) {
 			compteur++;
 			ID = rs.getInt("ID");
 			Machine = rs.getString("Machine");
 			AdresseIP = rs.getString("AdresseIP");
+			Os = rs.getString("Os");
 			Utilisée = rs.getString("Utilisée");
 			if (Utilisée.equals("true") == true) {
-				MonModele.addRow(new Object[] { ID, Machine, AdresseIP, new Boolean(true) });
+				MonModele.addRow(new Object[] { ID, Machine, AdresseIP, Os, new Boolean(true) });
 			}
 			else {
-				MonModele.addRow(new Object[] { ID, Machine, AdresseIP, new Boolean(false) });
+				MonModele.addRow(new Object[] { ID, Machine, AdresseIP, Os, new Boolean(false) });
 			}
 		}
 
 		TableMachine.setModel(MonModele);
-		LaBase.FermerConnexion(ConnectionBase);
+
+		MonModele.addTableModelListener(new TableModelListener() {
+
+			@Override
+			public void tableChanged(TableModelEvent tme) {
+				if (tme.getType() == TableModelEvent.UPDATE) {
+
+					// System.out.println("Cell " + tme.getFirstRow() + ", " +
+					// tme.getColumn() + " changed. The new value: " +
+					// MonModele.getValueAt(tme.getFirstRow(),
+					// tme.getColumn()));
+					Statement stmt = null;
+					ResultSet rs = null;
+					int i = tme.getFirstRow();
+					int used = (int) MonModele.getValueAt(i, 0);
+					try {
+						stmt = ConnectionBase.createStatement();
+
+						rs = stmt.executeQuery("select * from Machine where ID=" + used);
+					}
+					catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+
+					try {
+						while (rs.next()) {
+							int ID = (int) MonModele.getValueAt(i, 0);
+							String Machine = (String) MonModele.getValueAt(i, 1);
+							String AdresseIP = (String) MonModele.getValueAt(i, 2);
+							String Os = (String) MonModele.getValueAt(i, 3);
+							Boolean Bool = (Boolean) MonModele.getValueAt(i, 4);
+							String Utilisée = "";
+							if (Bool == true) {
+								Utilisée = "true";
+							}
+							if (Bool == false) {
+								Utilisée = "false";
+							}
+							String Query = "UPDATE Machine SET 'Machine'='" + Machine + "','AdresseIP'='" + AdresseIP + "','Os'='" + Os + "','Utilisée'='" + Utilisée + "' where ID='" + ID + "'";
+							try {
+								stmt.executeUpdate(Query);
+							}
+							catch (SQLException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+					}
+					catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+				}
+			}
+		});
+
+		// LaBase.FermerConnexion(ConnectionBase);
+
 		return TableMachine;
 	}
 
@@ -111,7 +175,8 @@ public class GestionMachine extends DefaultTableModel {
 				int ID = (int) table.getModel().getValueAt(i, 0);
 				String Machine = (String) table.getModel().getValueAt(i, 1);
 				String AdresseIP = (String) table.getModel().getValueAt(i, 2);
-				Boolean Bool = (Boolean) table.getModel().getValueAt(i, 3);
+				String Os = (String) MonModele.getValueAt(i, 3);
+				Boolean Bool = (Boolean) table.getModel().getValueAt(i, 4);
 				String Utilisée = "";
 				if (Bool == true) {
 					Utilisée = "true";
@@ -119,7 +184,7 @@ public class GestionMachine extends DefaultTableModel {
 				if (Bool == false) {
 					Utilisée = "false";
 				}
-				String Query = "UPDATE Machine SET 'Machine'='" + Machine + "','AdresseIP'='" + AdresseIP + "','Utilisée'='" + Utilisée + "' where ID='" + ID + "'";
+				String Query = "UPDATE Machine SET 'Machine'='" + Machine + "','AdresseIP'='" + AdresseIP + "','Os'='" + Os + "','Utilisée'='" + Utilisée + "' where ID='" + ID + "'";
 				stmt.executeUpdate(Query);
 			}
 
@@ -127,7 +192,7 @@ public class GestionMachine extends DefaultTableModel {
 		LaBase.FermerConnexion(ConnectionBase);
 	}
 
-	public Boolean AjouterMachine(JTable table, String Machine, String AdresseIp) throws SQLException {
+	public Boolean AjouterMachine(JTable table, String Machine, String AdresseIp, String Os) throws SQLException {
 		GestionSql LaBase = new GestionSql();
 		Connection ConnectionBase = LaBase.InitConnexion();
 		Statement stmt = null;
@@ -143,7 +208,7 @@ public class GestionMachine extends DefaultTableModel {
 			ExisteDeja = true;
 		}
 		if (ExisteDeja == false) {
-			String sql = "INSERT INTO `Machine`(`ID`,`Machine`,`AdresseIP`,`Utilisée`) VALUES (NULL,'" + Machine + "','" + AdresseIp + "','" + BoolTrue + "');";
+			String sql = "INSERT INTO `Machine`(`ID`,`Machine`,`AdresseIP`,`Os`,`Utilisée`) VALUES (NULL,'" + Machine + "','" + AdresseIp + "','" + Os + "','" + BoolTrue + "');";
 			stmt.executeUpdate(sql);
 			stmt.close();
 

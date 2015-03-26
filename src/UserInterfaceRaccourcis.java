@@ -2,6 +2,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -74,14 +75,20 @@ public class UserInterfaceRaccourcis extends JFrame {
 				String Raccourci = "";
 				GestionRaccourcis MesRaccourcis = new GestionRaccourcis();
 
-				Raccourci = (String) ComboBoxCapture.getSelectedItem();
-				MesRaccourcis.EcrireRaccourcis("Capture", Raccourci);
-
-				Raccourci = (String) ComboBoxConnexion.getSelectedItem();
-				MesRaccourcis.EcrireRaccourcis("Connexion", Raccourci);
-
-				Raccourci = (String) ComboBoxConsignes.getSelectedItem();
-				MesRaccourcis.EcrireRaccourcis("Consignes", Raccourci);
+				try {
+					Raccourci = (String) ComboBoxCapture.getSelectedItem();
+					MesRaccourcis.EcrireRaccourcis("Capture", Raccourci);
+					Raccourci = (String) ComboBoxConnexion.getSelectedItem();
+					MesRaccourcis.EcrireRaccourcis("Connexion", Raccourci);
+					Raccourci = (String) ComboBoxConsignes.getSelectedItem();
+					MesRaccourcis.EcrireRaccourcis("Consignes", Raccourci);
+					Raccourci = (String) ComboBoxAutoLogin.getSelectedItem();
+					MesRaccourcis.EcrireRaccourcis("AutoLogin", Raccourci);
+				}
+				catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 
 				dispose();
 
@@ -124,6 +131,28 @@ public class UserInterfaceRaccourcis extends JFrame {
 		ComboBoxConsignes.setMaximumRowCount(8);
 		ComboBoxConsignes.setBounds(86, 27, 50, 20);
 		panel_2.add(ComboBoxConsignes);
+
+		JPanel panel_3 = new JPanel();
+		panel_3.setLayout(null);
+		panel_3.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Auto login", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 128)));
+		panel_3.setBounds(6, 220, 228, 59);
+		getContentPane().add(panel_3);
+
+		JLabel LabelIconeWindows4 = new JLabel("");
+		LabelIconeWindows4.setBounds(10, 27, 34, 20);
+		LabelIconeWindows4.setIcon(IconWindows);
+		panel_3.add(LabelIconeWindows4);
+
+		JLabel label_4 = new JLabel("+");
+		label_4.setFont(new Font("Tahoma", Font.BOLD, 14));
+		label_4.setBounds(54, 27, 18, 20);
+		panel_3.add(label_4);
+
+		ComboBoxAutoLogin = new JComboBox();
+		ComboBoxAutoLogin.setModel(new DefaultComboBoxModel(new String[] { "-", "W", "X", "C", "V", "H", "Q", "S", "G" }));
+		ComboBoxAutoLogin.setMaximumRowCount(8);
+		ComboBoxAutoLogin.setBounds(86, 27, 50, 20);
+		panel_3.add(ComboBoxAutoLogin);
 
 		ThreadChargementRaccourcis ChargementRaccourci = new ThreadChargementRaccourcis();
 		ChargementRaccourci.run();
@@ -173,13 +202,23 @@ public class UserInterfaceRaccourcis extends JFrame {
 			String RaccourciCapture;
 			String RaccourciConnexion;
 			String RaccourciConsignes;
-			RaccourciCapture = GR.DemandeRaccourci("Capture");
-			RaccourciConnexion = GR.DemandeRaccourci("Connexion");
-			RaccourciConsignes = GR.DemandeRaccourci("Consignes");
+			String RaccourciAutoLogin;
+			try {
+				RaccourciCapture = GR.DemandeRaccourci("Capture");
+				RaccourciConnexion = GR.DemandeRaccourci("Connexion");
+				RaccourciConsignes = GR.DemandeRaccourci("Consignes");
+				RaccourciAutoLogin = GR.DemandeRaccourci("AutoLogin");
 
-			SetComboBox(ComboBoxCapture, RaccourciCapture);
-			SetComboBox(ComboBoxConnexion, RaccourciConnexion);
-			SetComboBox(ComboBoxConsignes, RaccourciConsignes);
+				SetComboBox(ComboBoxCapture, RaccourciCapture);
+				SetComboBox(ComboBoxConnexion, RaccourciConnexion);
+				SetComboBox(ComboBoxConsignes, RaccourciConsignes);
+				SetComboBox(ComboBoxAutoLogin, RaccourciAutoLogin);
+
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		}
 	}
@@ -188,4 +227,5 @@ public class UserInterfaceRaccourcis extends JFrame {
 	private JComboBox ComboBoxConnexion;
 	private JComboBox ComboBoxCapture;
 	private JComboBox ComboBoxConsignes;
+	private JComboBox ComboBoxAutoLogin;
 }

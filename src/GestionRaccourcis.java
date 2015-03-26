@@ -1,11 +1,12 @@
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class GestionRaccourcis {
 
-	public String EcrireRaccourcis(String NomRaccourci, String LettreRaccourci) {
+	public String EcrireRaccourcis(String NomRaccourci, String LettreRaccourci) throws SQLException {
 		String ValidationEcriture = "";
 
 		GestionSql LaBase = new GestionSql();
@@ -17,7 +18,7 @@ public class GestionRaccourcis {
 
 	}
 
-	public String DemandeRaccourci(String NomRaccourci) {
+	public String DemandeRaccourci(String NomRaccourci) throws SQLException {
 
 		String ResultatDemandeRaccourci = "";
 		GestionSql LaBase = new GestionSql();

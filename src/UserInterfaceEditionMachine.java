@@ -1,4 +1,3 @@
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Insets;
@@ -10,16 +9,17 @@ import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.util.regex.Pattern;
 
+import javax.swing.DefaultCellEditor;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JDialog;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.TableColumn;
@@ -62,7 +62,7 @@ public class UserInterfaceEditionMachine extends JFrame {
 			}
 		});
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 11, 371, 532);
+		scrollPane.setBounds(10, 11, 413, 532);
 		getContentPane().add(scrollPane);
 		scrollPane.setViewportView(table);
 
@@ -78,62 +78,21 @@ public class UserInterfaceEditionMachine extends JFrame {
 		getContentPane().add(btnNewButton);
 
 		JButton BoutonValider = new JButton("Valider");
-		final ImageIcon IconValider = new ImageIcon(getClass().getResource("/Ok-icon.png"));
-		BoutonValider.setIcon(IconValider);
 		BoutonValider.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-
-				PositionInterfaceX = getX();
-				PositionInterfaceY = getY();
-				System.out.println("" + PositionInterfaceX + "," + PositionInterfaceY);
-				final JDialog loading = new JDialog();
-				JPanel p1 = new JPanel(new BorderLayout());
-
-				p1.add(new JLabel("Enregistrement dans la base, merci de patienter ...."), BorderLayout.CENTER);
-				p1.setBackground(Color.ORANGE);
-				// loading.getContentPane().setBackground(Color.RED);
-				// p1.setForeground(Color.RED);
-
-				loading.setUndecorated(true);
-				loading.getContentPane().add(p1);
-				p1.setSize(400, 200);
-				loading.pack();
-				// loading.setLocationRelativeTo(PositionInterfaceX+50,PositionInterfaceY+50);
-				loading.setLocation(PositionInterfaceX + 290, PositionInterfaceY + 270);
-				loading.setAlwaysOnTop(true);
-				loading.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-				loading.setModal(true);
-
-				SwingWorker<String, Void> worker = new SwingWorker<String, Void>() {
-					@Override
-					protected String doInBackground() throws SQLException {
-						VersDB(table);
-						return null;
-					}
-
-					@Override
-					protected void done() {
-						loading.dispose();
-					}
-				};
-				worker.execute();
-				loading.setVisible(true);
-				try {
-					worker.get();
-				}
-				catch (Exception e1) {
-					e1.printStackTrace();
-				}
-
+				dispose();
 			}
 		});
-		BoutonValider.setBounds(400, 505, 123, 38);
+		final ImageIcon IconValider = new ImageIcon(getClass().getResource("/Ok-icon.png"));
+		BoutonValider.setIcon(IconValider);
+
+		BoutonValider.setBounds(433, 505, 123, 38);
 		getContentPane().add(BoutonValider);
 
 		panel = new JPanel();
 		panel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Ajouter une machine", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 128, 0)));
-		panel.setBounds(432, 146, 234, 114);
+		panel.setBounds(432, 146, 234, 143);
 		getContentPane().add(panel);
 		panel.setLayout(null);
 
@@ -148,7 +107,7 @@ public class UserInterfaceEditionMachine extends JFrame {
 		TextIp.setColumns(10);
 
 		BoutonAjouter = new JButton("Ajouter");
-		BoutonAjouter.setBounds(123, 80, 101, 23);
+		BoutonAjouter.setBounds(123, 109, 101, 23);
 		final ImageIcon IconAjouter = new ImageIcon(getClass().getResource("/add2-icon.png"));
 		BoutonAjouter.setIcon(IconAjouter);
 		panel.add(BoutonAjouter);
@@ -161,21 +120,30 @@ public class UserInterfaceEditionMachine extends JFrame {
 		lblAdresseIp.setBounds(23, 46, 80, 23);
 		panel.add(lblAdresseIp);
 
+		JComboBox ComboBoxOs = new JComboBox();
+		ComboBoxOs.setModel(new DefaultComboBoxModel(new String[] { "Unix", "Windows" }));
+		ComboBoxOs.setBounds(113, 75, 111, 23);
+		panel.add(ComboBoxOs);
+
+		JLabel lblSystme = new JLabel("Syst\u00E8me :");
+		lblSystme.setBounds(33, 84, 70, 14);
+		panel.add(lblSystme);
+
 		LabelMachineLog = new JLabel("");
 		LabelMachineLog.setForeground(new Color(0, 100, 0));
 		LabelMachineLog.setFont(new Font("Tahoma", Font.BOLD, 12));
-		LabelMachineLog.setBounds(400, 432, 334, 32);
+		LabelMachineLog.setBounds(433, 462, 334, 32);
 		getContentPane().add(LabelMachineLog);
 
 		LabelNombreMachine = new JLabel("New label");
 		LabelNombreMachine.setForeground(new Color(25, 25, 112));
 		LabelNombreMachine.setFont(new Font("Tahoma", Font.BOLD, 11));
-		LabelNombreMachine.setBounds(409, 6, 225, 32);
+		LabelNombreMachine.setBounds(433, 6, 225, 32);
 		getContentPane().add(LabelNombreMachine);
 
 		panel_2 = new JPanel();
 		panel_2.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Suppression d\u00E9finitive", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(165, 42, 42)));
-		panel_2.setBounds(432, 271, 234, 150);
+		panel_2.setBounds(433, 300, 234, 150);
 		getContentPane().add(panel_2);
 		panel_2.setLayout(null);
 
@@ -330,9 +298,16 @@ public class UserInterfaceEditionMachine extends JFrame {
 		BoutonAjouter.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				String Os = "";
+				if (ComboBoxOs.getSelectedIndex() == 0) {
+					Os = "Unix";
+				}
+				if (ComboBoxOs.getSelectedIndex() == 1) {
+					Os = "Windows";
+				}
 
 				try {
-					Boolean ExisteDeja = GM.AjouterMachine(table, TextMachine.getText(), TextIp.getText());
+					Boolean ExisteDeja = GM.AjouterMachine(table, TextMachine.getText(), TextIp.getText(), Os);
 
 					if (ExisteDeja == true) {
 						LabelMachineLog.setText("La machine " + TextMachine.getText().toLowerCase() + " existe déjà, elle n'est pas ajoutée.");
@@ -381,16 +356,23 @@ public class UserInterfaceEditionMachine extends JFrame {
 		TableColumn tc1 = table.getColumnModel().getColumn(1);
 		TableColumn tc2 = table.getColumnModel().getColumn(2);
 		TableColumn tc3 = table.getColumnModel().getColumn(3);
+		TableColumn tc4 = table.getColumnModel().getColumn(4);
 
 		tc0.setResizable(false);
-		tc3.setResizable(false);
-		tc0.setPreferredWidth(10);
-		tc1.setPreferredWidth(50);
-		tc2.setPreferredWidth(50);
-		tc3.setPreferredWidth(20);
+		tc4.setResizable(false);
+		tc0.setPreferredWidth(5);
+		tc1.setPreferredWidth(45);
+		tc2.setPreferredWidth(55);
+		tc3.setPreferredWidth(35);
+		tc4.setPreferredWidth(13);
 
-		tc3.setCellEditor(table.getDefaultEditor(Boolean.class));
-		tc3.setCellRenderer(table.getDefaultRenderer(Boolean.class));
+		JComboBox<String> comboBox = new JComboBox<String>();
+		comboBox.addItem("Unix");
+		comboBox.addItem("Windows");
+		tc3.setCellEditor(new DefaultCellEditor(comboBox));
+
+		tc4.setCellEditor(table.getDefaultEditor(Boolean.class));
+		tc4.setCellRenderer(table.getDefaultRenderer(Boolean.class));
 
 		LabelNombreMachine.setText("La base contient " + GM.getCompteur() + " enregistements");
 

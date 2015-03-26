@@ -1,4 +1,5 @@
 import java.awt.AWTException;
+import java.awt.BorderLayout;
 import java.awt.Checkbox;
 import java.awt.Color;
 import java.awt.Component;
@@ -23,14 +24,20 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.UnknownHostException;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.HashSet;
@@ -44,8 +51,10 @@ import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -60,12 +69,14 @@ import javax.swing.JTextArea;
 import javax.swing.JToggleButton;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
+import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.DefaultCaret;
 
+import org.apache.commons.io.FileUtils;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 public class UserInterface extends JFrame implements ActionListener {
@@ -93,9 +104,11 @@ public class UserInterface extends JFrame implements ActionListener {
 	private ButtonGroup MesBoutonsLogin;
 	private JButton BoutonConnexionTelnetOuSsh;
 	private Checkbox CheckBoxPassword;
+	private JCheckBox CheckCranSurete;
 	private JButton BoutonValideIp;
 	private JButton BoutonValideTelnet;
 	private JButton BoutonValideSsh;
+	private JButton BoutonLancePostePilotageComplet;
 	public Thread LeThreadInterface;
 	public JProgressBar ProgressBarExecutionGlobale;
 	public Point PositionFenetrePrincipale;
@@ -108,42 +121,29 @@ public class UserInterface extends JFrame implements ActionListener {
 	private JMenuItem MenuAS400Socly;
 	private JMenuItem MenuSocmcsd;
 	private JMenuItem MenuPfbcly;
-	private JMenuItem MenuOdip;
-	private JMenuItem MenuBbr;
-	private JMenuItem MenuIpLabel;
-	private JMenuItem MenuNewtest;
-	private JMenuItem MenuOseIp1;
-	private JMenuItem MenuOseIp2;
-	private JMenuItem MenuXguard;
 	private JMenuItem MenuIp1;
 	private JMenuItem MenuIp2;
 	private JMenuItem MenuIp3;
 	private JMenuItem MenuBmvs;
 	private JLabel LabelNombreThread;
-	private JMenuItem MenuHmc;
-	private JMenuItem MenuKvm;
-	private JMenuItem MenuTina5;
-	private JMenuItem MenuTina6;
-	private JMenuItem MenuVcenter;
-	private JMenuItem MenuSismoIp1;
-	private JMenuItem MenuSismoIp2;
-	private JMenuItem MenuSismoOceor;
-	private JMenuItem MenuSismoPalatine;
 	private JMenu MenuFavoris;
 	private JMenuItem MenuArsV8;
-	private JMenuItem MenuWebIas;
 	private JMenuItem MenuCfta;
 	private JMenuItem MenuCftacore;
 	private JMenuItem MenuArsCff;
 	private String MonIp = "";
 	private JLabel LabelAdresseIp;
 	private Boolean GainedFocus = false;
+
+	public void setGainedFocus(Boolean gainedFocus) {
+		GainedFocus = gainedFocus;
+	}
+
 	private JMenuItem MenuArsRemedy;
 	private JMenuItem MenuPuttyCm;
 	private JMenuItem MenuTinaIp1Siris;
 	private JMenuItem MenuTinaIp1Tinap203;
 	private JMenuItem mntmTina;
-	private JMenu MenuFavorisCommuns;
 	private JMenuItem MenuEditionFavoris;
 	private JMenu MenuParametresHaut;
 	private JLabel LabelDateHeure;
@@ -153,12 +153,15 @@ public class UserInterface extends JFrame implements ActionListener {
 	private JLabel LabelDetectionDoublon;
 	private JLabel LabelConsignes;
 	private JLabel LabelChargementProfil;
+	private JLabel LabelAutoLogin;
 	private int PositionInterfaceX;
 	private int PositionInterfaceY;
 	GestionProduits LanceProduit = new GestionProduits();
 	private JMenuItem MenuSauvegarderLaPosition;
 	private JCheckBoxMenuItem MenuItceParisBercy;
 	private JCheckBoxMenuItem MenuBourglareine;
+	private JCheckBoxMenuItem MenuCentraleIp1Ip2;
+	private JCheckBoxMenuItem MenuCentraleQpa;
 	private JSeparator separator_5;
 	private int Session = 1;
 	private JLabel LabelProfile;
@@ -166,14 +169,62 @@ public class UserInterface extends JFrame implements ActionListener {
 	private JLabel LabelLancementAuto;
 	private JButton BoutonCancel;
 	private Boolean BoutonCancelVar = false;
+	private JLabel lblOs;
+	private JLabel LabelOs;
+	private JLabel LabelProfileLocal;
+	private Boolean EtatRecherche = true;
+	private JMenu MenuSurveillances;
+	private JMenu MenuDocumentsMvs;
+	private JMenu MenuPilotage;
+	private JMenu MenuUrlPilotage;
+	private JMenu MenuDocumentsPilotage;
+	private JMenu MenuMvs;
+	private JMenu MenuUrlMvs;
+	private JMenu MenuAs400;
+	private JMenu MenuUrlAs400;
+	private JMenu MenuDocumentsAs400;
+	private JMenu MenuOceor;
+	private JMenu MenuUrlOceor;
+	private JMenu MenuDocumentsOceor;
+	private JMenu MenuMySysDistribues;
+	private JMenu MenuUrlMySysDistribues;
+	private JMenu MenuDocumentsMySysDistribues;
+	private JMenu MenuMySysCentrale;
+	private JMenu MenuUrlMySysCentrale;
+	private JMenu MenuDocumentsMySysCentrale;
+	private JMenu MenuCanauxDirects;
+	private JMenu MenuUrlCanauxDirects;
+	private JMenu MenuDocumentsCanauxDirects;
+	private JMenu MenuMonetique;
+	private JMenu MenuUrlMonetique;
+	private JMenu MenuDocumentsMonetique;
+	private JMenu MenuUrlSurveillances;
+	private JMenu MenuDocumentsSurveillances;
+	private JMenu MenuOutilsPilotage;
+	private JMenu MenuUrlOutilsPilotage;
+	private JMenu MenuDocumentsOutilsPilotage;
+	private JMenu MenuDivers;
+	private JMenu MenuUrlDivers;
+	private JMenu MenuDocumentsDivers;
+	private JMenu MenuCff;
+	private JMenu MenuUrlCff;
+	private JMenu MenuDocumentsCff;
+	private String CheminLog;
+	private String ComputerNameStation;
+	private JLabel LabelComputerName;
+	private Boolean ChargementEnCours = true;
+	private JMenuItem MenuAssocierCePosteCentraleIp1Ip2;
+	private JMenuItem MenuAssocierCePosteCentraleQpa;
+	private String UserAutoLogin;
+	private String PassAutoLogin;
 
-	public UserInterface() {
+	public UserInterface() throws SQLException {
 		addWindowFocusListener(new WindowFocusListener() {
 			@Override
 			public void windowGainedFocus(WindowEvent arg0) {
+
 				if (GainedFocus == true) {
 					new Thread(new ThreadRechargementConfigInterface()).start();
-					MenuFavorisCommuns.removeAll();
 					new Thread(new ThreadChargementFavoris()).start();
 					GainedFocus = false;
 					try {
@@ -191,10 +242,73 @@ public class UserInterface extends JFrame implements ActionListener {
 
 			@Override
 			public void windowLostFocus(WindowEvent arg0) {
+				if (ChargementEnCours == true) {
+					new Thread(new ThreadChargementFavoris()).start();
+
+				}
 			}
 		});
 
 		// ------------HOOK
+
+		class TeePrintStream extends PrintStream {
+			private final PrintStream second;
+
+			public TeePrintStream(OutputStream main, PrintStream second) {
+				super(main);
+				this.second = second;
+			}
+
+			@Override
+			public void close() {
+				// just for documentation
+				super.close();
+			}
+
+			@Override
+			public void flush() {
+				super.flush();
+				second.flush();
+			}
+
+			@Override
+			public void write(byte[] buf, int off, int len) {
+				super.write(buf, off, len);
+				second.write(buf, off, len);
+			}
+
+			@Override
+			public void write(int b) {
+				super.write(b);
+				second.write(b);
+			}
+
+			@Override
+			public void write(byte[] b) throws IOException {
+				super.write(b);
+				second.write(b);
+			}
+		}
+
+		FileOutputStream file;
+		try {
+			SimpleDateFormat SimpleDate = new SimpleDateFormat("dd-MM-yyyy à HH-mm-ss");
+			String LaDateHeure = SimpleDate.format(new java.util.Date());
+			GestionChemin GC = new GestionChemin();
+			CheminLog = GC.DemandeChemin("CheminFichierLogJava");
+			CheminLog = CheminLog + "JAVAERROR_" + LaDateHeure + ".txt";
+
+			FileWriter writer = new FileWriter(CheminLog);
+			writer.close();
+			file = new FileOutputStream(CheminLog);
+			TeePrintStream tee = new TeePrintStream(file, System.out);
+			System.setErr(tee);
+			System.setOut(tee);
+		}
+		catch (IOException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
 
 		// ----------------
 
@@ -203,6 +317,13 @@ public class UserInterface extends JFrame implements ActionListener {
 
 		setIconImage(Toolkit.getDefaultToolkit().getImage(UserInterface.class.getResource("/javax/swing/plaf/metal/icons/ocean/computer.gif")));
 		UserNameStation = System.getProperty("user.name");
+		try {
+			ComputerNameStation = InetAddress.getLocalHost().getHostName();
+		}
+		catch (UnknownHostException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
 		setTitle("AlphaPilote - Pr\u00EAt \u00E0 demembrer pour " + UserNameStation);
 		// setAlwaysOnTop(true);
 
@@ -247,7 +368,7 @@ public class UserInterface extends JFrame implements ActionListener {
 			}
 		});
 
-		MenuSauvegarderLaPosition = new JMenuItem("Sauvegarder position de la fen\u00EAtre");
+		MenuSauvegarderLaPosition = new JMenuItem("Sauvegarder la position d'AlphaPilote");
 		MenuSauvegarderLaPosition.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
@@ -255,10 +376,17 @@ public class UserInterface extends JFrame implements ActionListener {
 				Connection ConnectionBase = LaBase.InitConnexion();
 
 				String ValeurX = Integer.toString(PositionInterfaceX);
-				LaBase.AjoutDonneePilote(ConnectionBase, "PositionFenetreX", ValeurX);
-				String ValeurY = Integer.toString(PositionInterfaceY);
-				LaBase.AjoutDonneePilote(ConnectionBase, "PositionFenetreY", ValeurY);
-				ZoneTextLog.append("Position d'AlphaPilote sauvegardée." + "\n");
+				try {
+					LaBase.AjoutDonneePilote(ConnectionBase, "PositionFenetreX", ValeurX);
+					String ValeurY = Integer.toString(PositionInterfaceY);
+					LaBase.AjoutDonneePilote(ConnectionBase, "PositionFenetreY", ValeurY);
+					ZoneTextLog.append("Position d'AlphaPilote sauvegardée." + "\n");
+				}
+				catch (SQLException e) {
+					LaBase.FermerConnexion(ConnectionBase);
+					e.printStackTrace();
+				}
+
 				LaBase.FermerConnexion(ConnectionBase);
 
 			}
@@ -268,6 +396,97 @@ public class UserInterface extends JFrame implements ActionListener {
 		MenuFichier.add(MenuSauvegarderLaPosition);
 		MenuTestAccesFichiers.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/scene/web/skin/Copy_16x16_JFX.png")));
 		MenuFichier.add(MenuTestAccesFichiers);
+
+		JMenu mnAssocationLocaleDun = new JMenu("Assocation locale d'un profile");
+		MenuFichier.add(mnAssocationLocaleDun);
+
+		JMenuItem MenuAssocierCePosteBercy = new JMenuItem("Poste en profile locale : IT-CE Bercy");
+		MenuAssocierCePosteBercy.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+
+				java.io.File AssociationLocaleBercy = new java.io.File("C:\\Users\\" + UserNameStation + "\\AlphaPilote\\DataLocal\\Bercy.asc");
+				try {
+					AssociationLocaleBercy.createNewFile();
+					ZoneTextLog.append("Ce poste est associé au profile IT-CE Bercy localement." + "\n");
+				}
+				catch (IOException e) {
+					ZoneTextLog.append("Ce poste est déjà associé localement." + "\n");
+					e.printStackTrace();
+				}
+
+			}
+		});
+		mnAssocationLocaleDun.add(MenuAssocierCePosteBercy);
+
+		JMenuItem MenuAssocierCePosteBourg = new JMenuItem("Poste en profile locale : Bourg la reine");
+		MenuAssocierCePosteBourg.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				java.io.File AssociationLocaleBourgLaReine = new java.io.File("C:\\Users\\" + UserNameStation + "\\AlphaPilote\\DataLocal\\BourgLaReine.asc");
+				try {
+					AssociationLocaleBourgLaReine.createNewFile();
+					ZoneTextLog.append("Ce poste est associé au profile Bourg la reine localement." + "\n");
+				}
+				catch (IOException e1) {
+					ZoneTextLog.append("Ce poste est déjà associé localement." + "\n");
+					e1.printStackTrace();
+				}
+
+			}
+		});
+		mnAssocationLocaleDun.add(MenuAssocierCePosteBourg);
+
+		JMenuItem MenuRetirerLesAssociations = new JMenuItem("Retirer les associations de ce poste");
+		MenuRetirerLesAssociations.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				deleteDirectory("C:\\Users\\" + UserNameStation + "\\AlphaPilote\\DataLocal");
+				ZoneTextLog.append("Toutes les associations sont supprimées." + "\n");
+
+			}
+		});
+
+		MenuAssocierCePosteCentraleIp1Ip2 = new JMenuItem("Poste en profile locale : Centrale IP1 & IP2");
+		MenuAssocierCePosteCentraleIp1Ip2.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				java.io.File AssociationLocaleBercy = new java.io.File("C:\\Users\\" + UserNameStation + "\\AlphaPilote\\DataLocal\\CentraleIp1Ip2.asc");
+				try {
+					AssociationLocaleBercy.createNewFile();
+					ZoneTextLog.append("Ce poste est associé au profile Centrale IP1 & IP2 localement." + "\n");
+				}
+				catch (IOException e) {
+					ZoneTextLog.append("Ce poste est déjà associé localement." + "\n");
+					e.printStackTrace();
+				}
+
+			}
+		});
+		mnAssocationLocaleDun.add(MenuAssocierCePosteCentraleIp1Ip2);
+
+		MenuAssocierCePosteCentraleQpa = new JMenuItem("Poste en profile locale : Centrale QPA");
+		MenuAssocierCePosteCentraleQpa.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				java.io.File AssociationLocaleBercy = new java.io.File("C:\\Users\\" + UserNameStation + "\\AlphaPilote\\DataLocal\\CentraleQpa.asc");
+				try {
+					AssociationLocaleBercy.createNewFile();
+					ZoneTextLog.append("Ce poste est associé au profile Centrale IP1 & IP2 localement." + "\n");
+				}
+				catch (IOException e1) {
+					ZoneTextLog.append("Ce poste est déjà associé localement." + "\n");
+					e1.printStackTrace();
+				}
+
+			}
+		});
+		mnAssocationLocaleDun.add(MenuAssocierCePosteCentraleQpa);
+
+		JSeparator separator_8 = new JSeparator();
+		mnAssocationLocaleDun.add(separator_8);
+		mnAssocationLocaleDun.add(MenuRetirerLesAssociations);
 
 		JSeparator separator_4 = new JSeparator();
 		MenuFichier.add(separator_4);
@@ -279,8 +498,145 @@ public class UserInterface extends JFrame implements ActionListener {
 		SeparateurFichierFavoris.setOrientation(SwingConstants.VERTICAL);
 		BarreMenuPrincipale.add(SeparateurFichierFavoris);
 
-		MenuFavoris = new JMenu("Favoris web");
+		MenuFavoris = new JMenu("Favoris & liens");
+		MenuFavoris.setEnabled(true);
 		BarreMenuPrincipale.add(MenuFavoris);
+
+		MenuPilotage = new JMenu("Pilotage");
+		MenuFavoris.add(MenuPilotage);
+
+		MenuUrlPilotage = new JMenu("Url");
+		MenuPilotage.add(MenuUrlPilotage);
+
+		MenuDocumentsPilotage = new JMenu("Documents");
+		MenuPilotage.add(MenuDocumentsPilotage);
+
+		MenuMvs = new JMenu("MVS");
+		MenuFavoris.add(MenuMvs);
+
+		MenuUrlMvs = new JMenu("Url");
+		MenuMvs.add(MenuUrlMvs);
+
+		MenuDocumentsMvs = new JMenu("Documents");
+		MenuMvs.add(MenuDocumentsMvs);
+
+		MenuAs400 = new JMenu("AS 400");
+		MenuFavoris.add(MenuAs400);
+
+		MenuUrlAs400 = new JMenu("Url");
+		MenuAs400.add(MenuUrlAs400);
+
+		MenuDocumentsAs400 = new JMenu("Documents");
+		MenuAs400.add(MenuDocumentsAs400);
+
+		MenuOceor = new JMenu("Oceor");
+		MenuFavoris.add(MenuOceor);
+
+		MenuUrlOceor = new JMenu("Url");
+		MenuOceor.add(MenuUrlOceor);
+
+		MenuDocumentsOceor = new JMenu("Documents");
+		MenuOceor.add(MenuDocumentsOceor);
+
+		MenuCff = new JMenu("CFF");
+		MenuFavoris.add(MenuCff);
+
+		MenuUrlCff = new JMenu("Url");
+		MenuCff.add(MenuUrlCff);
+
+		MenuDocumentsCff = new JMenu("Documents");
+		MenuCff.add(MenuDocumentsCff);
+
+		MenuMySysDistribues = new JMenu("MySys Distribu\u00E9s");
+		MenuFavoris.add(MenuMySysDistribues);
+
+		MenuUrlMySysDistribues = new JMenu("Url");
+		MenuMySysDistribues.add(MenuUrlMySysDistribues);
+
+		MenuDocumentsMySysDistribues = new JMenu("Documents");
+		MenuMySysDistribues.add(MenuDocumentsMySysDistribues);
+
+		MenuMySysCentrale = new JMenu("MySys Centrale");
+		MenuFavoris.add(MenuMySysCentrale);
+
+		MenuUrlMySysCentrale = new JMenu("Url");
+		MenuMySysCentrale.add(MenuUrlMySysCentrale);
+
+		MenuDocumentsMySysCentrale = new JMenu("Documents");
+		MenuMySysCentrale.add(MenuDocumentsMySysCentrale);
+
+		MenuCanauxDirects = new JMenu("Canaux directs (BAD)");
+		MenuFavoris.add(MenuCanauxDirects);
+
+		MenuUrlCanauxDirects = new JMenu("Url");
+		MenuCanauxDirects.add(MenuUrlCanauxDirects);
+
+		MenuDocumentsCanauxDirects = new JMenu("Documents");
+		MenuCanauxDirects.add(MenuDocumentsCanauxDirects);
+
+		MenuMonetique = new JMenu("Mon\u00E9tique");
+		MenuFavoris.add(MenuMonetique);
+
+		MenuUrlMonetique = new JMenu("Url");
+		MenuMonetique.add(MenuUrlMonetique);
+
+		MenuDocumentsMonetique = new JMenu("Documents");
+		MenuMonetique.add(MenuDocumentsMonetique);
+
+		MenuSurveillances = new JMenu("Surveillances");
+		MenuFavoris.add(MenuSurveillances);
+
+		MenuUrlSurveillances = new JMenu("Url");
+		MenuSurveillances.add(MenuUrlSurveillances);
+
+		MenuDocumentsSurveillances = new JMenu("Documents");
+		MenuSurveillances.add(MenuDocumentsSurveillances);
+
+		MenuOutilsPilotage = new JMenu("Outils");
+		MenuFavoris.add(MenuOutilsPilotage);
+
+		MenuUrlOutilsPilotage = new JMenu("Url");
+		MenuOutilsPilotage.add(MenuUrlOutilsPilotage);
+
+		MenuDocumentsOutilsPilotage = new JMenu("Documents");
+		MenuOutilsPilotage.add(MenuDocumentsOutilsPilotage);
+
+		MenuDivers = new JMenu("Divers");
+		MenuFavoris.add(MenuDivers);
+
+		MenuUrlDivers = new JMenu("Url");
+		MenuDivers.add(MenuUrlDivers);
+
+		MenuDocumentsDivers = new JMenu("Documents");
+		MenuDivers.add(MenuDocumentsDivers);
+
+		// AJOUT ICONES MENUS FAVORIS
+		final ImageIcon IconPilotage = new ImageIcon(getClass().getResource("/checklist.png"));
+		MenuPilotage.setIcon(IconPilotage);
+		final ImageIcon IconMvs = new ImageIcon(getClass().getResource("/server.png"));
+		MenuMvs.setIcon(IconMvs);
+		final ImageIcon IconAs400 = new ImageIcon(getClass().getResource("/as400-icon.png"));
+		MenuAs400.setIcon(IconAs400);
+		final ImageIcon IconOceor = new ImageIcon(getClass().getResource("/as400br-icon.png"));
+		MenuOceor.setIcon(IconOceor);
+		final ImageIcon IconCff = new ImageIcon(getClass().getResource("/cff.png"));
+		MenuCff.setIcon(IconCff);
+		final ImageIcon IconMySysD = new ImageIcon(getClass().getResource("/vtom-icon.png"));
+		MenuMySysDistribues.setIcon(IconMySysD);
+		final ImageIcon IconMySysC = new ImageIcon(getClass().getResource("/server-icon.png"));
+		MenuMySysCentrale.setIcon(IconMySysC);
+		final ImageIcon IconBad = new ImageIcon(getClass().getResource("/ce.png"));
+		MenuCanauxDirects.setIcon(IconBad);
+		final ImageIcon IconMonetique = new ImageIcon(getClass().getResource("/carte.png"));
+		MenuMonetique.setIcon(IconMonetique);
+		final ImageIcon IconSurveillance = new ImageIcon(getClass().getResource("/camera.png"));
+		MenuSurveillances.setIcon(IconSurveillance);
+		final ImageIcon IconOutils = new ImageIcon(getClass().getResource("/icon-options.png"));
+		MenuOutilsPilotage.setIcon(IconOutils);
+		final ImageIcon IconDivers = new ImageIcon(getClass().getResource("/icon-divers.png"));
+		MenuDivers.setIcon(IconDivers);
+
+		// --------------
 
 		JScrollPane ScrollZoneTextLog = new JScrollPane();
 		ScrollZoneTextLog.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -289,6 +645,7 @@ public class UserInterface extends JFrame implements ActionListener {
 		getContentPane().add(ScrollZoneTextLog);
 
 		ZoneTextLog = new JTextArea();
+		ZoneTextLog.setSelectionColor(new Color(233, 150, 122));
 		ZoneTextLog.setForeground(new Color(0, 0, 0));
 		ScrollZoneTextLog.setViewportView(ZoneTextLog);
 		ZoneTextLog.setWrapStyleWord(true);
@@ -498,7 +855,7 @@ public class UserInterface extends JFrame implements ActionListener {
 		mnVtom.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/webkit/prism/resources/mediaPlayDisabled.png")));
 		MenuOutils.add(mnVtom);
 
-		JMenuItem MenuVtomIp1q = new JMenuItem("IP1 UP2TO002");
+		JMenuItem MenuVtomIp1q = new JMenuItem("IP1 UP2TO005");
 		final ImageIcon IconVtom = new ImageIcon(getClass().getResource("/vtom-icon.png"));
 		MenuVtomIp1q.setIcon(IconVtom);
 		MenuVtomIp1q.addMouseListener(new MouseAdapter() {
@@ -506,7 +863,7 @@ public class UserInterface extends JFrame implements ActionListener {
 			public void mouseReleased(MouseEvent e) {
 
 				if (LanceProduit.LanceVtomIp1q() == true) {
-					ZoneTextLog.append("Lancement de VTOM UP2TO002." + "\n");
+					ZoneTextLog.append("Lancement de VTOM UP2TO005." + "\n");
 				}
 				else {
 					ZoneTextLog.append("Erreur au lancement de VTOM UP2TO002: Consulter la log." + "\n");
@@ -516,16 +873,16 @@ public class UserInterface extends JFrame implements ActionListener {
 		});
 		mnVtom.add(MenuVtomIp1q);
 
-		JMenuItem MenuVtomIp1d = new JMenuItem("IP1 UP2TO003");
+		JMenuItem MenuVtomIp1d = new JMenuItem("IP1 UP2TO006 (d\u00E9cisionnel)");
 		MenuVtomIp1d.setIcon(IconVtom);
 		MenuVtomIp1d.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				if (LanceProduit.LanceVtomIp1d() == true) {
-					ZoneTextLog.append("Lancement de VTOM UP2TO003." + "\n");
+					ZoneTextLog.append("Lancement de VTOM UP2TO006." + "\n");
 				}
 				else {
-					ZoneTextLog.append("Erreur au lancement de VTOM UP2TO003: Consulter la log." + "\n");
+					ZoneTextLog.append("Erreur au lancement de VTOM UP2TO006: Consulter la log." + "\n");
 				}
 			}
 		});
@@ -534,13 +891,13 @@ public class UserInterface extends JFrame implements ActionListener {
 		JSeparator separator_2 = new JSeparator();
 		mnVtom.add(separator_2);
 
-		JMenuItem MenuVtomIp2q = new JMenuItem("IP2 UP1TO002");
+		JMenuItem MenuVtomIp2q = new JMenuItem("IP2 UP1TO005");
 		MenuVtomIp2q.setIcon(IconVtom);
 		MenuVtomIp2q.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				if (LanceProduit.LanceVtomIp2q() == true) {
-					ZoneTextLog.append("Lancement de VTOM UP1TO002." + "\n");
+					ZoneTextLog.append("Lancement de VTOM UP1TO005." + "\n");
 				}
 				else {
 					ZoneTextLog.append("Erreur au lancement de VTOM UP1TO002: Consulter la log." + "\n");
@@ -549,16 +906,16 @@ public class UserInterface extends JFrame implements ActionListener {
 		});
 		mnVtom.add(MenuVtomIp2q);
 
-		JMenuItem MenuVtomIp2d = new JMenuItem("IP2 UP1TO003");
+		JMenuItem MenuVtomIp2d = new JMenuItem("IP2 UP1TO006 (d\u00E9cisionnel)");
 		MenuVtomIp2d.setIcon(IconVtom);
 		MenuVtomIp2d.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				if (LanceProduit.LanceVtomIp2d() == true) {
-					ZoneTextLog.append("Lancement de VTOM IP1TO003." + "\n");
+					ZoneTextLog.append("Lancement de VTOM IP1TO006." + "\n");
 				}
 				else {
-					ZoneTextLog.append("Erreur au lancement de VTOM IP1TO003: Consulter la log." + "\n");
+					ZoneTextLog.append("Erreur au lancement de VTOM IP1TO006: Consulter la log." + "\n");
 				}
 			}
 
@@ -712,24 +1069,7 @@ public class UserInterface extends JFrame implements ActionListener {
 		JMenu SousMenuConnexionMvs = new JMenu("MVS");
 		SousMenuConnexionMvs.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/webkit/prism/resources/mediaPlayDisabled.png")));
 		MenuConnexionMvs.add(SousMenuConnexionMvs);
-
-		MenuZmvs = new JMenuItem("Zmvs (CFF)");
 		final ImageIcon IconZmvs = new ImageIcon(getClass().getResource("/Letter-Z-icon.png"));
-		MenuZmvs.setIcon(IconZmvs);
-		MenuZmvs.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent arg0) {
-
-				if (LanceProduit.LanceZmvs() == true) {
-
-					ZoneTextLog.append("Lancement de ZMVS." + "\n");
-				}
-				else {
-					ZoneTextLog.append("Erreur au lancement de ZMVS: Consulter la log." + "\n");
-				}
-
-			}
-		});
 
 		MenuSysa = new JMenuItem("Sysa");
 		final ImageIcon IconSysa = new ImageIcon(getClass().getResource("/Letter-A-blue-icon.png"));
@@ -787,8 +1127,46 @@ public class UserInterface extends JFrame implements ActionListener {
 
 		});
 		SousMenuConnexionMvs.add(MenuSysg);
-		SousMenuConnexionMvs.add(MenuKmvs);
+
+		MenuZmvs = new JMenuItem("Zmvs (CFF)");
+		MenuZmvs.setIcon(IconZmvs);
+		MenuZmvs.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+
+				if (LanceProduit.LanceZmvs() == true) {
+
+					ZoneTextLog.append("Lancement de ZMVS." + "\n");
+				}
+				else {
+					ZoneTextLog.append("Erreur au lancement de ZMVS: Consulter la log." + "\n");
+				}
+
+			}
+		});
 		SousMenuConnexionMvs.add(MenuZmvs);
+
+		JSeparator separator_7 = new JSeparator();
+		SousMenuConnexionMvs.add(separator_7);
+		SousMenuConnexionMvs.add(MenuKmvs);
+
+		MenuBmvs = new JMenuItem("Bmvs (Recette IP0)");
+		final ImageIcon IconBmvs = new ImageIcon(getClass().getResource("/B_icon.png"));
+		MenuBmvs.setIcon(IconBmvs);
+		MenuBmvs.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+
+				if (LanceProduit.LanceBmvs() == true) {
+
+					ZoneTextLog.append("Lancement de BMVS." + "\n");
+				}
+				else {
+					ZoneTextLog.append("Erreur au lancement de BMVS: Consulter la log." + "\n");
+				}
+			}
+		});
+		SousMenuConnexionMvs.add(MenuBmvs);
 
 		JSeparator SeparateurMenuConnexionMvs = new JSeparator();
 		SousMenuConnexionMvs.add(SeparateurMenuConnexionMvs);
@@ -849,28 +1227,24 @@ public class UserInterface extends JFrame implements ActionListener {
 		JSeparator separator_3 = new JSeparator();
 		SousMenuConnexionMvs.add(separator_3);
 
-		MenuGmvs = new JMenuItem("TPX Gmvs");
+		MenuGmvs = new JMenuItem("Gmvs (SIE)");
 		SousMenuConnexionMvs.add(MenuGmvs);
 
 		MenuGmvs.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/webkit/prism/resources/mediaVolumeThumb.png")));
 
-		MenuBmvs = new JMenuItem("Bmvs (Recette IP0)");
-		final ImageIcon IconBmvs = new ImageIcon(getClass().getResource("/B_icon.png"));
-		MenuBmvs.setIcon(IconBmvs);
-		MenuBmvs.addMouseListener(new MouseAdapter() {
+		MenuGmvs.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseReleased(MouseEvent e) {
+			public void mouseReleased(MouseEvent arg0) {
 
-				if (LanceProduit.LanceBmvs() == true) {
+				if (LanceProduit.LanceGmvs() == true) {
 
-					ZoneTextLog.append("Lancement de BMVS." + "\n");
+					ZoneTextLog.append("Lancement de GMVS." + "\n");
 				}
 				else {
-					ZoneTextLog.append("Erreur au lancement de BMVS: Consulter la log." + "\n");
+					ZoneTextLog.append("Erreur au lancement de GMVS: Consulter la log." + "\n");
 				}
 			}
 		});
-		SousMenuConnexionMvs.add(MenuBmvs);
 
 		JMenu MenuAS400 = new JMenu("AS400");
 		MenuAS400.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/webkit/prism/resources/mediaPlayDisabled.png")));
@@ -987,27 +1361,13 @@ public class UserInterface extends JFrame implements ActionListener {
 			}
 		});
 		MenuAS400.add(MenuPfbcly);
-
-		MenuGmvs.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent arg0) {
-
-				if (LanceProduit.LanceGmvs() == true) {
-
-					ZoneTextLog.append("Lancement de GMVS." + "\n");
-				}
-				else {
-					ZoneTextLog.append("Erreur au lancement de GMVS: Consulter la log." + "\n");
-				}
-			}
-		});
 		getContentPane().setLayout(null);
 
 		JPanel PaneZoneConnexion = new JPanel();
 		PaneZoneConnexion.setSize(new Dimension(10, 10));
 		PaneZoneConnexion.setOpaque(false);
 		PaneZoneConnexion.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Connexion", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(100, 149, 237)));
-		PaneZoneConnexion.setBounds(10, 2, 325, 201);
+		PaneZoneConnexion.setBounds(10, 2, 325, 224);
 		getContentPane().add(PaneZoneConnexion);
 		PaneZoneConnexion.setLayout(null);
 
@@ -1018,298 +1378,29 @@ public class UserInterface extends JFrame implements ActionListener {
 		BoutonValideTelnet = new JButton("Telnet");
 		BoutonValideTelnet.setVisible(false);
 		BoutonValideTelnet.setMargin(new Insets(0, 0, 0, 0));
-		BoutonValideTelnet.setBounds(198, 145, 50, 23);
+		BoutonValideTelnet.setBounds(198, 190, 50, 23);
 		PaneZoneConnexion.add(BoutonValideTelnet);
 
 		BoutonValideSsh = new JButton("SSH");
 		BoutonValideSsh.setVisible(false);
 		BoutonValideSsh.setMargin(new Insets(0, 0, 0, 0));
-		BoutonValideSsh.setBounds(258, 145, 37, 23);
+		BoutonValideSsh.setBounds(258, 190, 37, 23);
 		PaneZoneConnexion.add(BoutonValideSsh);
 
-		MenuOdip = new JMenuItem("ODIP");
-
-		final ImageIcon IconOdip = new ImageIcon(getClass().getResource("/odip-icon.png"));
-
-		MenuFavorisCommuns = new JMenu("Favoris Communs");
-		final ImageIcon IconBoutonRechargerFavoris2 = new ImageIcon(getClass().getResource("/rsz_1legendary-marker_1.png"));
-		MenuFavorisCommuns.setIcon(IconBoutonRechargerFavoris2);
-		MenuFavoris.add(MenuFavorisCommuns);
-		MenuOdip.setIcon(IconOdip);
-		MenuFavoris.add(MenuOdip);
-		MenuOdip.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent arg0) {
-
-				if (LanceProduit.LanceOdip() == true) {
-					ZoneTextLog.append("Ouverture d'ODIP." + "\n");
-				}
-				else {
-					ZoneTextLog.append("Erreur lancement d'ODIP : Consulter la log." + "\n");
-				}
-
-			}
-		});
-
-		MenuBbr = new JMenuItem("BBR(Buisness Bridge)");
-		final ImageIcon IconBbr = new ImageIcon(getClass().getResource("/bbr-icon.png"));
-		MenuBbr.setIcon(IconBbr);
-		MenuBbr.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent arg0) {
-				if (LanceProduit.LanceBbr() == true) {
-					ZoneTextLog.append("Ouverture de BBR." + "\n");
-				}
-				else {
-					ZoneTextLog.append("Erreur lancement de BBR : Consulter la log." + "\n");
-				}
-			}
-		});
-		MenuFavoris.add(MenuBbr);
-
-		MenuOseIp1 = new JMenuItem("OSE ip1");
-		final ImageIcon IconOseIp1 = new ImageIcon(getClass().getResource("/ose-icon.png"));
-		MenuOseIp1.setIcon(IconOseIp1);
-		MenuOseIp1.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				if (LanceProduit.LanceOseIp1() == true) {
-					ZoneTextLog.append("Ouverture d'OSE IP1." + "\n");
-				}
-				else {
-					ZoneTextLog.append("Erreur lancement D'OSE IP1 : Consulter la log." + "\n");
-				}
-
-			}
-		});
-		MenuFavoris.add(MenuOseIp1);
-
-		MenuOseIp2 = new JMenuItem("OSE ip2");
-		final ImageIcon IconOseip2 = new ImageIcon(getClass().getResource("/ose-icon.png"));
-		MenuOseIp2.setIcon(IconOseip2);
-		MenuOseIp2.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				if (LanceProduit.LanceOseIp2() == true) {
-					ZoneTextLog.append("Ouverture d'OSE IP2." + "\n");
-				}
-				else {
-					ZoneTextLog.append("Erreur lancement d'OSE IP2 : Consulter la log." + "\n");
-				}
-			}
-		});
-		MenuFavoris.add(MenuOseIp2);
-
-		MenuIpLabel = new JMenuItem("ip-Label");
-		final ImageIcon IconIpLabel = new ImageIcon(getClass().getResource("/iplabel-icon.png"));
-		MenuIpLabel.setIcon(IconIpLabel);
-		MenuIpLabel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				if (LanceProduit.LanceIpLabel() == true) {
-					ZoneTextLog.append("Ouverture d'Ip-Label." + "\n");
-				}
-				else {
-					ZoneTextLog.append("Erreur lancement d'Ip-Label : Consulter la log." + "\n");
-				}
-			}
-		});
-		MenuFavoris.add(MenuIpLabel);
-
-		MenuNewtest = new JMenuItem("Newtest");
-		final ImageIcon IconNewtest = new ImageIcon(getClass().getResource("/newtest-icon.png"));
-		MenuNewtest.setIcon(IconNewtest);
-		MenuNewtest.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				if (LanceProduit.LanceNewtest() == true) {
-					ZoneTextLog.append("Ouverture de Newtest." + "\n");
-				}
-				else {
-					ZoneTextLog.append("Erreur lancement de Newtest : Consulter la log." + "\n");
-				}
-			}
-		});
-		MenuFavoris.add(MenuNewtest);
-
-		MenuXguard = new JMenuItem("Xguard");
-		final ImageIcon IconXguard = new ImageIcon(getClass().getResource("/xguard-icon.png"));
-		MenuXguard.setIcon(IconXguard);
-		MenuXguard.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				if (LanceProduit.LanceXguard() == true) {
-					ZoneTextLog.append("Ouverture d'Xguard" + "\n");
-				}
-				else {
-					ZoneTextLog.append("Erreur lancement d'Xguard : Consulter la log." + "\n");
-				}
-			}
-		});
-		MenuFavoris.add(MenuXguard);
-
-		MenuHmc = new JMenuItem("HMC web1");
-		final ImageIcon IconHmc = new ImageIcon(getClass().getResource("/hmc-icon.PNG"));
-		MenuHmc.setIcon(IconHmc);
-		MenuHmc.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent e) {
-
-				if (LanceProduit.LanceHmc() == true) {
-					ZoneTextLog.append("Ouverture de la HMC." + "\n");
-				}
-				else {
-					ZoneTextLog.append("Erreur lancement de la HMC : Consulter la log." + "\n");
-				}
-			}
-		});
-		MenuFavoris.add(MenuHmc);
-
-		MenuKvm = new JMenuItem("KVM");
-		final ImageIcon IconKvm = new ImageIcon(getClass().getResource("/kvm-icon.PNG"));
-		MenuKvm.setIcon(IconKvm);
-		MenuKvm.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				if (LanceProduit.LanceKvm() == true) {
-					ZoneTextLog.append("Ouverture de KVM." + "\n");
-				}
-				else {
-					ZoneTextLog.append("Erreur lancement de KVM : Consulter la log." + "\n");
-				}
-			}
-		});
-		MenuFavoris.add(MenuKvm);
-
-		MenuTina5 = new JMenuItem("Tina web Cltec5");
-		final ImageIcon IconTina = new ImageIcon(getClass().getResource("/tina-icon.jpg"));
-		MenuTina5.setIcon(IconTina);
-		MenuTina5.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				if (LanceProduit.LanceTina5() == true) {
-					ZoneTextLog.append("Ouverture de TINA 5" + "\n");
-				}
-				else {
-					ZoneTextLog.append("Erreur lancement de TINA 5 : Consulter la log." + "\n");
-				}
-			}
-		});
-		MenuFavoris.add(MenuTina5);
-
-		MenuTina6 = new JMenuItem("Tina web Cltec6");
-		MenuTina6.setIcon(IconTina);
-		MenuTina6.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				if (LanceProduit.LanceTina6() == true) {
-					ZoneTextLog.append("Ouverture de TINA 6." + "\n");
-				}
-				else {
-					ZoneTextLog.append("Erreur lancement de TINA 6 : Consulter la log." + "\n");
-				}
-			}
-		});
-		MenuFavoris.add(MenuTina6);
-
-		MenuVcenter = new JMenuItem("Vcenter (VMware)");
-		final ImageIcon IconVcenter = new ImageIcon(getClass().getResource("/vmware-icon.png"));
-		MenuVcenter.setIcon(IconVcenter);
-		MenuVcenter.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				if (LanceProduit.LanceVcenter() == true) {
-					ZoneTextLog.append("Ouverture de Vcenter." + "\n");
-				}
-				else {
-					ZoneTextLog.append("Erreur lancement de Vcenter : Consulter la log." + "\n");
-				}
-			}
-		});
-		MenuFavoris.add(MenuVcenter);
-
-		MenuWebIas = new JMenuItem("Web IAS");
-		final ImageIcon IconIas = new ImageIcon(getClass().getResource("/ias-icon.png"));
-		MenuWebIas.setIcon(IconIas);
-		MenuWebIas.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent e) {
-
-				if (LanceProduit.LanceWebIas() == true) {
-					ZoneTextLog.append("Ouverture de WebIAS." + "\n");
-				}
-				else {
-					ZoneTextLog.append("Erreur lancement de WebIAS : Consulter la log." + "\n");
-				}
-			}
-		});
-		MenuFavoris.add(MenuWebIas);
-
-		JMenu mnSismo = new JMenu("Sismo");
-		mnSismo.setIcon(new ImageIcon(UserInterface.class.getResource("/com/sun/javafx/webkit/prism/resources/mediaPlayDisabled.png")));
-		MenuFavoris.add(mnSismo);
-
-		MenuSismoIp1 = new JMenuItem("Sismo/cd IP1");
-		final ImageIcon IconSismo = new ImageIcon(getClass().getResource("/sismo-icon.jpg"));
-		MenuSismoIp1.setIcon(IconSismo);
-		MenuSismoIp1.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				if (LanceProduit.LanceSismoIp1() == true) {
-					ZoneTextLog.append("Ouverture de SISMO IP1." + "\n");
-				}
-				else {
-					ZoneTextLog.append("Erreur lancement de SISMO IP1 : Consulter la log." + "\n");
-				}
-			}
-		});
-		mnSismo.add(MenuSismoIp1);
-
-		MenuSismoIp2 = new JMenuItem("Sismo/cd IP2");
-		MenuSismoIp2.setIcon(IconSismo);
-		MenuSismoIp2.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				if (LanceProduit.LanceSismoIp2() == true) {
-					ZoneTextLog.append("Ouverture de SISMO IP2." + "\n");
-				}
-				else {
-					ZoneTextLog.append("Erreur lancement de SISMO IP2 : Consulter la log." + "\n");
-				}
-			}
-		});
-		mnSismo.add(MenuSismoIp2);
-
-		MenuSismoOceor = new JMenuItem("Sismo/cd Oceor");
-		MenuSismoOceor.setIcon(IconSismo);
-		MenuSismoOceor.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				if (LanceProduit.LanceSismoOceor() == true) {
-					ZoneTextLog.append("Ouverture de SISMO OCEOR." + "\n");
-				}
-				else {
-					ZoneTextLog.append("Erreur lancement de SISMO OCEOR : Consulter la log." + "\n");
-				}
-			}
-		});
-		mnSismo.add(MenuSismoOceor);
-
-		MenuSismoPalatine = new JMenuItem("Sismo/cd Palatine");
-		MenuSismoPalatine.setIcon(IconSismo);
-		MenuSismoPalatine.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				if (LanceProduit.LanceSismoPalatine() == true) {
-					ZoneTextLog.append("Ouverture de SISMO Palatine." + "\n");
-				}
-				else {
-					ZoneTextLog.append("Erreur lancement de SISMO Palatine: Consulter la log." + "\n");
-				}
-
-			}
-		});
-		mnSismo.add(MenuSismoPalatine);
+		new ImageIcon(getClass().getResource("/odip-icon.png"));
+		new ImageIcon(getClass().getResource("/rsz_1legendary-marker_1.png"));
+		new ImageIcon(getClass().getResource("/bbr-icon.png"));
+		new ImageIcon(getClass().getResource("/ose-icon.png"));
+		new ImageIcon(getClass().getResource("/ose-icon.png"));
+		new ImageIcon(getClass().getResource("/iplabel-icon.png"));
+		new ImageIcon(getClass().getResource("/newtest-icon.png"));
+		new ImageIcon(getClass().getResource("/xguard-icon.png"));
+		new ImageIcon(getClass().getResource("/hmc-icon.PNG"));
+		new ImageIcon(getClass().getResource("/kvm-icon.PNG"));
+		new ImageIcon(getClass().getResource("/tina-icon.jpg"));
+		new ImageIcon(getClass().getResource("/vmware-icon.png"));
+		new ImageIcon(getClass().getResource("/ias-icon.png"));
+		new ImageIcon(getClass().getResource("/sismo-icon.jpg"));
 
 		JMenu MenuGestion = new JMenu("Gestion");
 
@@ -1368,19 +1459,68 @@ public class UserInterface extends JFrame implements ActionListener {
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
 
+				final JDialog loading = new JDialog();
+				loading.setAlwaysOnTop(true);
+				JPanel p1 = new JPanel(new BorderLayout());
+
+				p1.add(new JLabel("Veuillez patienter, génération des favoris en cours..."), BorderLayout.CENTER);
+				loading.setUndecorated(false);
+				loading.setTitle("AlphaPilote");
+				loading.setSize(700, 300);
+				loading.setAlwaysOnTop(true);
+				loading.setBackground(Color.ORANGE);
+				p1.setBackground(Color.ORANGE);
+				loading.getContentPane().add(p1);
+				loading.pack();
+				loading.setLocation(PositionInterfaceX + 200, PositionInterfaceY + 200);
+
+				// loading.setLocation(PositionInterfaceX, PositionInterfaceY);
+
+				loading.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+				loading.setModal(true);
+
+				SwingWorker<String, Void> worker = new SwingWorker<String, Void>() {
+					@Override
+					protected String doInBackground() throws InterruptedException {
+
+						Chargement();
+
+						return null;
+					}
+
+					@Override
+					protected void done() {
+
+						loading.dispose();
+
+					}
+				};
+				worker.execute();
+				loading.setVisible(true);
+				try {
+					worker.get();
+				}
+				catch (Exception e1) {
+					e1.printStackTrace();
+				}
 				GainedFocus = true;
+
+			}
+
+			void Chargement() {
+
 				UserInterfaceFavoris PageEditionFavoris = null;
 				try {
 					PageEditionFavoris = new UserInterfaceFavoris();
 				}
-				catch (IOException e) {
-					// TODO Auto-generated catch block
+				catch (SQLException e) {
 					e.printStackTrace();
 				}
-
+				PageEditionFavoris.setAlwaysOnTop(true);
 				PageEditionFavoris.setVisible(true);
-				PageEditionFavoris.setSize(800, 550);
+				PageEditionFavoris.setSize(1024, 768);
 				PageEditionFavoris.setLocation(PositionFenetrePrincipale);
+				GainedFocus = true;
 
 			}
 		});
@@ -1453,7 +1593,15 @@ public class UserInterface extends JFrame implements ActionListener {
 				Session = 1;
 				MenuBourglareine.setSelected(false);
 				MenuItceParisBercy.setSelected(true);
-				GS.EcrireSession(Session);
+				MenuCentraleQpa.setSelected(false);
+				MenuCentraleIp1Ip2.setSelected(false);
+				try {
+					GS.EcrireSession(Session);
+				}
+				catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				LabelProfile.setText("Profile: IT-CE Bercy");
 
 			}
@@ -1467,16 +1615,69 @@ public class UserInterface extends JFrame implements ActionListener {
 				Session = 2;
 				MenuItceParisBercy.setSelected(false);
 				MenuBourglareine.setSelected(true);
-				GS.EcrireSession(Session);
+				MenuCentraleQpa.setSelected(false);
+				MenuCentraleIp1Ip2.setSelected(false);
+				try {
+					GS.EcrireSession(Session);
+				}
+				catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				LabelProfile.setText("Profile: Bourg-la-reine");
 			}
 		});
 		MenuProfiles.add(MenuBourglareine);
 
+		MenuCentraleIp1Ip2 = new JCheckBoxMenuItem("Centrale IP1 & IP2");
+		MenuCentraleIp1Ip2.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				Session = 3;
+				MenuBourglareine.setSelected(false);
+				MenuItceParisBercy.setSelected(false);
+				MenuCentraleQpa.setSelected(false);
+				MenuCentraleIp1Ip2.setSelected(true);
+				try {
+					GS.EcrireSession(Session);
+				}
+				catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				LabelProfile.setText("Profile: Centrale IP1 & IP2");
+
+			}
+		});
+		MenuProfiles.add(MenuCentraleIp1Ip2);
+
+		MenuCentraleQpa = new JCheckBoxMenuItem("Centrale QPA");
+		MenuCentraleQpa.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+
+				Session = 4;
+				MenuBourglareine.setSelected(false);
+				MenuItceParisBercy.setSelected(false);
+				MenuCentraleQpa.setSelected(true);
+				MenuCentraleIp1Ip2.setSelected(false);
+				try {
+					GS.EcrireSession(Session);
+				}
+				catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				LabelProfile.setText("Profile: Centrale QPA");
+
+			}
+		});
+		MenuProfiles.add(MenuCentraleQpa);
+
 		JMenu MenuAPropos = new JMenu("Aide");
 		BarreMenuPrincipale.add(MenuAPropos);
 
-		JMenuItem MenuLogErreurs = new JMenuItem("Log d'erreurs");
+		JMenuItem MenuLogErreurs = new JMenuItem("Log d'erreurs pilote");
 		MenuLogErreurs.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
@@ -1484,8 +1685,9 @@ public class UserInterface extends JFrame implements ActionListener {
 				GestionChemin RequeteChemin = new GestionChemin();
 
 				try {
-					ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/C", "start ", "\"", RequeteChemin.DemandeChemin("CheminFichierLog"), "\"");
+					ProcessBuilder builder = new ProcessBuilder("notepad.exe", "\"" + RequeteChemin.DemandeChemin("CheminFichierLog") + "\"");
 					builder.start();
+					// System.out.println(RequeteChemin.DemandeChemin("CheminFichierLog"));
 				}
 				catch (IOException e) {
 
@@ -1499,6 +1701,27 @@ public class UserInterface extends JFrame implements ActionListener {
 			}
 		});
 		MenuAPropos.add(MenuLogErreurs);
+
+		JMenuItem mntmLogDerreursJava = new JMenuItem("Log d'erreurs JAVA");
+		mntmLogDerreursJava.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if (Desktop.isDesktopSupported()) {
+					try {
+						File dir = new File("\\\\fsitceti\\entites\\ITC PPR-EDC-PIL-724 ETI\\Pilotage Mutualise\\Sauvegarde Olive&Pascal\\Outils de pilotage\\Alphapilote\\Profiles\\"
+								+ UserNameStation + "\\logJava");
+						Desktop.getDesktop().open(dir);
+						ZoneTextLog.append("Ouverture du dossier contenant les logs d'erreurs Java." + "\n");
+					}
+					catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+
+			}
+		});
+		MenuAPropos.add(mntmLogDerreursJava);
 
 		JSeparator SeparateurApropos = new JSeparator();
 		MenuAPropos.add(SeparateurApropos);
@@ -1539,7 +1762,6 @@ public class UserInterface extends JFrame implements ActionListener {
 		mntmRechargerFavoris.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				MenuFavorisCommuns.removeAll();
 				new Thread(new ThreadChargementFavoris()).start();
 				ZoneTextLog.append("Favoris communs rechargés." + "\n");
 			}
@@ -1589,7 +1811,7 @@ public class UserInterface extends JFrame implements ActionListener {
 					e.printStackTrace();
 				}
 				// String TextZoneIp = ZoneIp.getText();
-				if (Resultatdemande == null) {
+				if (Resultatdemande.equals("") == true) {
 					Resultatdemande = MachineDansMaComboBox;
 				}
 
@@ -1621,7 +1843,7 @@ public class UserInterface extends JFrame implements ActionListener {
 		JPanel ZoneConnexionAutoLogin = new JPanel();
 		ZoneConnexionAutoLogin.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Auto login (SSH seulement)", TitledBorder.LEADING, TitledBorder.TOP, null,
 				new Color(72, 61, 139)));
-		ZoneConnexionAutoLogin.setBounds(10, 54, 178, 136);
+		ZoneConnexionAutoLogin.setBounds(10, 77, 178, 136);
 		PaneZoneConnexion.add(ZoneConnexionAutoLogin);
 		ZoneConnexionAutoLogin.setLayout(null);
 
@@ -1702,11 +1924,23 @@ public class UserInterface extends JFrame implements ActionListener {
 		BoutonConnexionTelnetOuSsh.setBounds(224, 50, 91, 23);
 		PaneZoneConnexion.add(BoutonConnexionTelnetOuSsh);
 
+		lblOs = new JLabel("Os :");
+		lblOs.setBounds(10, 52, 29, 14);
+		PaneZoneConnexion.add(lblOs);
+
+		LabelOs = new JLabel("");
+		LabelOs.setBounds(36, 37, 46, 36);
+		PaneZoneConnexion.add(LabelOs);
+
 		MaComboBox.addItemListener(new ItemListener() {
 
 			@Override
 			public void itemStateChanged(ItemEvent ie) {
-				MachineDansMaComboBox = (String) MaComboBox.getSelectedItem();
+				if (EtatRecherche == true) {
+					EtatRecherche = false;
+
+					new Thread(new ThreadRechercheOs()).start();
+				}
 
 			}
 
@@ -1727,12 +1961,12 @@ public class UserInterface extends JFrame implements ActionListener {
 		JPanel PanelZoneTestFichier = new JPanel();
 		PanelZoneTestFichier.setForeground(new Color(255, 69, 0));
 		PanelZoneTestFichier.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Param\u00E8tres session", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(100, 149, 237)));
-		PanelZoneTestFichier.setBounds(544, 2, 189, 134);
+		PanelZoneTestFichier.setBounds(544, 2, 194, 148);
 		getContentPane().add(PanelZoneTestFichier);
 		PanelZoneTestFichier.setLayout(null);
 
 		LabelProfile = new JLabel("Profile: IT-CE Bercy");
-		LabelProfile.setBounds(10, 45, 199, 23);
+		LabelProfile.setBounds(10, 58, 199, 18);
 		PanelZoneTestFichier.add(LabelProfile);
 		LabelProfile.setForeground(new Color(25, 25, 112));
 		LabelProfile.setFont(new Font("Segoe UI Symbol", Font.BOLD, 13));
@@ -1740,44 +1974,46 @@ public class UserInterface extends JFrame implements ActionListener {
 		JLabel lblUtilisateur = new JLabel("Utilisateur: " + UserNameStation);
 		lblUtilisateur.setForeground(new Color(25, 25, 112));
 		lblUtilisateur.setFont(new Font("Segoe UI Symbol", Font.BOLD, 13));
-		lblUtilisateur.setBounds(10, 20, 199, 23);
+		lblUtilisateur.setBounds(10, 20, 199, 18);
 		PanelZoneTestFichier.add(lblUtilisateur);
 
 		JLabel LabelRessources = new JLabel("Acc\u00E8s ressources: ");
 		LabelRessources.setForeground(new Color(25, 25, 112));
 		LabelRessources.setFont(new Font("Segoe UI Symbol", Font.BOLD, 13));
-		LabelRessources.setBounds(10, 100, 138, 23);
+		LabelRessources.setBounds(10, 110, 138, 23);
 		PanelZoneTestFichier.add(LabelRessources);
 
 		LabelImageRessources = new JLabel("");
-		LabelImageRessources.setToolTipText("Base de donn\u00E9es = OK, \r\nFichier machines = OK, \r\nFichier favoris = OK, \r\nDossier profiles =OK, ");
+		LabelImageRessources.setToolTipText("Base de donn\u00E9es = OK\r\n");
 		LabelImageRessources.setIcon(new ImageIcon(UserInterface.class.getResource("/javax/swing/plaf/basic/icons/JavaCup16.png")));
-		LabelImageRessources.setBounds(138, 100, 46, 23);
+		LabelImageRessources.setBounds(133, 110, 46, 23);
 		PanelZoneTestFichier.add(LabelImageRessources);
 
-		JToggleButton tglbtnNewToggleButton = new JToggleButton("New toggle button");
-		tglbtnNewToggleButton.setBounds(190, 0, 46, 23);
-		PanelZoneTestFichier.add(tglbtnNewToggleButton);
+		LabelProfileLocal = new JLabel("Assocation locale: Oui");
+		LabelProfileLocal.setForeground(new Color(25, 25, 112));
+		LabelProfileLocal.setFont(new Font("Segoe UI Symbol", Font.BOLD, 13));
+		LabelProfileLocal.setBounds(10, 76, 199, 23);
+		PanelZoneTestFichier.add(LabelProfileLocal);
 
-		JToggleButton tglbtnNewToggleButton_1 = new JToggleButton("New toggle button");
-		tglbtnNewToggleButton_1.setBounds(190, 0, 46, 23);
-		PanelZoneTestFichier.add(tglbtnNewToggleButton_1);
+		LabelComputerName = new JLabel("Poste: " + ComputerNameStation);
+		LabelComputerName.setForeground(new Color(25, 25, 112));
+		LabelComputerName.setFont(new Font("Segoe UI Symbol", Font.BOLD, 13));
+		LabelComputerName.setBounds(10, 37, 199, 18);
+		PanelZoneTestFichier.add(LabelComputerName);
 
 		JPanel PaneZonePreparationPostePilotage = new JPanel();
 		PaneZonePreparationPostePilotage.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Pr\u00E9paration poste pilotage", TitledBorder.LEADING, TitledBorder.TOP, null,
 				new Color(100, 149, 237)));
-		PaneZonePreparationPostePilotage.setBounds(345, 2, 189, 148);
+		PaneZonePreparationPostePilotage.setBounds(345, 2, 189, 169);
 		getContentPane().add(PaneZonePreparationPostePilotage);
 		PaneZonePreparationPostePilotage.setLayout(null);
 
-		JButton BoutonLancePostePilotageComplet = new JButton("Lancer poste complet");
-		BoutonLancePostePilotageComplet.addMouseListener(new MouseAdapter() {
-
+		BoutonLancePostePilotageComplet = new JButton("Lancer poste complet");
+		BoutonLancePostePilotageComplet.addActionListener(new ActionListener() {
 			@Override
-			public void mouseReleased(MouseEvent e) {
-				// BLEA
-				LanceAutoPostePilotage();
+			public void actionPerformed(ActionEvent e) {
 
+				LanceAutoPostePilotage();
 			}
 		});
 		final ImageIcon IconLancePostePilotageComplet = new ImageIcon(getClass().getResource("/activity_monitor.png"));
@@ -1788,7 +2024,7 @@ public class UserInterface extends JFrame implements ActionListener {
 
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Lancer tout ->", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(165, 42, 42)));
-		panel.setBounds(6, 58, 173, 78);
+		panel.setBounds(6, 80, 173, 78);
 		PaneZonePreparationPostePilotage.add(panel);
 		panel.setLayout(null);
 
@@ -1875,12 +2111,30 @@ public class UserInterface extends JFrame implements ActionListener {
 		panel.add(BoutonToutAs400);
 		BoutonToutAs400.setMargin(new Insets(0, 0, 0, 0));
 
+		CheckCranSurete = new JCheckBox("Cran suret\u00E9");
+		CheckCranSurete.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Boolean Check = CheckCranSurete.isSelected();
+				if (Check == false) {
+					BoutonLancePostePilotageComplet.setEnabled(true);
+
+				}
+				else {
+					BoutonLancePostePilotageComplet.setEnabled(false);
+				}
+
+			}
+		});
+		CheckCranSurete.setBounds(6, 50, 120, 23);
+		PaneZonePreparationPostePilotage.add(CheckCranSurete);
+
 		ProgressBarExecutionGlobale = new JProgressBar();
 		ProgressBarExecutionGlobale.setVisible(false);
 		ProgressBarExecutionGlobale.setValue(0);
 		ProgressBarExecutionGlobale.setStringPainted(true);
 		ProgressBarExecutionGlobale.setMaximum(15000);
-		ProgressBarExecutionGlobale.setBounds(264, 223, 270, 23);
+		ProgressBarExecutionGlobale.setBounds(264, 237, 270, 23);
 		getContentPane().add(ProgressBarExecutionGlobale);
 
 		LabelUtilisationMemoire = new JLabel("Utilisation m\u00E9moire : ");
@@ -1905,7 +2159,7 @@ public class UserInterface extends JFrame implements ActionListener {
 
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Raccourcis", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(100, 149, 237)));
-		panel_1.setBounds(558, 358, 216, 134);
+		panel_1.setBounds(498, 323, 216, 169);
 		getContentPane().add(panel_1);
 		panel_1.setLayout(null);
 
@@ -1925,12 +2179,19 @@ public class UserInterface extends JFrame implements ActionListener {
 		LabelConnexion.setBounds(6, 52, 202, 24);
 		panel_1.add(LabelConnexion);
 
-		LabelConsignes = new JLabel("+  = Dossier Consignes");
+		LabelConsignes = new JLabel("+  = Dossier consignes");
 		LabelConsignes.setIcon(IconWindows);
 		LabelConsignes.setForeground(new Color(160, 82, 45));
 		LabelConsignes.setFont(new Font("Calibri", Font.PLAIN, 12));
 		LabelConsignes.setBounds(6, 87, 202, 24);
 		panel_1.add(LabelConsignes);
+
+		LabelAutoLogin = new JLabel("+  = Auto login favoris");
+		LabelAutoLogin.setIcon(IconWindows);
+		LabelAutoLogin.setForeground(new Color(160, 82, 45));
+		LabelAutoLogin.setFont(new Font("Calibri", Font.PLAIN, 12));
+		LabelAutoLogin.setBounds(6, 122, 202, 24);
+		panel_1.add(LabelAutoLogin);
 		final ImageIcon IconWarning = new ImageIcon(getClass().getResource("/warning-icon.png"));
 
 		LabelDetectionDoublon = new JLabel("Conflit dans les raccourcis");
@@ -1941,11 +2202,11 @@ public class UserInterface extends JFrame implements ActionListener {
 		LabelDetectionDoublon.setForeground(new Color(220, 20, 60));
 		LabelDetectionDoublon.setFont(new Font("Tahoma", Font.BOLD, 11));
 
-		LabelChargementProfil = new JLabel("Chargement du profil en cours ....");
+		LabelChargementProfil = new JLabel("Chargement du profile en cours ....");
 		LabelChargementProfil.setVisible(false);
-		LabelChargementProfil.setForeground(new Color(60, 179, 113));
-		LabelChargementProfil.setFont(new Font("Times New Roman", Font.BOLD, 18));
-		LabelChargementProfil.setBounds(255, 230, 293, 56);
+		LabelChargementProfil.setForeground(new Color(204, 0, 51));
+		LabelChargementProfil.setFont(new Font("Times New Roman", Font.BOLD, 22));
+		LabelChargementProfil.setBounds(205, 224, 439, 56);
 		getContentPane().add(LabelChargementProfil);
 
 		JToggleButton BoutonAncre = new JToggleButton("");
@@ -1971,6 +2232,7 @@ public class UserInterface extends JFrame implements ActionListener {
 		LabelLancementAuto.setForeground(new Color(0, 0, 0));
 		LabelLancementAuto.setFont(new Font("Verdana", Font.BOLD, 17));
 		LabelLancementAuto.setBounds(191, 223, 388, 42);
+		LabelLancementAuto.setVisible(false);
 		getContentPane().add(LabelLancementAuto);
 
 		BoutonCancel = new JButton("Annuler Lancement");
@@ -1987,6 +2249,28 @@ public class UserInterface extends JFrame implements ActionListener {
 		BoutonCancel.setForeground(new Color(139, 0, 0));
 		BoutonCancel.setBounds(589, 222, 169, 43);
 		getContentPane().add(BoutonCancel);
+
+		JButton BoutonReboot = new JButton("");
+		BoutonReboot.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+
+				ProcessBuilder pb = new ProcessBuilder("cmd.exe", " start", "/C", "shutdown -r -f -t 5 ");
+				try {
+					pb.start();
+					ZoneTextLog.append("Reboot du poste dans 5 sec..." + "\n");
+				}
+				catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		BoutonReboot.setMargin(new Insets(0, 0, 0, 0));
+		BoutonReboot.setBounds(732, 450, 42, 42);
+		final ImageIcon IconReboot = new ImageIcon(getClass().getResource("/shutdown-icon.png"));
+		BoutonReboot.setIcon(IconReboot);
+		getContentPane().add(BoutonReboot);
 
 		BoutonValideSsh.addMouseListener(new MouseAdapter() {
 			@Override
@@ -2043,7 +2327,6 @@ public class UserInterface extends JFrame implements ActionListener {
 		//
 		//
 		// ----------------------------------------------
-		new Thread(new InitialisationInterface()).start();
 
 		// --------------------TEST SQL------------------
 		//
@@ -2054,31 +2337,56 @@ public class UserInterface extends JFrame implements ActionListener {
 
 		GestionSql LaBase = new GestionSql();
 		Connection LaConnexion = LaBase.InitConnexion();
-		String Retour = LaBase.TestUserExistant(LaConnexion, UserNameStation);
+		String user = UserNameStation.toUpperCase();
+		String Retour = LaBase.TestUserExistant(LaConnexion, user);
 		if (Retour.equals("AUCUN") == true) {
 
-			LaBase.AjoutNouveauPilote(LaConnexion, UserNameStation);
+			LaBase.AjoutNouveauPilote(LaConnexion, user);
+			ZoneTextLog.append("Nouveau profile SQL crée pour: " + user + "\n");
 			LaBase.AjoutBrowserPilote(LaConnexion, "Mozilla Firefox");
 			LaBase.AjoutDonneePilote(LaConnexion, "RaccourciCapture", "X");
 			LaBase.AjoutDonneePilote(LaConnexion, "RaccourciConnexion", "V");
 			LaBase.AjoutDonneePilote(LaConnexion, "RaccourciConsignes", "C");
+			LaBase.AjoutDonneePilote(LaConnexion, "RaccourciAutoLogin", "W");
+
+			// AJOUT DOSSIER PROFILE-----
+			// -------------------------
+
+			GestionChemin GC = new GestionChemin();
+			File DossierProfileStation = new File(GC.DemandeChemin("CheminProfileStationGeneral"));
+
+			if (DossierProfileStation.exists()) {
+				// System.out.println(GC.DemandeChemin("CheminProfileIprox"));
+			}
+			else {
+				SuccesCreation = DossierProfileStation.mkdir();
+				File Source = new File(GC.DemandeChemin("CheminProfileStationVierge"));
+
+				if (SuccesCreation == true) {
+					try {
+						FileUtils.copyDirectory(Source, DossierProfileStation);
+						ZoneTextLog.append("Nouveau profile crée pour: " + UserNameStation + "\n");
+					}
+					catch (IOException e) {
+
+						e.printStackTrace();
+						GestionLog MaLog = new GestionLog();
+						MaLog.EcrireDansFichierLog("Erreur lors de la copie du profile de base vers le nouveau : " + e);
+						ZoneTextLog.append("Erreur lors de la copie du profile de base vers le nouveau : Consulter la log." + "\n");
+
+					}
+				}
+
+			}
+
+			// -------------------------------------------
+
+			// ------------------------- START
 
 		}
 
-		LaBase.AjoutDonneeIntPilote(LaConnexion, "Session", LaBase.ConsulterDonneeIntPilote(LaConnexion, "SessionDefault"));
-		int Session = LaBase.ConsulterDonneeIntPilote(LaConnexion, "SessionDefault");
-		if (Session == 1) {
-			LabelProfile.setText("Profile: IT-CE Bercy");
-			MenuItceParisBercy.setSelected(true);
-			MenuBourglareine.setSelected(false);
-		}
-		if (Session == 2) {
-			LabelProfile.setText("Profile: Bourg-la-reine");
-			MenuBourglareine.setSelected(true);
-			MenuItceParisBercy.setSelected(false);
-		}
-		LaBase.FermerConnexion(LaConnexion);
-		TestAccesFichier();
+		new Thread(new InitialisationInterface()).start();
+
 	}
 
 	public class InitialisationInterface implements Runnable {
@@ -2086,10 +2394,105 @@ public class UserInterface extends JFrame implements ActionListener {
 		@Override
 		public void run() {
 			try {
+				new GestionChemin();
+				GestionSql LaBase = new GestionSql();
+				Connection LaConnexion = LaBase.InitConnexion();
+				LaBase.AjoutDonneeIntPilote(LaConnexion, "Session", LaBase.ConsulterDonneeIntPilote(LaConnexion, "SessionDefault"));
+				int Session = LaBase.ConsulterDonneeIntPilote(LaConnexion, "SessionDefault");
+				if (Session == 1) {
+					LabelProfile.setText("Profile: IT-CE Bercy");
+					MenuItceParisBercy.setSelected(true);
+					MenuBourglareine.setSelected(false);
+					MenuCentraleIp1Ip2.setSelected(false);
+					MenuCentraleQpa.setSelected(false);
+					LabelProfileLocal.setText("Assocation locale: Non");
+				}
+				if (Session == 2) {
+					LabelProfile.setText("Profile: Bourg-la-reine");
+					MenuBourglareine.setSelected(true);
+					MenuItceParisBercy.setSelected(false);
+					MenuCentraleIp1Ip2.setSelected(false);
+					MenuCentraleQpa.setSelected(false);
+					LabelProfileLocal.setText("Assocation locale: Non");
+				}
+				if (Session == 3) {
+					LabelProfile.setText("Profile: Centrale IP1 & IP2");
+					MenuBourglareine.setSelected(false);
+					MenuItceParisBercy.setSelected(false);
+					MenuCentraleIp1Ip2.setSelected(true);
+					MenuCentraleQpa.setSelected(false);
+					LabelProfileLocal.setText("Assocation locale: Non");
+				}
+				if (Session == 4) {
+					LabelProfile.setText("Profile: Centrale QPA");
+					MenuBourglareine.setSelected(false);
+					MenuItceParisBercy.setSelected(false);
+					MenuCentraleIp1Ip2.setSelected(false);
+					MenuCentraleQpa.setSelected(true);
+					LabelProfileLocal.setText("Assocation locale: Non");
+				}
+
+				// --------------------TEST PRESENCE DOSSIER
+
+				// ASSOCIATION------------
+				File DossierDataLocale = new File("C:\\Users\\" + UserNameStation + "\\AlphaPilote\\DataLocal\\");
+				File AssociationLocaleBercy = new File("C:\\Users\\" + UserNameStation + "\\AlphaPilote\\DataLocal\\Bercy.asc");
+				File AssociationLocaleBourgLaReine = new File("C:\\Users\\" + UserNameStation + "\\AlphaPilote\\DataLocal\\BourgLaReine.asc");
+				File AssociationLocaleCentraleIp1Ip2 = new File("C:\\Users\\" + UserNameStation + "\\AlphaPilote\\DataLocal\\CentraleIp1Ip2.asc");
+				File AssociationLocaleCentraleQpa = new File("C:\\Users\\" + UserNameStation + "\\AlphaPilote\\DataLocal\\CentraleQpa.asc");
+				if (DossierDataLocale.exists()) {
+					if (AssociationLocaleBercy.exists()) {
+						LaBase.AjoutDonneeIntPilote(LaConnexion, "Session", 1);
+						LabelProfile.setText("Profile: IT-CE Bercy");
+						MenuItceParisBercy.setSelected(true);
+						MenuBourglareine.setSelected(false);
+						MenuCentraleIp1Ip2.setSelected(false);
+						MenuCentraleQpa.setSelected(false);
+						LabelProfileLocal.setText("Assocation locale: Oui");
+						ZoneTextLog.append("Assocation locale du poste détectée. Chargement du profile IT-CE Bercy." + "\n");
+					}
+					if (AssociationLocaleBourgLaReine.exists()) {
+						LaBase.AjoutDonneeIntPilote(LaConnexion, "Session", 2);
+						LabelProfile.setText("Profile: Bourg-la-reine");
+						MenuBourglareine.setSelected(true);
+						MenuItceParisBercy.setSelected(false);
+						MenuCentraleIp1Ip2.setSelected(false);
+						MenuCentraleQpa.setSelected(false);
+						LabelProfileLocal.setText("Assocation locale: Oui");
+						ZoneTextLog.append("Assocation locale du poste détectée. Chargement du profile Bourg la Reine." + "\n");
+					}
+					if (AssociationLocaleCentraleIp1Ip2.exists()) {
+						LaBase.AjoutDonneeIntPilote(LaConnexion, "Session", 3);
+						LabelProfile.setText("Profile: Centrale IP1 & IP2");
+						MenuBourglareine.setSelected(false);
+						MenuItceParisBercy.setSelected(false);
+						MenuCentraleIp1Ip2.setSelected(true);
+						MenuCentraleQpa.setSelected(false);
+						LabelProfileLocal.setText("Assocation locale: Oui");
+						ZoneTextLog.append("Assocation locale du poste détectée. Chargement du profile Centrale IP1 & IP2." + "\n");
+					}
+					if (AssociationLocaleCentraleQpa.exists()) {
+						LaBase.AjoutDonneeIntPilote(LaConnexion, "Session", 4);
+						LabelProfile.setText("Profile: Centrale QPA");
+						MenuBourglareine.setSelected(false);
+						MenuItceParisBercy.setSelected(false);
+						MenuCentraleIp1Ip2.setSelected(false);
+						MenuCentraleQpa.setSelected(true);
+						LabelProfileLocal.setText("Assocation locale: Oui");
+						ZoneTextLog.append("Assocation locale du poste détectée. Chargement du profile Centrale QPA." + "\n");
+					}
+
+				}
+				else {
+					DossierDataLocale.mkdir();
+				}
+				// -------------------------------------------------------------
+				LaBase.FermerConnexion(LaConnexion);
+				TestAccesFichier();
 				LabelChargementProfil.setVisible(true);
-				Thread.sleep(100);
+				Thread.sleep(2000);
 			}
-			catch (InterruptedException e) {
+			catch (InterruptedException | SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -2109,7 +2512,6 @@ public class UserInterface extends JFrame implements ActionListener {
 			}
 
 			new Thread(new ThreadRechargementConfigInterface()).start();
-			LabelChargementProfil.setVisible(false);
 			new Thread(new ThreadLanceAutoPoste()).start();
 		}
 
@@ -2132,47 +2534,16 @@ public class UserInterface extends JFrame implements ActionListener {
 			MaLog.EcrireDansFichierLog("Problème d'accès à la base de donnée dans : " + RequeteChemin.DemandeChemin("BaseDeDonnée"));
 		}
 
-		File FichierMachine = new File(RequeteChemin.DemandeChemin("CheminFichierMachine"));
-		if (FichierMachine.exists()) {
-			RessourcesPresentes++;
-		}
-		else {
-			ZoneTextLog.append("Impossible de trouver le fichier machine : " + RequeteChemin.DemandeChemin("CheminFichierMachine") + "\n");
-			MaLog.EcrireDansFichierLog("Erreur lors du test présence du fichier machine dans : " + RequeteChemin.DemandeChemin("CheminFichierFavoris"));
-		}
-		File FichierFavoris = new File(RequeteChemin.DemandeChemin("CheminFichierFavoris"));
-		if (FichierFavoris.exists()) {
-			RessourcesPresentes++;
-		}
-		else {
-			ZoneTextLog.append("Impossible de trouver le fichier favoris : " + RequeteChemin.DemandeChemin("CheminFichierFavoris") + "\n");
-			MaLog.EcrireDansFichierLog("Erreur lors du test présence du fichier favoris dans : " + RequeteChemin.DemandeChemin("CheminFichierFavoris"));
-		}
-		File FichierLog = new File(RequeteChemin.DemandeChemin("CheminFichierLog"));
-		if (FichierLog.exists()) {
-			RessourcesPresentes++;
-		}
-		else {
-			ZoneTextLog.append("Impossible de trouver le fichier de log : " + RequeteChemin.DemandeChemin("CheminFichierLog") + "\n");
-			MaLog.EcrireDansFichierLog("Erreur lors du test présence du fichier log dans : " + RequeteChemin.DemandeChemin("CheminFichierMachine"));
-
-		}
-
-		if (RessourcesPresentes == 4) {
+		if (RessourcesPresentes == 1) {
 			final ImageIcon IconImageRessources = new ImageIcon(getClass().getResource("/dot-green.png"));
 			LabelImageRessources.setIcon(IconImageRessources);
 			ZoneTextLog.append("Toutes les ressources sont présentes." + "\n");
 		}
 
-		if ((RessourcesPresentes == 3) || (RessourcesPresentes == 2) || (RessourcesPresentes == 1)) {
-			final ImageIcon IconImageRessources = new ImageIcon(getClass().getResource("/dot-orange.gif"));
-			LabelImageRessources.setIcon(IconImageRessources);
-			ZoneTextLog.append("Problème d'accès à certaines ressources." + "\n");
-		}
 		if (RessourcesPresentes == 0) {
 			final ImageIcon IconImageRessources = new ImageIcon(getClass().getResource("/dot-red.png"));
 			LabelImageRessources.setIcon(IconImageRessources);
-			ZoneTextLog.append("Aucun accès à toutes les ressources." + "\n");
+			ZoneTextLog.append("Problème d'accès à la base de données." + "\n");
 		}
 
 	}
@@ -2202,8 +2573,14 @@ public class UserInterface extends JFrame implements ActionListener {
 			String UserUnix = "";
 			String PassUnix = "";
 
-			UserUnix = LaBase.ConsulterUserPilote(ConnectionBase, "Unix");
-			PassUnix = LaBase.ConsulterPasswordPilote(ConnectionBase, "Unix");
+			try {
+				UserUnix = LaBase.ConsulterUserPilote(ConnectionBase, "Unix");
+				PassUnix = LaBase.ConsulterPasswordPilote(ConnectionBase, "Unix");
+			}
+			catch (SQLException e1) {
+				LaBase.FermerConnexion(ConnectionBase);
+				e1.printStackTrace();
+			}
 
 			try {
 				MonIp = InetAddress.getLocalHost().getHostAddress();
@@ -2251,8 +2628,15 @@ public class UserInterface extends JFrame implements ActionListener {
 			GestionLog MaLog = new GestionLog();
 			String UserUnix = "";
 			String PassUnix = "";
-			UserUnix = LaBase.ConsulterUserPilote(ConnectionBase, "Unix");
-			PassUnix = LaBase.ConsulterPasswordPilote(ConnectionBase, "Unix");
+			try {
+				UserUnix = LaBase.ConsulterUserPilote(ConnectionBase, "Unix");
+				PassUnix = LaBase.ConsulterPasswordPilote(ConnectionBase, "Unix");
+			}
+			catch (SQLException e1) {
+				LaBase.FermerConnexion(ConnectionBase);
+				e1.printStackTrace();
+			}
+
 			try {
 				MonIp = InetAddress.getLocalHost().getHostAddress();
 			}
@@ -2297,8 +2681,15 @@ public class UserInterface extends JFrame implements ActionListener {
 			new GestionLog();
 			String UserUnix = "";
 			String PassUnix = "";
-			UserUnix = LaBase.ConsulterUserPilote(ConnectionBase, "Unix");
-			PassUnix = LaBase.ConsulterPasswordPilote(ConnectionBase, "Unix");
+			try {
+				UserUnix = LaBase.ConsulterUserPilote(ConnectionBase, "Unix");
+				PassUnix = LaBase.ConsulterPasswordPilote(ConnectionBase, "Unix");
+			}
+			catch (SQLException e2) {
+				LaBase.FermerConnexion(ConnectionBase);
+				e2.printStackTrace();
+			}
+
 			try {
 				MonIp = InetAddress.getLocalHost().getHostAddress();
 				AutomatedTelnetClient telnet = new AutomatedTelnetClient("126.40.230.119 ", UserUnix, PassUnix);
@@ -2327,7 +2718,7 @@ public class UserInterface extends JFrame implements ActionListener {
 		}
 	}
 
-	public String SelectionneNavigateur() {
+	public String SelectionneNavigateur() throws SQLException {
 
 		GestionSql LaBase = new GestionSql();
 		Connection ConnectionBase = LaBase.InitConnexion();
@@ -2379,7 +2770,7 @@ public class UserInterface extends JFrame implements ActionListener {
 		String Resultatdemande = MaMachine.DemandeIpSQL(MachineDansMaComboBox);
 		GestionChemin RequeteChemin = new GestionChemin();
 
-		if (Resultatdemande == null) {
+		if (Resultatdemande.equals("") == true) {
 			Resultatdemande = MachineDansMaComboBox;
 		}
 
@@ -2446,7 +2837,7 @@ public class UserInterface extends JFrame implements ActionListener {
 				}
 				else {
 					CheckBoxPassword.setState(false);
-					ZoneTextLog.append("Problème lors de la demande du mot de passe" + "\n");
+					ZoneTextLog.append("Problème lors de la demande du mot de passe, verifiez que votre mot de passe unix est bien saisi dans la gestion des accès." + "\n");
 
 				}
 
@@ -2486,7 +2877,7 @@ public class UserInterface extends JFrame implements ActionListener {
 		GestionSql LaBase = new GestionSql();
 		Connection ConnectionBase = LaBase.InitConnexion();
 
-		if (Resultatdemande == null) {
+		if (Resultatdemande.equals("") == true) {
 			Resultatdemande = MachineDansMaComboBox;
 		}
 
@@ -2577,7 +2968,7 @@ public class UserInterface extends JFrame implements ActionListener {
 				e1.printStackTrace();
 			}
 			Boolean RetourTestConnexion = false;
-			if (Resultatdemande == null) {
+			if (Resultatdemande.equals("") == true) {
 				Resultatdemande = MachineDansMaComboBox;
 			}
 
@@ -2702,7 +3093,8 @@ public class UserInterface extends JFrame implements ActionListener {
 
 	public void LanceAutoPostePilotage() {
 
-		// System.out.println("Je passe ici");
+		CheckCranSurete.setSelected(true);
+		BoutonLancePostePilotageComplet.setEnabled(false);
 		new Thread(new ThreadBarProgress()).start();
 		new Thread(new ThreadLancementProduitAuto()).start();
 
@@ -2743,7 +3135,13 @@ public class UserInterface extends JFrame implements ActionListener {
 		public void run() {
 			GestionSql LaBase = new GestionSql();
 			Connection ConnectionBase = LaBase.InitConnexion();
-			LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Sysa");
+			try {
+				LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Sysa");
+			}
+			catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 
 			try {
 				if (LaBase.ConsulterLancementAutoPilote(ConnectionBase, "Sysa").equals("true") == true) {
@@ -2988,12 +3386,16 @@ public class UserInterface extends JFrame implements ActionListener {
 
 			}
 			catch (InterruptedException e) {
-				// TODO Auto-generated catch block
+				LaBase.FermerConnexion(ConnectionBase);
 				e.printStackTrace();
 			}
 			catch (IOException e) {
-				// TODO Auto-generated catch block
+				LaBase.FermerConnexion(ConnectionBase);
 				e.printStackTrace();
+			}
+			catch (SQLException e1) {
+				LaBase.FermerConnexion(ConnectionBase);
+				e1.printStackTrace();
 			}
 			LaBase.FermerConnexion(ConnectionBase);
 		}
@@ -3021,7 +3423,7 @@ public class UserInterface extends JFrame implements ActionListener {
 
 			ResultatPing.setForeground(Color.GRAY);
 
-			if (ResultatDemandeTest == null) {
+			if (ResultatDemandeTest.equals("") == true) {
 				ResultatDemandeTest = MachineDansMaComboBox;
 				ResultatdemandeSave = MachineDansMaComboBox;
 
@@ -3130,7 +3532,13 @@ public class UserInterface extends JFrame implements ActionListener {
 			GestionSql LaBase = new GestionSql();
 			Connection ConnectionBase = LaBase.InitConnexion();
 			// TestAccesFichier();
-			UserUnix = LaBase.ConsulterUserPilote(ConnectionBase, "Unix");
+			try {
+				UserUnix = LaBase.ConsulterUserPilote(ConnectionBase, "Unix");
+			}
+			catch (SQLException e1) {
+				LaBase.FermerConnexion(ConnectionBase);
+				e1.printStackTrace();
+			}
 			GestionMachine MaMachine = new GestionMachine();
 
 			String[] ListeMachinePourComboBox = { "NO MACHINE" };
@@ -3145,7 +3553,14 @@ public class UserInterface extends JFrame implements ActionListener {
 			MaComboBox.removeAllItems();
 			MaComboBox.setModel(new DefaultComboBoxModel(ListeMachinePourComboBox));
 
-			int Session = LaBase.ConsulterDonneeIntPilote(ConnectionBase, "Session");
+			int Session = 0;
+			try {
+				Session = LaBase.ConsulterDonneeIntPilote(ConnectionBase, "Session");
+			}
+			catch (SQLException e) {
+				LaBase.FermerConnexion(ConnectionBase);
+				e.printStackTrace();
+			}
 			if (Session == 1) {
 
 				MenuItceParisBercy.setSelected(true);
@@ -3196,52 +3611,369 @@ public class UserInterface extends JFrame implements ActionListener {
 
 		@Override
 		public void run() {
+			ChargementEnCours = false;
+			LabelChargementProfil.setEnabled(true);
+			LabelChargementProfil.setVisible(true);
+			LabelChargementProfil.setText("Rechargement des favoris en cours");
+			MenuFavoris.setEnabled(false);
+			MenuDocumentsPilotage.removeAll();
+			MenuUrlPilotage.removeAll();
+			MenuDocumentsMvs.removeAll();
+			MenuUrlMvs.removeAll();
+			MenuDocumentsAs400.removeAll();
+			MenuUrlAs400.removeAll();
+			MenuDocumentsMySysDistribues.removeAll();
+			MenuUrlMySysDistribues.removeAll();
+			MenuDocumentsMySysCentrale.removeAll();
+			MenuUrlMySysCentrale.removeAll();
+			MenuDocumentsCanauxDirects.removeAll();
+			MenuUrlCanauxDirects.removeAll();
+			MenuDocumentsMonetique.removeAll();
+			MenuUrlMonetique.removeAll();
+			MenuDocumentsSurveillances.removeAll();
+			MenuUrlSurveillances.removeAll();
+			MenuDocumentsOutilsPilotage.removeAll();
+			MenuUrlOutilsPilotage.removeAll();
+			MenuDocumentsDivers.removeAll();
+			MenuUrlDivers.removeAll();
+			MenuUrlCff.removeAll();
+			MenuDocumentsCff.removeAll();
 
-			GestionFavoris GF = new GestionFavoris();
-			String Navigateur = SelectionneNavigateur();
-
-			int NombreLigne = 0;
-			String[] ListeFavoris = null;
+			GestionSql LaBase = new GestionSql();
+			Connection ConnectionBase = LaBase.InitConnexion();
+			Statement stmt = null;
+			String Nom = "";
+			String Url = null;
+			String Categorie = "";
+			int Icone = 0;
+			String SousCategorie = "";
+			String Help = "";
+			String Utilisée = "";
+			UserInterfaceFavoris UIF = null;
+			int MaxId = 0;
+			// GENERATION ICONES
 
 			try {
-				NombreLigne = GF.CompteLigneFichierFavoris();
-				ListeFavoris = GF.LireFichierFavoris();
+				UIF = new UserInterfaceFavoris();
+				UIF.CoreGenerationImages();
+
 			}
-			catch (IOException e1) {
+			catch (SQLException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+			ImageIcon[] images = UIF.getImages();
+
+			// -------------------
+
+			try {
+				stmt = ConnectionBase.createStatement();
+				ResultSet rs = stmt.executeQuery("select * from Favoris");
+				while (rs.next()) {
+				}
+			}
+			catch (SQLException e1) {
+
+				e1.printStackTrace();
+			}
+			// NombreLigne++;
+
+			try {
+				ResultSet rsMax = stmt.executeQuery("select * from Favoris where ID=(SELECT max(ID) FROM Favoris);");
+				while (rsMax.next()) {
+					MaxId = rsMax.getInt("ID");
+					// System.out.println(NombreLigne);
+				}
+			}
+			catch (SQLException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+			JMenuItem[] Favoris = new JMenuItem[MaxId + 1];
 
-			JMenuItem[] Favoris = new JMenuItem[NombreLigne];
+			for (int i = 0; i <= MaxId; i++) {
+				try {
+					ResultSet rs = stmt.executeQuery("select * from Favoris where ID='" + i + "'");
 
-			for (int i = 0; i < NombreLigne; i++) {
-				String string = ListeFavoris[i];
-				String[] parts = string.split("\t");
-				String NomFavoris = parts[0]; // NomFavoris
-				String urlFavoris = parts[1]; // UrlFavoris
-				Favoris[i] = new JMenuItem(NomFavoris);
-				MenuFavorisCommuns.add(Favoris[i]);
-				Favoris[i].addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseReleased(MouseEvent arg0) {
+					while (rs.next()) {
+						rs.getInt("ID");
+						Nom = rs.getString("Nom");
+						Url = rs.getString("Url");
+						Categorie = rs.getString("Categorie");
+						SousCategorie = rs.getString("SCategorie");
+						Icone = rs.getInt("Icone");
+						Help = rs.getString("Help");
+						Utilisée = rs.getString("Utilisee");
+					}
 
-						// System.out.println("je vais vers : " + urlFavoris);
-						ProcessBuilder pb = new ProcessBuilder("cmd.exe", " start", "/C", Navigateur, "", urlFavoris);
-						try {
-							pb.start();
-						}
-						catch (IOException e) {
-							e.printStackTrace();
-						}
+				}
+				catch (SQLException e) {
+					e.printStackTrace();
+				}
+				final String Url_usable = Url;
+				// SI UTILISE
+				if (Utilisée.equals("true") == true) {
+					Favoris[i] = new JMenuItem(Nom + " - (" + Help + ")");
 
-						ZoneTextLog.append("Ouverture de la page " + NomFavoris + "\n");
+					Favoris[i].setIcon(images[Icone]);
+					// PILOTAGE
+					if (Categorie.equals("Pilotage") == true) {
+						AjoutMenuPilotage(Favoris[i], SousCategorie, Url_usable);
 
 					}
-				});
+					// MVS
+					if (Categorie.equals("MVS") == true) {
+						AjoutMenuMvs(Favoris[i], SousCategorie, Url_usable);
+
+					}
+					// AS 400
+					if (Categorie.equals("AS 400") == true) {
+						AjoutMenuAs400(Favoris[i], SousCategorie, Url_usable);
+
+					}
+					// CFF
+					if (Categorie.equals("CFF") == true) {
+						AjoutMenuCff(Favoris[i], SousCategorie, Url_usable);
+
+					}
+					// MySys Distribués
+					if (Categorie.equals("MySys Distribués") == true) {
+						AjoutMenuMySysDistribues(Favoris[i], SousCategorie, Url_usable);
+
+					}
+					// MySys Centrale
+					if (Categorie.equals("MySys Centrale") == true) {
+						AjoutMenuMySysCentrale(Favoris[i], SousCategorie, Url_usable);
+
+					}
+					// BAD
+					if (Categorie.equals("Canaux directs (BAD)") == true) {
+						AjoutMenuCanauxDirect(Favoris[i], SousCategorie, Url_usable);
+
+					}
+					// Monétique
+					if (Categorie.equals("Monétique") == true) {
+						AjoutMenuMonetique(Favoris[i], SousCategorie, Url_usable);
+
+					}
+					// Surveillances
+					if (Categorie.equals("Surveillances") == true) {
+						AjoutMenuSurveillances(Favoris[i], SousCategorie, Url_usable);
+
+					}
+					// Outils
+					if (Categorie.equals("Outils") == true) {
+						AjoutMenuOutils(Favoris[i], SousCategorie, Url_usable);
+
+					}
+					// Divers
+					if (Categorie.equals("Divers") == true) {
+						AjoutMenuDivers(Favoris[i], SousCategorie, Url_usable);
+
+					}
+
+				}
 
 			}
+			MenuFavoris.setEnabled(true);
+
+			// LabelChargementProfil.setEnabled(false);
+			LabelChargementProfil.setVisible(false);
+			ChargementEnCours = true;
 
 		}
+
+	}
+
+	public void AjoutMenuPilotage(JMenuItem Favoris, String SousCategorie, String Url_usable) {
+
+		if (SousCategorie.equals("Documents") == true) {
+			MenuDocumentsPilotage.add(Favoris);
+			AddListennerDocument(Favoris, Url_usable);
+		}
+		if (SousCategorie.equals("Url") == true) {
+			MenuUrlPilotage.add(Favoris);
+			AddListennerUrl(Favoris, Url_usable);
+		}
+	}
+
+	public void AjoutMenuMvs(JMenuItem Favoris, String SousCategorie, String Url_usable) {
+
+		if (SousCategorie.equals("Documents") == true) {
+			MenuDocumentsMvs.add(Favoris);
+			AddListennerDocument(Favoris, Url_usable);
+		}
+		if (SousCategorie.equals("Url") == true) {
+			MenuUrlMvs.add(Favoris);
+			AddListennerUrl(Favoris, Url_usable);
+		}
+	}
+
+	public void AjoutMenuCff(JMenuItem Favoris, String SousCategorie, String Url_usable) {
+
+		if (SousCategorie.equals("Documents") == true) {
+			MenuDocumentsCff.add(Favoris);
+			AddListennerDocument(Favoris, Url_usable);
+		}
+		if (SousCategorie.equals("Url") == true) {
+			MenuUrlCff.add(Favoris);
+			AddListennerUrl(Favoris, Url_usable);
+		}
+	}
+
+	public void AjoutMenuAs400(JMenuItem Favoris, String SousCategorie, String Url_usable) {
+
+		if (SousCategorie.equals("Documents") == true) {
+			MenuDocumentsAs400.add(Favoris);
+			AddListennerDocument(Favoris, Url_usable);
+		}
+		if (SousCategorie.equals("Url") == true) {
+			MenuUrlAs400.add(Favoris);
+			AddListennerUrl(Favoris, Url_usable);
+		}
+	}
+
+	public void AjoutMenuMySysDistribues(JMenuItem Favoris, String SousCategorie, String Url_usable) {
+
+		if (SousCategorie.equals("Documents") == true) {
+			MenuDocumentsMySysDistribues.add(Favoris);
+			AddListennerDocument(Favoris, Url_usable);
+		}
+		if (SousCategorie.equals("Url") == true) {
+			MenuUrlMySysDistribues.add(Favoris);
+			AddListennerUrl(Favoris, Url_usable);
+		}
+	}
+
+	public void AjoutMenuMySysCentrale(JMenuItem Favoris, String SousCategorie, String Url_usable) {
+
+		if (SousCategorie.equals("Documents") == true) {
+			MenuDocumentsMySysCentrale.add(Favoris);
+			AddListennerDocument(Favoris, Url_usable);
+		}
+		if (SousCategorie.equals("Url") == true) {
+			MenuUrlMySysCentrale.add(Favoris);
+			AddListennerUrl(Favoris, Url_usable);
+		}
+	}
+
+	public void AjoutMenuCanauxDirect(JMenuItem Favoris, String SousCategorie, String Url_usable) {
+
+		if (SousCategorie.equals("Documents") == true) {
+			MenuDocumentsCanauxDirects.add(Favoris);
+			AddListennerDocument(Favoris, Url_usable);
+		}
+		if (SousCategorie.equals("Url") == true) {
+			MenuUrlCanauxDirects.add(Favoris);
+			AddListennerUrl(Favoris, Url_usable);
+		}
+	}
+
+	public void AjoutMenuMonetique(JMenuItem Favoris, String SousCategorie, String Url_usable) {
+
+		if (SousCategorie.equals("Documents") == true) {
+			MenuDocumentsMonetique.add(Favoris);
+			AddListennerDocument(Favoris, Url_usable);
+		}
+		if (SousCategorie.equals("Url") == true) {
+			MenuUrlMonetique.add(Favoris);
+			AddListennerUrl(Favoris, Url_usable);
+		}
+	}
+
+	public void AjoutMenuSurveillances(JMenuItem Favoris, String SousCategorie, String Url_usable) {
+
+		if (SousCategorie.equals("Documents") == true) {
+			MenuDocumentsSurveillances.add(Favoris);
+			AddListennerDocument(Favoris, Url_usable);
+		}
+		if (SousCategorie.equals("Url") == true) {
+			MenuUrlSurveillances.add(Favoris);
+			AddListennerUrl(Favoris, Url_usable);
+		}
+	}
+
+	public void AjoutMenuOutils(JMenuItem Favoris, String SousCategorie, String Url_usable) {
+
+		if (SousCategorie.equals("Documents") == true) {
+			MenuDocumentsOutilsPilotage.add(Favoris);
+			AddListennerDocument(Favoris, Url_usable);
+		}
+		if (SousCategorie.equals("Url") == true) {
+			MenuUrlOutilsPilotage.add(Favoris);
+			AddListennerUrl(Favoris, Url_usable);
+		}
+	}
+
+	public void AjoutMenuDivers(JMenuItem Favoris, String SousCategorie, String Url_usable) {
+
+		if (SousCategorie.equals("Documents") == true) {
+			MenuDocumentsDivers.add(Favoris);
+			AddListennerDocument(Favoris, Url_usable);
+		}
+		if (SousCategorie.equals("Url") == true) {
+			MenuUrlDivers.add(Favoris);
+			AddListennerUrl(Favoris, Url_usable);
+		}
+	}
+
+	public void AddListennerUrl(JMenuItem Favoris, String Url_usable) {
+
+		Favoris.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+
+				String Navigateur = "Mozilla Firefox";
+				GestionProduits GP = new GestionProduits();
+				Navigateur = GP.SelectionneNavigateur();
+				ProcessBuilder pb = new ProcessBuilder("cmd.exe", "start", "/C", Navigateur, Url_usable);
+				try {
+					pb.start();
+					ZoneTextLog.append("Ouverture de la page " + Favoris.getText() + "\n");
+				}
+				catch (IOException e) {
+					e.printStackTrace();
+				}
+
+				String Base = Favoris.getText();
+				String search = "(";
+				String result = "";
+				int index = Base.lastIndexOf(search);
+				if (index > -1) {
+					result = Base.substring(index, Base.length());
+				}
+
+				String result2 = result.replace("(", "");
+				String result3 = result2.replace(")", "");
+
+				String[] UserPassAutoLogin = result3.split("/");
+				UserAutoLogin = UserPassAutoLogin[0];
+				PassAutoLogin = UserPassAutoLogin[1];
+
+			}
+		});
+
+	}
+
+	public void AddListennerDocument(JMenuItem Favoris, String Url_usable) {
+		Favoris.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+
+				ProcessBuilder pb = new ProcessBuilder("cmd.exe", "start", "/C ", Url_usable);
+				try {
+					pb.start();
+					ZoneTextLog.append("Ouverture du document " + Favoris.getText() + "\n");
+
+				}
+				catch (IOException e) {
+					e.printStackTrace();
+
+				}
+
+			}
+		});
+
 	}
 
 	// --------------HOOK
@@ -3263,12 +3995,42 @@ public class UserInterface extends JFrame implements ActionListener {
 			}
 
 			CK = new CatchKeyboardEvent();
-			CK.installKeyGrabber();
+			try {
+				CK.installKeyGrabber();
+			}
+			catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			while (!fin) {
 				if (CK.RaccourciCapture.equals("Capture") == true) {
 					CK.RaccourciCapture = "Rien";
 					LanceProduit.LanceCapture();
 					ZoneTextLog.append("Raccourci vers l'outil \"Capture\" détecté." + "\n");
+				}
+				if (CK.RaccourciCapture.equals("AutoLogin") == true) {
+					CK.RaccourciCapture = "Rien";
+					ZoneTextLog.append("Raccourci \"Autologin\" détecté." + "\n");
+					if (UserAutoLogin != null) {
+						ZoneTextLog.append("Tentative de connexion avec " + UserAutoLogin + "/" + PassAutoLogin + "\n");
+						SuperRobot.type(UserAutoLogin);
+						SuperRobot.keyPress(KeyEvent.VK_TAB);
+						SuperRobot.keyRelease(KeyEvent.VK_TAB);
+						SuperRobot.type(PassAutoLogin);
+						try {
+							Thread.sleep(50);
+						}
+						catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						SuperRobot.keyPress(KeyEvent.VK_ENTER);
+						SuperRobot.keyRelease(KeyEvent.VK_ENTER);
+					}
+					else {
+						ZoneTextLog.append("Pas de user/pass stockés pour l'autologin." + "\n");
+					}
+
 				}
 				if (CK.RaccourciCapture.equals("Connexion") == true) {
 					CK.RaccourciCapture = "Rien";
@@ -3281,13 +4043,15 @@ public class UserInterface extends JFrame implements ActionListener {
 				if (CK.RaccourciCapture.equals("Consignes") == true) {
 					CK.RaccourciCapture = "Rien";
 					ZoneTextLog.append("Raccourci vers les consignes détecté." + "\n");
-					ProcessBuilder pb = new ProcessBuilder("explorer.exe", "/select,\\\\fsgcepil\\pilotage\\Consignes de pilotage\\Consignes_Permanente\\");
-					try {
-						pb.start();
-					}
-					catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+
+					if (Desktop.isDesktopSupported()) {
+						try {
+							File dir = new File("\\\\fsgcepil\\pilotage\\Consignes de pilotage\\Consignes_Permanente\\");
+							Desktop.getDesktop().open(dir);
+						}
+						catch (IOException e) {
+							e.printStackTrace();
+						}
 					}
 
 				}
@@ -3324,19 +4088,27 @@ public class UserInterface extends JFrame implements ActionListener {
 	public void MajAffichageRaccourcis() throws InterruptedException {
 
 		GestionRaccourcis GC = new GestionRaccourcis();
-		String[] TableauDoublon = new String[3];
+		String[] TableauDoublon = new String[4];
 		new HashSet<String>();
 
-		TableauDoublon[0] = GC.DemandeRaccourci("Capture");
-		TableauDoublon[1] = GC.DemandeRaccourci("Connexion");
-		TableauDoublon[2] = GC.DemandeRaccourci("Consignes");
+		try {
+			TableauDoublon[0] = GC.DemandeRaccourci("Capture");
+			TableauDoublon[1] = GC.DemandeRaccourci("Connexion");
+			TableauDoublon[2] = GC.DemandeRaccourci("Consignes");
+			TableauDoublon[3] = GC.DemandeRaccourci("AutoLogin");
+		}
+		catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		LabelCapture.setText("+ " + TableauDoublon[0] + " = Outil Capture");
 		LabelConnexion.setText("+ " + TableauDoublon[1] + " = Connexion s\u00E9lection");
 		LabelConsignes.setText("+ " + TableauDoublon[2] + " = Dossier consignes");
+		LabelAutoLogin.setText("+ " + TableauDoublon[3] + " = AutoLogin");
 
 		List<String> list = new LinkedList<String>();
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 4; i++) {
 			list.add(TableauDoublon[i]);
 		}
 
@@ -3356,7 +4128,7 @@ public class UserInterface extends JFrame implements ActionListener {
 		PositionInterfaceY = this.getY();
 	}
 
-	public void LirePositionFenetreConfig() {
+	public void LirePositionFenetreConfig() throws SQLException {
 		GestionSql LaBase = new GestionSql();
 		Connection ConnectionBase = LaBase.InitConnexion();
 		String Retour = LaBase.ConsulterDonneePilote(ConnectionBase, "PositionFenetreDernierLancement");
@@ -3382,51 +4154,108 @@ public class UserInterface extends JFrame implements ActionListener {
 			GestionSql LaBase = new GestionSql();
 			Connection ConnexionBase = LaBase.InitConnexion();
 
-			if (LaBase.ConsulterDonneePilote(ConnexionBase, "LancementAutoPoste").equals("true") == true) {
+			try {
+				if (LaBase.ConsulterDonneePilote(ConnexionBase, "LancementAutoPoste").equals("true") == true) {
 
-				BoutonCancel.setVisible(true);
-				int Temps = LaBase.ConsulterDonneeIntPilote(ConnexionBase, "LancementAutoTemps");
+					BoutonCancel.setVisible(true);
+					int Temps = LaBase.ConsulterDonneeIntPilote(ConnexionBase, "LancementAutoTemps");
 
-				LabelLancementAuto.setVisible(true);
-				while (Temps >= 0 && BoutonCancelVar == false) {
-					LabelLancementAuto.setText("Lancement automatique dans : " + Temps);
-					Temps--;
+					LabelLancementAuto.setVisible(true);
+					while (Temps >= 0 && BoutonCancelVar == false) {
+						LabelLancementAuto.setText("Lancement automatique dans : " + Temps);
+						Temps--;
+						try {
+							Thread.sleep(500);
+							LabelLancementAuto.setForeground(new Color(0, 0, 0));
+							Thread.sleep(500);
+							LabelLancementAuto.setForeground(new Color(178, 34, 34));
+						}
+						catch (InterruptedException e) {
+
+							e.printStackTrace();
+						}
+
+					}
+					if (BoutonCancelVar == false) {
+						LabelLancementAuto.setVisible(false);
+						LanceAutoPostePilotage();
+						BoutonLancePostePilotageComplet.setEnabled(false);
+						CheckCranSurete.setSelected(true);
+
+					}
+				}
+				if (LaBase.ConsulterDonneePilote(ConnexionBase, "LancementAutoPoste").equals("false") == true) {
+					BoutonCancel.setVisible(false);
+					LabelLancementAuto.setText("Pas de lancement automatique.");
 					try {
-						Thread.sleep(500);
-						LabelLancementAuto.setForeground(new Color(0, 0, 0));
-						Thread.sleep(500);
-						LabelLancementAuto.setForeground(new Color(178, 34, 34));
+						Thread.sleep(2000);
 					}
 					catch (InterruptedException e) {
-
+						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-
-				}
-				if (BoutonCancelVar == false) {
 					LabelLancementAuto.setVisible(false);
-					LanceAutoPostePilotage();
+					BoutonCancel.setVisible(false);
 				}
 			}
-
-			if (LaBase.ConsulterDonneePilote(ConnexionBase, "LancementAutoPoste").equals("false") == true) {
-				BoutonCancel.setVisible(false);
-				LabelLancementAuto.setText("Pas de lancement automatique.");
-				try {
-					Thread.sleep(2000);
-				}
-				catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				LabelLancementAuto.setVisible(false);
-				BoutonCancel.setVisible(false);
+			catch (SQLException e1) {
+				LaBase.FermerConnexion(ConnexionBase);
+				e1.printStackTrace();
 			}
+			LaBase.FermerConnexion(ConnexionBase);
 			LabelLancementAuto.setVisible(false);
 			BoutonCancel.setVisible(false);
 
 		}
 
+	}
+
+	public class ThreadRechercheOs implements Runnable {
+
+		@Override
+		public void run() {
+			try {
+				Thread.sleep(500);
+			}
+			catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			MachineDansMaComboBox = (String) MaComboBox.getSelectedItem();
+			GestionSql LaBase = new GestionSql();
+			Connection ConnectionBase = LaBase.InitConnexion();
+			Statement stmt = null;
+			ResultSet rs = null;
+			String Os = "";
+
+			try {
+				stmt = ConnectionBase.createStatement();
+				rs = stmt.executeQuery("select Os from Machine where Machine='" + MachineDansMaComboBox + "'");
+				while (rs.next()) {
+					Os = rs.getString("Os");
+
+				}
+				if (Os.equals("Unix") == true) {
+
+					final ImageIcon iconUnix = new ImageIcon(getClass().getResource("/linux-icon.png"));
+					LabelOs.setIcon(iconUnix);
+
+				}
+				if (Os.equals("Windows") == true) {
+
+					final ImageIcon iconWindows = new ImageIcon(getClass().getResource("/windows2-icon.png"));
+					LabelOs.setIcon(iconWindows);
+
+				}
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			// System.out.println("Fin thread recherche");
+			EtatRecherche = true;
+
+		}
 	}
 
 	public void keyPressed(KeyEvent arg0) {
@@ -3448,5 +4277,18 @@ public class UserInterface extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
 
+	}
+
+	static public void deleteDirectory(String emplacement) {
+		File path = new File(emplacement);
+		if (path.exists()) {
+			File[] files = path.listFiles();
+			for (int i = 0; i < files.length; i++) {
+				if (files[i].isDirectory()) {
+					deleteDirectory(path + "\\" + files[i]);
+				}
+				files[i].delete();
+			}
+		}
 	}
 }

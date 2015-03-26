@@ -1,9 +1,18 @@
+import java.sql.SQLException;
+
 public class GestionChemin {
 
 	public String DemandeChemin(String NomDemande) {
 
 		GestionSessions Sessions = new GestionSessions();
-		int Session = Sessions.LireSession();
+		int Session = 1;
+		try {
+			Session = Sessions.LireSession();
+		}
+		catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		String UserNameStation = "Username non reconnu";
 		UserNameStation = System.getProperty("user.name");
 
@@ -22,6 +31,7 @@ public class GestionChemin {
 
 		String BaseDeDonnee = "\\\\fsitceti\\entites\\ITC PPR-EDC-PIL-724 ETI\\Pilotage Mutualise\\Sauvegarde Olive&Pascal\\Outils de pilotage\\Alphapilote\\Data\\BaseProfile.db";
 		String CheminFichierLog = CheminGeneralProjet + UserNameStation + "\\log.txt";
+		String CheminFichierLogJava = CheminGeneralProjet + UserNameStation + "\\logJava\\";
 		String CheminFichierSuperLog = "\\\\fsitceti\\entites\\ITC PPR-EDC-PIL-724 ETI\\Pilotage Mutualise\\Sauvegarde Olive&Pascal\\Outils de pilotage\\Alphapilote\\Data\\log\\" + "log.txt";
 		String CheminTinaMacro = CheminGeneralProjet + UserNameStation + "\\";
 		String CheminFichierFavoris = "\\\\fsitceti\\entites\\ITC PPR-EDC-PIL-724 ETI\\Pilotage Mutualise\\Sauvegarde Olive&Pascal\\Outils de pilotage\\Alphapilote\\Data\\favoris.txt";
@@ -108,6 +118,34 @@ public class GestionChemin {
 
 		// ----- BLR -----
 
+		// ------- Centrale IP1 & IP2 ----------
+
+		String CheminQuick3270ProfileGmvs_3 = CheminGeneralProjet + UserNameStation + "\\GMVS_3.ecf";
+		String CheminQuick3270ProfileKmvs_3 = CheminGeneralProjet + UserNameStation + "\\KMVS_3.ecf";
+		String CheminQuick3270ProfileZmvs_3 = CheminGeneralProjet + UserNameStation + "\\ZMVS_3.ecf";
+		String CheminQuick3270ProfileSysa_3 = CheminGeneralProjet + UserNameStation + "\\Sysa_3.ecf";
+		String CheminQuick3270ProfileSysg_3 = CheminGeneralProjet + UserNameStation + "\\Sysg_3.ecf";
+		String CheminQuick3270ProfileBmvs_3 = CheminGeneralProjet + UserNameStation + "\\BMVS_3.ecf";
+		String CheminQuick3270ProfileIp1_3 = CheminGeneralProjet + UserNameStation + "\\IP1_3.ecf";
+		String CheminQuick3270ProfileIp2_3 = CheminGeneralProjet + UserNameStation + "\\IP2_3.ecf";
+		String CheminQuick3270ProfileIp3_3 = CheminGeneralProjet + UserNameStation + "\\IP3_3.ecf";
+
+		// ----------------------------------------
+
+		// ------- Centrale QPA ----------
+
+		String CheminQuick3270ProfileGmvs_4 = CheminGeneralProjet + UserNameStation + "\\GMVS_4.ecf";
+		String CheminQuick3270ProfileKmvs_4 = CheminGeneralProjet + UserNameStation + "\\KMVS_4.ecf";
+		String CheminQuick3270ProfileZmvs_4 = CheminGeneralProjet + UserNameStation + "\\ZMVS_4.ecf";
+		String CheminQuick3270ProfileSysa_4 = CheminGeneralProjet + UserNameStation + "\\Sysa_4.ecf";
+		String CheminQuick3270ProfileSysg_4 = CheminGeneralProjet + UserNameStation + "\\Sysg_4.ecf";
+		String CheminQuick3270ProfileBmvs_4 = CheminGeneralProjet + UserNameStation + "\\BMVS_4.ecf";
+		String CheminQuick3270ProfileIp1_4 = CheminGeneralProjet + UserNameStation + "\\IP1_4.ecf";
+		String CheminQuick3270ProfileIp2_4 = CheminGeneralProjet + UserNameStation + "\\IP2_4.ecf";
+		String CheminQuick3270ProfileIp3_4 = CheminGeneralProjet + UserNameStation + "\\IP3_4.ecf";
+
+		// ----------------------------------------
+
 		String CheminQuick3270ProfileGeneral = CheminGeneralProjet + UserNameStation + "\\";
 		String CheminProfileStationGeneral = CheminGeneralProjet + UserNameStation + "\\";
 
@@ -130,6 +168,9 @@ public class GestionChemin {
 			case "CheminFichierLog":
 				ResultatChemin = CheminFichierLog;
 				break;
+			case "CheminFichierLogJava":
+				ResultatChemin = CheminFichierLogJava;
+				break;
 			case "CheminFichierSuperLog":
 				ResultatChemin = CheminFichierSuperLog;
 				break;
@@ -150,7 +191,13 @@ public class GestionChemin {
 				if (Session == 2) {
 					ResultatChemin = CheminQuick3270ProfileGmvs_2;
 				}
-				else {
+				if (Session == 3) {
+					ResultatChemin = CheminQuick3270ProfileGmvs_3;
+				}
+				if (Session == 4) {
+					ResultatChemin = CheminQuick3270ProfileGmvs_4;
+				}
+				if (Session == 1) {
 					ResultatChemin = CheminQuick3270ProfileGmvs;
 				}
 
@@ -166,7 +213,13 @@ public class GestionChemin {
 				if (Session == 2) {
 					ResultatChemin = CheminQuick3270ProfileKmvs_2;
 				}
-				else {
+				if (Session == 3) {
+					ResultatChemin = CheminQuick3270ProfileKmvs_3;
+				}
+				if (Session == 4) {
+					ResultatChemin = CheminQuick3270ProfileKmvs_4;
+				}
+				if (Session == 1) {
 					ResultatChemin = CheminQuick3270ProfileKmvs;
 				}
 
@@ -182,7 +235,13 @@ public class GestionChemin {
 				if (Session == 2) {
 					ResultatChemin = CheminQuick3270ProfileZmvs_2;
 				}
-				else {
+				if (Session == 3) {
+					ResultatChemin = CheminQuick3270ProfileZmvs_3;
+				}
+				if (Session == 4) {
+					ResultatChemin = CheminQuick3270ProfileZmvs_4;
+				}
+				if (Session == 1) {
 					ResultatChemin = CheminQuick3270ProfileZmvs;
 				}
 				break;
@@ -197,7 +256,14 @@ public class GestionChemin {
 				if (Session == 2) {
 					ResultatChemin = CheminQuick3270ProfileSysa_2;
 				}
-				else {
+				if (Session == 3) {
+					ResultatChemin = CheminQuick3270ProfileSysa_3;
+				}
+				if (Session == 4) {
+					ResultatChemin = CheminQuick3270ProfileSysa_4;
+				}
+
+				if (Session == 1) {
 					ResultatChemin = CheminQuick3270ProfileSysa;
 				}
 
@@ -213,7 +279,13 @@ public class GestionChemin {
 				if (Session == 2) {
 					ResultatChemin = CheminQuick3270ProfileSysg_2;
 				}
-				else {
+				if (Session == 3) {
+					ResultatChemin = CheminQuick3270ProfileSysg_3;
+				}
+				if (Session == 4) {
+					ResultatChemin = CheminQuick3270ProfileSysg_4;
+				}
+				if (Session == 1) {
 					ResultatChemin = CheminQuick3270ProfileSysg;
 				}
 
@@ -229,8 +301,14 @@ public class GestionChemin {
 				if (Session == 2) {
 					ResultatChemin = CheminQuick3270ProfileBmvs_2;
 				}
+				if (Session == 3) {
+					ResultatChemin = CheminQuick3270ProfileBmvs_3;
+				}
+				if (Session == 4) {
+					ResultatChemin = CheminQuick3270ProfileBmvs_4;
+				}
 
-				else {
+				if (Session == 1) {
 					ResultatChemin = CheminQuick3270ProfileBmvs;
 				}
 				break;
@@ -245,7 +323,14 @@ public class GestionChemin {
 				if (Session == 2) {
 					ResultatChemin = CheminQuick3270ProfileIp1_2;
 				}
-				else {
+				if (Session == 3) {
+					ResultatChemin = CheminQuick3270ProfileIp1_3;
+				}
+				if (Session == 4) {
+					ResultatChemin = CheminQuick3270ProfileIp1_4;
+				}
+
+				if (Session == 1) {
 					ResultatChemin = CheminQuick3270ProfileIp1;
 				}
 
@@ -261,7 +346,14 @@ public class GestionChemin {
 				if (Session == 2) {
 					ResultatChemin = CheminQuick3270ProfileIp2_2;
 				}
-				else {
+				if (Session == 3) {
+					ResultatChemin = CheminQuick3270ProfileIp2_3;
+				}
+				if (Session == 4) {
+					ResultatChemin = CheminQuick3270ProfileIp2_4;
+				}
+
+				if (Session == 1) {
 					ResultatChemin = CheminQuick3270ProfileIp2;
 				}
 
@@ -277,7 +369,14 @@ public class GestionChemin {
 				if (Session == 2) {
 					ResultatChemin = CheminQuick3270ProfileIp3_2;
 				}
-				else {
+				if (Session == 3) {
+					ResultatChemin = CheminQuick3270ProfileIp3_3;
+				}
+				if (Session == 4) {
+					ResultatChemin = CheminQuick3270ProfileIp3_4;
+				}
+
+				if (Session == 1) {
 					ResultatChemin = CheminQuick3270ProfileIp3;
 				}
 
